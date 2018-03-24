@@ -1,0 +1,16 @@
+{
+  "name": "makeba-electron",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./base/index.js",
+  "scripts": {
+    "test": "build.ps1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "electron": "^2.0.0-beta.4",
+    "sh": "0.0.3",
+    "typescript": "^2.7.2"
+  }
+}
