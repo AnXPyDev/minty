@@ -21,7 +21,6 @@ const $MAKEBA__main = {
         ctx = vport.context;
         vport.resize(new Vector(400, 400));
         vport.resize(new Vector(400, 400));
-        requestAnimationFrame(draw);
     }
 }
 
