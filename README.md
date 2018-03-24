@@ -1,1 +1,3 @@
-This is a rewrite of the AnCore game engine under the name MAKEBA
+#MAKEBA-electron
+
+This is a TypeScript rewrite of the AnCore game engine under the name MAKEBA using Electron 
