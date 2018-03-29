@@ -11,6 +11,14 @@ class Actor {
     draw():void {}
 }
 
-module.exports = {
-    Actor:Actor
+function def(...names:string[]):void {
+    names.forEach((name:string) => {
+        act[name] = [];
+    })
 }
+
+module.exports = {
+    Actor:Actor,
+    def:def
+}
+

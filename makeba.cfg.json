@@ -1,9 +1,0 @@
-{
-    "developer": true,
-    "modules": [
-        "display",
-        "math", 
-        "util",
-        "actor"
-    ]
-}

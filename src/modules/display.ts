@@ -21,7 +21,9 @@ class Viewport {
         this.element.width = size.x;
         this.element.height = size.y;
         this.size = new Vector(size.x, size.y);
-        WINDOW.setSize(size.x + 6, size.y + 29);
+        for (let i in [0,1]) {
+            WINDOW.setSize(size.x + 6, size.y + 29);
+        }    
     }
 }
 
