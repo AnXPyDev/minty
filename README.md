@@ -1,6 +1,6 @@
-# MINTY-electron
+<h style="text-align: center;"><strong>MINTY-electron</strong></h>
 
-This is a TypeScript rewrite of the AnCore game engine under the name MINTY using Electron 
+<p style="text-align: center;">This is a TypeScript rewrite of the AnCore game engine under the name MINTY using Electron </p>
 
 
 ![Alt text](./icon/minty.svg)
