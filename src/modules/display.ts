@@ -28,7 +28,7 @@ class Viewport {
 }
 
 class Layers {
-    public arr:Function[][];
+    public arr:(() => void)[][];
     public temp:Layer[];
     public min:number;
 
@@ -45,7 +45,7 @@ class Layers {
         this.temp.push(layer);
     }
 
-    finalize():Function[][] {
+    finalize():(() => void)[][] {
         this.temp.forEach((layer:Layer) => {
             if (this.arr[layer.depth + this.min]) {
                 this.arr[layer.depth + this.min].push(layer.fn);
@@ -65,9 +65,9 @@ class Layers {
 
 class Layer {
     public depth:number;
-    public fn:Function;
+    public fn:() => void;
 
-    constructor(depth:number, fn:Function) {
+    constructor(depth:number, fn:() => void) {
         this.depth = depth;
         this.fn = fn;
     }

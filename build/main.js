@@ -41,16 +41,14 @@ $MAIN.step = function (td) {
 };
 $MAIN.draw = function () {
     ctx.save();
-    ctx.save();
-    ctx.restore();
-    if (true) {
-        $MAIN.loadanim();
+    $MAIN.loadanim();
+    if ($MAIN.cfg.developer) {
+        ctx.fillStyle = "black";
+        ctx.textAlign = "left";
+        ctx.font = "15px Arial";
+        ctx.fillText($MAIN.cfg.name, 5, 15);
+        ctx.fillText($MAIN.cfg.version, 5, 35);
     }
-    ctx.fillStyle = "black";
-    ctx.textAlign = "left";
-    ctx.font = "15px Arial";
-    ctx.fillText($MAIN.cfg.name, 5, 15);
-    ctx.fillText($MAIN.cfg.version, 5, 35);
     ctx.restore();
     requestAnimationFrame($MAIN.draw);
 };

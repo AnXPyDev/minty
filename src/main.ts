@@ -5,7 +5,15 @@ function obtain(path:string):void {
 
 let WINDOW:any;
 
-const $MAIN:any = {};
+//@ts-ignore
+const $MAIN:{
+    cfg:any,
+    logo:any,
+    loadanim:() => void,
+    onload:() => void,
+    step:(td:number) => number,
+    draw:() => void 
+} = {};
 
 $MAIN.cfg = require("../minty.cfg.json");
 const ELECTRON:any = require("electron");
@@ -28,15 +36,15 @@ const act:any = {};
 
 $MAIN.loadanim = getLoadAnim();
 
-$MAIN.main = {
-    onload() {
-        vport = new Viewport("c0", true);
-        ctx = vport.context;
-        vport.resize(new Vector(600,600));
-        requestAnimationFrame($MAIN.draw);
-    }
+$MAIN.onload = function() {
+    vport = new Viewport("c0", true);
+    ctx = vport.context;
+    vport.resize(new Vector(600,600));
+    requestAnimationFrame($MAIN.draw);
 }
+
 $MAIN.step = function(td:number):number {
+    let start:any = new Date();
     
     for(let i in act) {
         for(let e in act[i]) {
@@ -44,49 +52,28 @@ $MAIN.step = function(td:number):number {
         }
     }
 
-    return 1; 
+    let end:any = new Date();
+    return end - start; 
+
 }
 
 $MAIN.draw = function() {
-    
     ctx.save();
-
-    ctx.save();
-    ctx.restore();
-    if (true) {
-        $MAIN.loadanim();
+    $MAIN.loadanim();
+    if ($MAIN.cfg.developer) {
+        ctx.fillStyle = "black";
+        ctx.textAlign = "left";
+        ctx.font = "15px Arial";
+        ctx.fillText($MAIN.cfg.name, 5, 15);
+        ctx.fillText($MAIN.cfg.version, 5, 35);
     }
-    ctx.fillStyle = "black";
-    ctx.textAlign = "left";
-    ctx.font = "15px Arial";
-    ctx.fillText($MAIN.cfg.name, 5, 15);
-    ctx.fillText($MAIN.cfg.version, 5, 35);
-
     ctx.restore();
     requestAnimationFrame($MAIN.draw);
 
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+} 
 
 document.onreadystatechange = function():void {
     if (document.readyState == "complete") {
-        setTimeout($MAIN.main.onload,0);
+        setTimeout($MAIN.onload,0);
     }
 }
