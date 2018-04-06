@@ -17,8 +17,8 @@ function createWindow () {
     }));
     if (config.developer) {
         win.toggleDevTools();
-    }  
+    }
     win.setResizable(false);
 }
-  
+
 app.on('ready', createWindow);

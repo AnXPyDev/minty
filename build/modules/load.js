@@ -3,11 +3,10 @@ function getLoadAnim() {
     let i0 = $MAIN.logo.parts[0];
     let angle = 0;
     let i1 = $MAIN.logo.parts[1];
-    return function (c) {
+    return function () {
         ctx.save();
         let vsz = vport.size;
         let sz = (Math.min(vsz.x, vsz.y) / 3) * 2;
-        //@ts-ignore
         ctx.translate(vsz.x / 2, vsz.y / 2);
         ctx.clearRect(-vsz.x / 2, -vsz.y / 2, vsz.x, vsz.y);
         //@ts-ignore

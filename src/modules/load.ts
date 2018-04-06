@@ -22,7 +22,6 @@ function getLoadAnim():() => void {
         ctx.restore();
         ctx.restore();
     }
-
 }   
 
 

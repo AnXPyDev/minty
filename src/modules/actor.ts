@@ -1,24 +1,64 @@
 class Actor {
     public x:number;
     public y:number;
-
+    public id:number;
+    public persistant:boolean;
 
     constructor() {
         this.x = 0;
         this.y = 0;
+        this.id = 0;
+        this.persistant = false;
     }
     step():void {}
     draw():void {}
 }
 
-function def(...names:string[]):void {
-    names.forEach((name:string) => {
-        act[name] = [];
-    })
+const Instance:{
+    spawn:(name:string, Args:any) => number,
+    destroy:(name:string, id:number) => void,
+    mod:(name:string, merge:any, id:string | number) => void,
+    get:(name:string, id:number) => any
+} = {
+    spawn(name:string, Args:any):number {
+        let id:number = ins[name].length;
+        let pho:any = new act[name](...Args);
+        pho.id = id;
+        ins[name].push(pho);
+        return id;
+    },
+    destroy(name:string, id:number):void {
+        delete ins[name][id];
+        for(let i:number = id; i < ins[name].length; i ++) {
+            ins[name][i].id --;
+        }
+    },
+    mod(name:string, merge:any, id:string | number = ""):void {
+        if (typeof id == "number") {
+            //@ts-ignore
+            Object.assign(ins[name][id], merge);
+        } else {
+            for(let i in ins[name]) {
+                //@ts-ignore
+                Object.assign(ins[name][i], merge);
+            }
+        }
+    },
+    get(name:string, id:number):any {
+        return ins[name][id];
+    }
 }
+
+
+function def(name:string, act:any):void {
+    act[name] = act;
+    ins[name] = [];
+}
+
 
 module.exports = {
     Actor:Actor,
+    Instance:Instance,
     def:def
 }
 

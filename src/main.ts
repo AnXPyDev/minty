@@ -1,25 +1,61 @@
 function obtain(path:string):void {
-    //@ts-ignore
+    // @ts-ignore
     Object.assign(window, require(path));
 }
 
+function loadscript(path:string):void {
+    let scr = document.createElement("script");
+    scr.src = path;
+    document.head.appendChild(scr);
+} 
+
+function preload(type:string, path:string):void {
+    let name:string = path.split("/")[-1].split(".")[0]; 
+    if (type == "img") {
+        $MAIN.load.start();
+        img[name] = new Image();
+        img[name].src = path;
+        img[name].onload = function():void {
+            $MAIN.load.stop();
+        }
+    } else if (type == "snd") {
+        $MAIN.load.start();
+        snd[name] = new Audio();
+        snd[name].src = path;
+        snd[name].oncanplaythrough = ():void => {
+            $MAIN.load.stop();
+            snd[name].oncanplaythrough = ():void => {};
+        }
+    }
+}
+ 
 let WINDOW:any;
 
-//@ts-ignore
+// @ts-ignore
 const $MAIN:{
     cfg:any,
+    game_cfg:any,
     logo:any,
     loadanim:() => void,
     onload:() => void,
     step:(td:number) => number,
-    draw:() => void 
+    draw:() => void,
+    load:{
+        all:number,
+        done:number,
+        pending:number,
+        stop:() => void,
+        start:() => void,
+        loading:() => boolean
+    }
 } = {};
 
 $MAIN.cfg = require("../minty.cfg.json");
+$MAIN.game_cfg = require("../project/game.cfg.json");
 const ELECTRON:any = require("electron");
 WINDOW = ELECTRON.remote.getCurrentWindow();
 
-// Obtains all MAKEBA modules
+// obtains all MAKEBA modules
 $MAIN.cfg.modules.forEach((file:string) => {
     obtain("../build/modules/" + file + ".js");
 });
@@ -33,6 +69,14 @@ let vport:Viewport;
 let ctx:CanvasRenderingContext2D;
 
 const act:any = {};
+const ins:any = {};
+const cfg:any = {};
+const img:any = {};
+const snd:any = {};
+
+let bck:any = {};
+
+let scene:Scene;
 
 $MAIN.loadanim = getLoadAnim();
 
@@ -41,11 +85,26 @@ $MAIN.onload = function() {
     ctx = vport.context;
     vport.resize(new Vector(600,600));
     requestAnimationFrame($MAIN.draw);
+    if ($MAIN.cfg.developer) {
+      console.warn("You Are In Developer Mode");
+    }
+    $MAIN.game_cfg.assets.images.forEach((file:string) => {
+        preload("img", "../project/assets/" + file);
+    })
+    $MAIN.game_cfg.assets.sounds.forEach((file:string) => {
+        preload("snd", "../project/assets/" + file);
+    })
+    $MAIN.game_cfg.code.json.forEach((file:string) => {
+        cfg[file.split(".")[0]] = require("../project/code/" + file);
+    });
+    $MAIN.game_cfg.code.js.forEach((file:string) => {
+        loadscript("../project/code/" + file);
+    })
 }
 
 $MAIN.step = function(td:number):number {
     let start:any = new Date();
-    
+
     for(let i in act) {
         for(let e in act[i]) {
             act[i][e].step();
@@ -53,13 +112,15 @@ $MAIN.step = function(td:number):number {
     }
 
     let end:any = new Date();
-    return end - start; 
+    return end - start;
 
 }
 
 $MAIN.draw = function() {
     ctx.save();
-    $MAIN.loadanim();
+    if (!$MAIN.load.loading()) {
+        $MAIN.loadanim();
+    }
     if ($MAIN.cfg.developer) {
         ctx.fillStyle = "black";
         ctx.textAlign = "left";
@@ -70,7 +131,24 @@ $MAIN.draw = function() {
     ctx.restore();
     requestAnimationFrame($MAIN.draw);
 
-} 
+}
+
+$MAIN.load = {
+    all: 0,
+    done: 0,
+    pending: 0,
+    start() {
+        this.all ++;
+        this.pending ++;
+    },
+    stop() {
+        this.done ++;
+        this.pending --;
+    },
+    loading() {
+        return this.done == this.all && this.pending == 0;
+    }
+}
 
 document.onreadystatechange = function():void {
     if (document.readyState == "complete") {
