@@ -47,6 +47,11 @@ const $MAIN:{
         stop:() => void,
         start:() => void,
         loading:() => boolean
+    },
+    fps:{
+        last:Date,
+        now:Date,
+        total:number
     }
 } = {};
 
@@ -116,8 +121,17 @@ $MAIN.step = function(td:number):number {
 
 }
 
+$MAIN.fps = {
+    last: new Date(),
+    now: new Date(),
+    total: 0
+}
+
 $MAIN.draw = function() {
+    $MAIN.fps.last = $MAIN.fps.now;
     ctx.save();
+    ctx.fillStyle = "white";
+    ctx.fillRect(0 , 0, vport.size.x, vport.size.y);
     if (!$MAIN.load.loading()) {
         $MAIN.loadanim();
     }
@@ -127,10 +141,14 @@ $MAIN.draw = function() {
         ctx.font = "15px Arial";
         ctx.fillText($MAIN.cfg.name, 5, 15);
         ctx.fillText($MAIN.cfg.version, 5, 35);
+        //@ts-ignore
+        ctx.fillText("fps: " + $MAIN.fps.total, 5, 55)
     }
     ctx.restore();
     requestAnimationFrame($MAIN.draw);
-
+    $MAIN.fps.now = new Date();
+    //@ts-ignore
+    $MAIN.fps.total = Math.floor(1000 / ($MAIN.fps.now - $MAIN.fps.last));
 }
 
 $MAIN.load = {
