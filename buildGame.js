@@ -5,23 +5,23 @@
         image: ["jpg", "svg", "png"],
         sound: ["mp3"]
     }
-    fs.readdir("./project/code", function(err, files) {
+    fs.readdir("./project/code", function (err, files) {
         files.forEach(file => {
             let extension = file.split(".")[1];
             if (extension == "js") {
-                json.code.js.push(file); 
+                json.code.js.push(file);
             } else if (extension == "json") {
                 json.code.json.push(file);
             }
         });
-        fs.readdir("./project/assets/img", function(err, files) {
+        fs.readdir("./project/assets/img", function (err, files) {
             files.forEach(file => {
                 let extension = file.split()[1];
                 if (types.image.includes(extension)) {
                     json.assets.images.push(file);
                 }
             })
-            fs.readdir("./project/assets/snd", function(err, files) {
+            fs.readdir("./project/assets/snd", function (err, files) {
                 files.forEach(file => {
                     let extension = file.split()[1];
                     if (types.sound.includes(extension)) {

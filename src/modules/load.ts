@@ -11,7 +11,7 @@ function getLoadAnim():() => void {
         ctx.clearRect(- vsz.x / 2, -vsz.y / 2, vsz.x, vsz.y);
         //@ts-ignore
         angle = 2 * Math.PI * Math.sin(new Date() / 1000);
-        if (angle < -2 * Math.PI) {angle = 0};
+        //if (angle < -2 * Math.PI) {angle = 0};
         ctx.save();
         ctx.rotate(angle);
         ctx.drawImage(i0, -sz / 2, -sz / 2, sz, sz);
