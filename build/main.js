@@ -49,9 +49,12 @@ $MAIN.logo.parts[1].src = "../icon/parts/2.svg";
 let vport;
 let ctx;
 const act = {};
+const ins = {};
 const cfg = {};
 const img = {};
 const snd = {};
+let bck = {};
+let scene;
 $MAIN.loadanim = getLoadAnim();
 $MAIN.onload = function () {
     vport = new Viewport("c0", true);
