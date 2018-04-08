@@ -1,1 +1,0 @@
-console.log(cfg.stuff.nigger);

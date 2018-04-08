@@ -38,7 +38,7 @@ const $MAIN:{
     logo:any,
     loadanim:() => void,
     onload:() => void,
-    step:(td:number) => number,
+    step:(td:number) => void,
     draw:() => void,
     load:{
         all:number,
@@ -107,18 +107,12 @@ $MAIN.onload = function() {
     })
 }
 
-$MAIN.step = function(td:number):number {
-    let start:any = new Date();
-
+$MAIN.step = function(td:number):void {
     for(let i in act) {
         for(let e in act[i]) {
-            act[i][e].step();
+            act[i][e].update();
         }
     }
-
-    let end:any = new Date();
-    return end - start;
-
 }
 
 $MAIN.fps = {
@@ -174,4 +168,4 @@ document.onreadystatechange = function():void {
     }
 }
 
-//
+///
