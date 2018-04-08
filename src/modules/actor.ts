@@ -3,15 +3,25 @@ class Actor {
     public y:number;
     public id:number;
     public persistant:boolean;
+    public tickrate:number;
+    public depth:number;
 
     constructor() {
         this.x = 0;
         this.y = 0;
         this.id = 0;
         this.persistant = false;
+        this.tickrate = 1;
+        this.depth = 1;
     }
-    step():void {}
+    tick():void {}
     draw():void {}
+    update():void {
+        if (tick * 100 % scene.tps * 100 /  Math.floor(this.tickrate * 100)) {
+            this.tick();
+        }
+        $MAIN.cLAY.insert(new Layer(this.depth, ():void => {this.draw()}));
+    }
 }
 
 const Instance:{

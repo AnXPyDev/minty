@@ -4,6 +4,7 @@ class Scene {
     public index:number;
     public act:any;
     public bck:any;
+    public tps:number;
 
     constructor(act:any, bck:any, onload:() => void, onbeforeload:() => void) {
         this.index = 0;
@@ -11,6 +12,7 @@ class Scene {
         this.onbeforeload = onbeforeload;
         this.act = act;
         this.bck = bck;
+        this.tps = 60;
     } 
 
     load():void {

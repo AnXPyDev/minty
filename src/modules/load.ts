@@ -3,11 +3,19 @@ function getLoadAnim():() => void {
     let angle:number = 0;
     let i1:any = $MAIN.logo.parts[1];
     let szm:number = 6;
+    let alpha = 1;
 
     return function () {
         ctx.save();
+        if ($MAIN.load.done == $MAIN.load.all) {
+            alpha -= 0.01;
+            if (alpha <= 0) {
+                $MAIN.load.doneanim = true;
+            }
+        }
         let vsz:Vector = vport.size;
         let sz:number = (Math.min(vsz.x, vsz.y) / 3) * 2 / szm;
+        ctx.globalAlpha = alpha;
         ctx.translate(vsz.x / szm * (szm - 1) , vsz.y / szm * (szm -1));
         ctx.clearRect(- vsz.x / 2, -vsz.y / 2, vsz.x, vsz.y);
         //@ts-ignore
@@ -21,7 +29,7 @@ function getLoadAnim():() => void {
         ctx.rotate(-angle);
         ctx.drawImage(i1, -sz / 2, -sz / 2, sz, sz);
         ctx.restore();
-        ctx.restore();
+        ctx.restore();    
     }
 }   
 

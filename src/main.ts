@@ -28,22 +28,35 @@ function preload(type:string, path:string):void {
         }
     }
 }
- 
+
 let WINDOW:any;
+
+function pause():void {
+    clearInterval($MAIN.mainloop);
+}
+
+function resume(tps:number = scene.tps):void {
+    //@ts-ignore
+    $MAIN.mainloop = setInterval($MAIN.tick, 1000 / 60);
+}
 
 // @ts-ignore
 const $MAIN:{
     cfg:any,
     game_cfg:any,
     logo:any,
+    mainloop:number,
+    cAPI:Compiler,
+    cLAY:Layers,
     loadanim:() => void,
     onload:() => void,
-    step:(td:number) => void,
+    tick:() => void,
     draw:() => void,
     load:{
         all:number,
         done:number,
         pending:number,
+        doneanim:boolean;
         stop:() => void,
         start:() => void,
         loading:() => boolean
@@ -54,6 +67,12 @@ const $MAIN:{
         total:number
     }
 } = {};
+
+//@ts-ignore
+const GAME:{
+    onload:() => void
+} = {}
+
 
 $MAIN.cfg = require("../minty.cfg.json");
 $MAIN.game_cfg = require("../project/game.cfg.json");
@@ -74,14 +93,17 @@ let vport:Viewport;
 let ctx:CanvasRenderingContext2D;
 
 const act:any = {};
-const ins:any = {};
 const cfg:any = {};
 const img:any = {};
 const snd:any = {};
 
 let bck:any = {};
-
+let ins:any = {};
 let scene:Scene;
+let tick:number = 0;
+
+$MAIN.cAPI = new Compiler;
+$MAIN.cLAY = new Layers;
 
 $MAIN.loadanim = getLoadAnim();
 
@@ -105,9 +127,11 @@ $MAIN.onload = function() {
     $MAIN.game_cfg.code.js.forEach((file:string) => {
         loadscript("../project/code/" + file);
     })
+    resume();
 }
 
-$MAIN.step = function(td:number):void {
+$MAIN.tick = function():void {
+    tick ++;
     for(let i in act) {
         for(let e in act[i]) {
             act[i][e].update();
@@ -126,7 +150,7 @@ $MAIN.draw = function() {
     ctx.save();
     ctx.fillStyle = "white";
     ctx.fillRect(0 , 0, vport.size.x, vport.size.y);
-    if (!$MAIN.load.loading()) {
+    if (!$MAIN.load.doneanim) {
         $MAIN.loadanim();
     }
     if ($MAIN.cfg.developer) {
@@ -149,6 +173,7 @@ $MAIN.load = {
     all: 0,
     done: 0,
     pending: 0,
+    doneanim: false,
     start() {
         this.all ++;
         this.pending ++;
