@@ -1,1 +1,1 @@
-{"name":"MINTY-electron","version":"alpha-0.1","developer":true,"modules":["actor","display","load","math","scene","util"]}
+{"name":"MINTY-electron","version":"alpha-0.1","developer":true,"modules":["actor","display","key","load","math","scene","util"]}

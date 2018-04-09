@@ -28,7 +28,9 @@
                         json.assets.sounds.push(file);
                     }
                 });
-                fs.writeFile("./project/game.cfg.json", JSON.stringify(json));
+                fs.writeFile("./project/game.cfg.json", JSON.stringify(json), function() {
+                    console.log("Sucessfully built game.cfg.json");
+                });
             })
         })
     });

@@ -17,7 +17,7 @@ class Actor {
     tick():void {}
     draw():void {}
     update():void {
-        if (tick * 100 % scene.tps * 100 /  Math.floor(this.tickrate * 100)) {
+        if (tick * 100 % Math.floor(this.tickrate * 100) == 0) {
             this.tick();
         }
         $MAIN.cLAY.insert(new Layer(this.depth, ():void => {this.draw()}));
@@ -60,8 +60,8 @@ const Instance:{
 }
 
 
-function def(name:string, act:any):void {
-    act[name] = act;
+function def(name:string, actor:any):void {
+    act[name] = actor;
     ins[name] = [];
 }
 

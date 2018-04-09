@@ -65,14 +65,20 @@ const $MAIN:{
         last:Date,
         now:Date,
         total:number
+    },
+    tps:{
+        last:Date,
+        now:Date,
+        total:number
     }
 } = {};
 
 //@ts-ignore
 const GAME:{
     onload:() => void
-} = {}
-
+} = {
+    onload() {}
+}
 
 $MAIN.cfg = require("../minty.cfg.json");
 $MAIN.game_cfg = require("../project/game.cfg.json");
@@ -83,6 +89,13 @@ WINDOW = ELECTRON.remote.getCurrentWindow();
 $MAIN.cfg.modules.forEach((file:string) => {
     obtain("../build/modules/" + file + ".js");
 });
+
+$MAIN.game_cfg.code.json.forEach((file:string) => {
+    cfg[file.split(".")[0]] = require("../project/code/" + file);
+});
+$MAIN.game_cfg.code.js.forEach((file:string) => {
+    loadscript("../project/code/" + file);
+})
 
 $MAIN.logo = new Image(); $MAIN.logo.src = "../icon/minty.svg";
 $MAIN.logo.parts = [];
@@ -121,22 +134,26 @@ $MAIN.onload = function() {
     $MAIN.game_cfg.assets.sounds.forEach((file:string) => {
         preload("snd", "../project/assets/" + file);
     })
-    $MAIN.game_cfg.code.json.forEach((file:string) => {
-        cfg[file.split(".")[0]] = require("../project/code/" + file);
-    });
-    $MAIN.game_cfg.code.js.forEach((file:string) => {
-        loadscript("../project/code/" + file);
-    })
+    window.addEventListener("keydown", Key.add);
+    window.addEventListener("keyup", Key.remove);
+    window.addEventListener("mousemove", Key.mouse);
+    GAME.onload();
     resume();
 }
 
 $MAIN.tick = function():void {
+    $MAIN.tps.last = $MAIN.tps.now;
     tick ++;
-    for(let i in act) {
-        for(let e in act[i]) {
-            act[i][e].update();
+    $MAIN.cLAY.reset();
+    for(let i in ins) {
+        for(let e in ins[i]) {
+            ins[i][e].update();
         }
     }
+    $MAIN.cLAY.finalize();
+    $MAIN.tps.now = new Date();
+    //@ts-ignore
+    $MAIN.tps.total = Math.floor(1000 / ($MAIN.tps.now - $MAIN.tps.last));
 }
 
 $MAIN.fps = {
@@ -145,11 +162,19 @@ $MAIN.fps = {
     total: 0
 }
 
+$MAIN.tps = {
+    last: new Date(),
+    now: new Date(),
+    total: 0
+}
+
+
 $MAIN.draw = function() {
     $MAIN.fps.last = $MAIN.fps.now;
     ctx.save();
     ctx.fillStyle = "white";
     ctx.fillRect(0 , 0, vport.size.x, vport.size.y);
+    $MAIN.cAPI.compile($MAIN.cLAY);
     if (!$MAIN.load.doneanim) {
         $MAIN.loadanim();
     }
@@ -160,7 +185,9 @@ $MAIN.draw = function() {
         ctx.fillText($MAIN.cfg.name, 5, 15);
         ctx.fillText($MAIN.cfg.version, 5, 35);
         //@ts-ignore
-        ctx.fillText("fps: " + $MAIN.fps.total, 5, 55)
+        ctx.fillText("fps: " + $MAIN.fps.total, 5, 55);
+        //@ts-ignore
+        ctx.fillText("tps: " + $MAIN.tps.total, 5, 75);
     }
     ctx.restore();
     requestAnimationFrame($MAIN.draw);
@@ -181,6 +208,9 @@ $MAIN.load = {
     stop() {
         this.done ++;
         this.pending --;
+        if ($MAIN.load.loading()) {
+            $MAIN.onload();
+        }
     },
     loading() {
         return this.done == this.all && this.pending == 0;
@@ -189,7 +219,9 @@ $MAIN.load = {
 
 document.onreadystatechange = function():void {
     if (document.readyState == "complete") {
-        setTimeout($MAIN.onload,0);
+        if ($MAIN.load.loading()) {
+            setTimeout($MAIN.onload, 100);
+        }
     }
 }
 

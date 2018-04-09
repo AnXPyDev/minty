@@ -14,6 +14,8 @@ function getLoadAnim():() => void {
             }
         }
         let vsz:Vector = vport.size;
+        ctx.fillStyle = "white";
+        ctx.fillRect(0,0,vsz.x,vsz.y);
         let sz:number = (Math.min(vsz.x, vsz.y) / 3) * 2 / szm;
         ctx.globalAlpha = alpha;
         ctx.translate(vsz.x / szm * (szm - 1) , vsz.y / szm * (szm -1));
