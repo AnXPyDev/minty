@@ -23,7 +23,7 @@ class Scene {
         for(let i in ins) {
             for(let e in ins[i]) {
                 if (!ins[i][e].persistant) {
-                    ins[i][e].destroy();
+                    //ins[i][e].destroy();
                 }
             }
         }

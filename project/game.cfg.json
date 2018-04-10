@@ -1,1 +1,1 @@
-{"name":"Default","code":{"js":["game.js"],"json":[]},"assets":{"images":[],"sounds":[]}}
+{"name":"Default","code":{"js":["game.js"],"json":[]},"assets":{"images":["cursor.png"],"sounds":[]}}

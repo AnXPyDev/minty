@@ -16,7 +16,8 @@ function loadscript(path:string):void {
 } 
 
 function preload(type:string, path:string):void {
-    let name:string = path.split("/")[-1].split(".")[0]; 
+    let pho:string[] = path.split("/");
+    let name:string = pho[pho.length - 1].split(".")[0];
     if (type == "img") {
         $MAIN.load.start();
         img[name] = new Image();
@@ -98,13 +99,6 @@ $MAIN.cfg.modules.forEach((file:string) => {
     obtain("../build/modules/" + file + ".js");
 });
 
-$MAIN.game_cfg.code.json.forEach((file:string) => {
-    cfg[file.split(".")[0]] = require("../project/code/" + file);
-});
-$MAIN.game_cfg.code.js.forEach((file:string) => {
-    loadscript("../project/code/" + file);
-})
-
 $MAIN.logo = new Image(); $MAIN.logo.src = "../icon/minty.svg";
 $MAIN.logo.parts = [];
 $MAIN.logo.parts[0] = new Image(); $MAIN.logo.parts[0].src = "../icon/parts/1.svg";
@@ -131,6 +125,7 @@ $MAIN.mLAY = new Layers;
 $MAIN.loadanim = getLoadAnim();
 
 $MAIN.onload = function() {
+    console.log("odoeoad");
     vport = new Viewport("c0", true);
     ctx = vport.context;
     vport.resize(new Vector(600,600));
@@ -138,12 +133,6 @@ $MAIN.onload = function() {
     if ($MAIN.cfg.developer) {
       console.warn("You Are In Developer Mode");
     }
-    $MAIN.game_cfg.assets.images.forEach((file:string) => {
-        preload("img", "../project/assets/" + file);
-    })
-    $MAIN.game_cfg.assets.sounds.forEach((file:string) => {
-        preload("snd", "../project/assets/" + file);
-    })
     document.addEventListener("keydown", Key.add);
     document.addEventListener("keyup", Key.remove);
     document.addEventListener("mousemove", Key.mouse);
@@ -233,9 +222,22 @@ $MAIN.load = {
     }
 }
 
+$MAIN.game_cfg.code.json.forEach((file:string) => {
+    cfg[file.split(".")[0]] = require("../project/code/" + file);
+});
+$MAIN.game_cfg.code.js.forEach((file:string) => {
+    loadscript("../project/code/" + file);
+})
+$MAIN.game_cfg.assets.images.forEach((file:string) => {
+    preload("img", "../project/assets/img/" + file);
+})
+$MAIN.game_cfg.assets.sounds.forEach((file:string) => {
+    preload("snd", "../project/assets/snd/" + file);
+})
+
 document.onreadystatechange = function():void {
     if (document.readyState == "complete") {
-        if ($MAIN.load.loading()) {
+        if ($MAIN.load.loading() && $MAIN.load.all == 0) {
             setTimeout($MAIN.onload, 100);
         }
     }
