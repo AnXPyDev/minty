@@ -72,7 +72,14 @@ function def(name:string, actor:any):void {
     ins[name] = [];
 }
 
-
+class Loop {
+    public callback:() => any;
+    public tps:number;
+    constructor(callback:() => any, tps:number) {
+        this.tps = tps;
+        this.callback = callback;   
+    }
+}
 module.exports = {
     Actor:Actor,
     Instance:Instance,
