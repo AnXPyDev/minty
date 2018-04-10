@@ -5,6 +5,7 @@ class Actor {
     public persistant:boolean;
     public tickrate:number;
     public depth:number;
+    public mdepth:number;
 
     constructor() {
         this.x = 0;
@@ -13,6 +14,7 @@ class Actor {
         this.persistant = false;
         this.tickrate = 1;
         this.depth = 1;
+        this.mdepth = 1;
     }
     tick():void {}
     draw():void {}
@@ -21,6 +23,11 @@ class Actor {
             this.tick();
         }
         $MAIN.cLAY.insert(new Layer(this.depth, ():void => {this.draw()}));
+        $MAIN.mLAY.insert(new Layer(this.mdepth, ():boolean => {return this.mousedown()}));
+        
+    }
+    mousedown():boolean {
+        return false;
     }
 }
 

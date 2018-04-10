@@ -13,13 +13,13 @@ function getLoadAnim():() => void {
                 $MAIN.load.doneanim = true;
             }
         }
+        alpha = clamp(alpha, 0, 1);
         let vsz:Vector = vport.size;
-        ctx.fillStyle = "white";
-        ctx.fillRect(0,0,vsz.x,vsz.y);
         let sz:number = (Math.min(vsz.x, vsz.y) / 3) * 2 / szm;
         ctx.globalAlpha = alpha;
         ctx.translate(vsz.x / szm * (szm - 1) , vsz.y / szm * (szm -1));
-        ctx.clearRect(- vsz.x / 2, -vsz.y / 2, vsz.x, vsz.y);
+        ctx.fillStyle = "white";
+        ctx.fillRect(0,0,vsz.x,vsz.y);
         //@ts-ignore
         angle = 2 * Math.PI * Math.sin(new Date() / 1000);
         //if (angle < -2 * Math.PI) {angle = 0};

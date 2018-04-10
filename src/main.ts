@@ -1,6 +1,12 @@
-function obtain(path:string):void {
+function obtain(path:string, scope:any = null):void {
     // @ts-ignore
-    Object.assign(window, require(path));
+    if(scope != null) {
+        // @ts-ignore
+        Object.assign(scope, require(path));
+    } else {
+        // @ts-ignore
+        Object.assign(window, require(path)); 
+    }
 }
 
 function loadscript(path:string):void {
@@ -48,6 +54,8 @@ const $MAIN:{
     mainloop:number,
     cAPI:Compiler,
     cLAY:Layers,
+    mAPI:MCompiler,
+    mLAY:Layers,
     loadanim:() => void,
     onload:() => void,
     tick:() => void,
@@ -117,6 +125,8 @@ let tick:number = 0;
 
 $MAIN.cAPI = new Compiler;
 $MAIN.cLAY = new Layers;
+$MAIN.mAPI = new MCompiler;
+$MAIN.mLAY = new Layers;
 
 $MAIN.loadanim = getLoadAnim();
 
@@ -134,9 +144,11 @@ $MAIN.onload = function() {
     $MAIN.game_cfg.assets.sounds.forEach((file:string) => {
         preload("snd", "../project/assets/" + file);
     })
-    window.addEventListener("keydown", Key.add);
-    window.addEventListener("keyup", Key.remove);
-    window.addEventListener("mousemove", Key.mouse);
+    document.addEventListener("keydown", Key.add);
+    document.addEventListener("keyup", Key.remove);
+    document.addEventListener("mousemove", Key.mouse);
+    document.addEventListener("mousedown", Key.mousedown);
+    document.addEventListener("mouseup", Key.mouseup);
     GAME.onload();
     resume();
 }
@@ -145,12 +157,14 @@ $MAIN.tick = function():void {
     $MAIN.tps.last = $MAIN.tps.now;
     tick ++;
     $MAIN.cLAY.reset();
+    $MAIN.mLAY.reset();
     for(let i in ins) {
         for(let e in ins[i]) {
             ins[i][e].update();
         }
     }
     $MAIN.cLAY.finalize();
+    $MAIN.mLAY.finalize();
     $MAIN.tps.now = new Date();
     //@ts-ignore
     $MAIN.tps.total = Math.floor(1000 / ($MAIN.tps.now - $MAIN.tps.last));
@@ -174,6 +188,8 @@ $MAIN.draw = function() {
     ctx.save();
     ctx.fillStyle = "white";
     ctx.fillRect(0 , 0, vport.size.x, vport.size.y);
+    ctx.restore();
+    ctx.save();
     $MAIN.cAPI.compile($MAIN.cLAY);
     if (!$MAIN.load.doneanim) {
         $MAIN.loadanim();
