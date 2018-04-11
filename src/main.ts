@@ -114,6 +114,7 @@ const snd:any = {};
 
 let bck:any = {};
 let ins:any = {};
+let camera:Camera = new Camera();
 let scene:Scene;
 let tick:number = 0;
 
@@ -145,6 +146,7 @@ $MAIN.onload = function() {
 $MAIN.tick = function():void {
     $MAIN.tps.last = $MAIN.tps.now;
     tick ++;
+    Key.mouselog();
     $MAIN.cLAY.reset();
     $MAIN.mLAY.reset();
     for(let i in ins) {
@@ -179,7 +181,10 @@ $MAIN.draw = function() {
     ctx.fillRect(0 , 0, vport.size.x, vport.size.y);
     ctx.restore();
     ctx.save();
+    ctx.translate(-camera.pos.x, -camera.pos.y)
     $MAIN.cAPI.compile($MAIN.cLAY);
+    ctx.restore();
+    ctx.save();
     if (!$MAIN.load.doneanim) {
         $MAIN.loadanim();
     }

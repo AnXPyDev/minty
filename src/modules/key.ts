@@ -8,6 +8,7 @@ const Key:{
     add:(evt:any) => void,
     remove:(evt:any) => void,
     mouse:(evt:any) => void,
+    mouselog:() => void,
     mousedown:(evt:any) => void,
     mouseup:(evt:any) => void,
     holder:boolean[]
@@ -20,8 +21,13 @@ Key.check = function (kc:number):boolean {
 }
 
 Key.mouse = function (evt:any):void {
-    Mouse.x = evt.clientX;
-    Mouse.y = evt.clientY;
+    MClient.x = evt.clientX;
+    MClient.y = evt.clientY;
+}
+
+Key.mouselog = function ():void {
+    Mouse.x = MClient.x + camera.pos.x;
+    Mouse.y = MClient.y + camera.pos.y;
 }
 
 Key.mousedown = function (evt:any) {
@@ -44,6 +50,7 @@ Key.remove = function (evt:any):void {
 
 //@ts-ignore
 const Mouse:Vector = new Vector();
+const MClient:Vector = new Vector();
 
 class MCompiler extends Compiler {
     constructor() {
@@ -63,5 +70,6 @@ class MCompiler extends Compiler {
 module.exports = {
     Key:Key,
     Mouse:Mouse,
-    MCompiler:MCompiler
+    MCompiler:MCompiler,
+    MClient:MClient
 }
