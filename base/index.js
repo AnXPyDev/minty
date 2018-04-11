@@ -1,4 +1,4 @@
-const {app, BrowserWindow} = require("electron");
+const {app, BrowserWindow, globalShortcut} = require("electron");
 const path = require("path");
 const url = require("url");
 const config = require("../minty.cfg.json");
@@ -19,6 +19,9 @@ function createWindow () {
         win.toggleDevTools();
     }
     win.setResizable(false);
+    globalShortcut.register('F5', function() {
+		win.reload();
+	})
 }
 
 app.on('ready', createWindow);

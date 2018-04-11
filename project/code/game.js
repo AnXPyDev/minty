@@ -23,8 +23,8 @@ def("main", class extends Actor {
         this.sprite = new Sprite("cursor", 2, 10);
     }
     tick() {
-        this.x = lerp(this.x,Mouse.x,0.2,true);
-        this.y = lerp(this.y,Mouse.y,0.2,true);
+        this.x = Mouse.x;
+        this.y = Mouse.y;
         this.sprite.update();
     }
     draw() {

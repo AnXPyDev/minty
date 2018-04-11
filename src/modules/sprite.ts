@@ -10,7 +10,6 @@ class Sprite {
         this.len = len;
         this.index = 0;
         this.width = this.img.width / len;
-        console.log(this.img);
         this.fps = fps;
         this.loop = new Loop(() => {
             this.index = wrap_np(this.index + 1, 0, this.len - 1);

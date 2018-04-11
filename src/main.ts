@@ -126,7 +126,6 @@ $MAIN.mLAY = new Layers;
 $MAIN.loadanim = getLoadAnim();
 
 $MAIN.onload = function() {
-    console.log("odoeoad");
     vport = new Viewport("c0", true);
     ctx = vport.context;
     vport.resize(new Vector(600,600));
