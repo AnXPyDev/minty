@@ -9,7 +9,8 @@ class Sprite {
         this.img = img[imgname];
         this.len = len;
         this.index = 0;
-        this.width = img.width / len;
+        this.width = this.img.width / len;
+        console.log(this.img);
         this.fps = fps;
         this.loop = new Loop(() => {
             this.index = wrap_np(this.index + 1, 0, this.len - 1);
@@ -21,7 +22,7 @@ class Sprite {
         }
     }
     draw(pos:Vector,size:Vector):void {
-        ctx.drawImage(this.img, pos.x - size.x / 2, pos.y - size.y / 2, size.x, size.y, this.index * this.width, 0, this.width, this.img.height);
+        ctx.drawImage(this.img, this.index * this.width, 0, this.width, this.img.height, pos.x - size.x / 2, pos.y - size.y / 2, size.x, size.y);
     }
 }
 

@@ -88,6 +88,7 @@ class Loop {
 module.exports = {
     Actor:Actor,
     Instance:Instance,
-    def:def
+    def:def,
+    Loop:Loop
 }
 
