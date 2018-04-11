@@ -20,11 +20,12 @@ def("main", class extends Actor {
         this.y = 50;
         this.spd = 5;
         this.tickrate = 1;
-        this.sprite = new Sprite("cursor");
+        this.sprite = new Sprite("cursor", 10);
     }
     tick() {
         this.x = lerp(this.x,Mouse.x,0.5,true);
         this.y = lerp(this.y,Mouse.y,0.5,true);
+        this.sprite.update();
     }
     draw() {
         this.sprite.draw(new Vector(this.x, this.y), new Vector(20,30));

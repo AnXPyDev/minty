@@ -18,6 +18,16 @@ function wrap(val:number, min:number, max:number):number {
     }
 }
 
+function wrap_np(val:number, min:number, max:number):number {
+    if (val < min) {
+        return max;
+    } else if (val > max) {
+        return min;
+    } else {
+        return val;
+    }
+}
+
 function flip(val:number, min:number, max:number):number {
     return min - val + max;
 }
@@ -42,5 +52,6 @@ module.exports = {
     wrap:wrap,
     flip:flip,
     lerp:lerp,
+    wrap_np:wrap_np,
     approach:approach
 }

@@ -79,6 +79,11 @@ class Loop {
         this.tps = tps;
         this.callback = callback;   
     }
+    update():void {
+        if (tick % this.tps == 0) {
+            this.callback();
+        }
+    }
 }
 module.exports = {
     Actor:Actor,
