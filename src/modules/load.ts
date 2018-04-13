@@ -17,9 +17,9 @@ function getLoadAnim():() => void {
         let vsz:Vector = vport.size;
         let sz:number = (Math.min(vsz.x, vsz.y) / 3) * 2 / szm;
         ctx.globalAlpha = alpha;
-        ctx.translate(vsz.x / szm * (szm - 1) , vsz.y / szm * (szm -1));
         ctx.fillStyle = "white";
         ctx.fillRect(0,0,vsz.x,vsz.y);
+        ctx.translate(vsz.x / szm * (szm - 1) , vsz.y / szm * (szm -1));
         //@ts-ignore
         angle = 2 * Math.PI * Math.sin(new Date() / 1000);
         //if (angle < -2 * Math.PI) {angle = 0};

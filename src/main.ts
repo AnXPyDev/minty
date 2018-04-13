@@ -148,6 +148,9 @@ $MAIN.tick = function():void {
     Key.mouselog();
     $MAIN.cLAY.reset();
     $MAIN.mLAY.reset();
+    for(let i in bck) {
+        bck[i].update();
+    }
     for(let i in ins) {
         for(let e in ins[i]) {
             ins[i][e].update();
@@ -181,6 +184,9 @@ $MAIN.draw = function() {
     ctx.restore();
     ctx.save();
     ctx.translate(-camera.pos.x, -camera.pos.y)
+    for(let i in bck) {
+        bck[i].draw();
+    }
     $MAIN.cAPI.compile($MAIN.cLAY);
     ctx.restore();
     ctx.save();

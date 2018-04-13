@@ -20,10 +20,12 @@ class Scene {
     load():void {
         this.onbeforeload();
         scene = this;
+        let insKeys:string[] = Object.keys(ins);
         for(let i in ins) {
             for(let e in ins[i]) {
                 if (!ins[i][e].persistant) {
-                    //ins[i][e].destroy();
+                    //@ts-ignore
+                    Instance.destroy(insKeys[i], e);
                 }
             }
         }
@@ -37,8 +39,12 @@ class Scene {
         bck = {};
         let bckKeys:string[] = Object.keys(this.bck);
         for(let i in bckKeys) {
-            
+
+            let pho:any[] = this.bck[bckKeys[i]];
+            //@ts-ignore
+            bck[bckKeys[i]] = new Background(...pho);
         }
+        this.onload();
     }
 
     setNext(scene:Scene):void {

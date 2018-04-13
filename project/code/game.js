@@ -3,8 +3,12 @@ const r0 = new Scene(
         main: [[]]
     },
     {
+        main: ["bck", "tiled"]
     },
-    () => {},
+    () => {
+        bck.main.setScale(new Vector(2,2));
+        bck.main.setScroll(new Vector(5,5));
+    },
     () => {},
 
 )
