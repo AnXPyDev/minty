@@ -1,4 +1,5 @@
+<p align = "center"><img src = "./icon/minty.svg" width = 400></img></p>
 
 
-![Alt text](./icon/minty.svg)
 
+<h1 align = "center"><em>MINTY-electron</em></h1>
