@@ -35,3 +35,4 @@ def("main", class extends Actor {
         this.sprite.draw(new Vector(this.x, this.y), new Vector(20,30));
     }
 })
+

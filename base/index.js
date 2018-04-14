@@ -19,6 +19,10 @@ function createWindow () {
     }));
     if (config.developer) {
         win.toggleDevTools();
+        globalShortcut.register('F7', function() {
+            win.toggleDevTools();
+        });
+
     }
     win.setResizable(false);
     globalShortcut.register('F5', function() {
