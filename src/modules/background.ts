@@ -27,15 +27,26 @@ class Background {
     }
     draw():void {
         if(this.type == "tiled") {
+            let goff:Vector = new Vector(
+                    (camera.pos.x / this.img.width - Math.floor(camera.pos.x / this.img.width)) * this.img.width,
+                    (camera.pos.y / this.img.height - Math.floor(camera.pos.y / this.img.height)) * this.img.height,
+                )
             for(let i:number = -2; i < Math.floor(vport.size.x / (this.img.width * this.scale.x)) + 2; i++) {
                 for(let e:number = -2; e < Math.floor(vport.size.y / (this.img.height * this.scale.y)) + 2; e++) {
                     ctx.drawImage(this.img, 
-                        i * this.img.width * this.scale.x + camera.pos.x + this.off.x,  
-                        e * this.img.height * this.scale.y + camera.pos.y + this.off.y, 
+                        i * this.img.width * this.scale.x + camera.pos.x - goff.x + this.off.x,  
+                        e * this.img.height * this.scale.y + camera.pos.y - goff.y + this.off.y, 
                         this.img.width * this.scale.x, 
                         this.img.height * this.scale.y)
                 }
             }
+        } else if (this.type == "fullscreen") {
+            ctx.drawImage(this.img, 0, 0, vport.size.x, vport.size.y);
+        } else if (this.type == "solid") {
+            ctx.save();
+            ctx.fillStyle = this.color;
+            ctx.fillRect(0, 0, vport.size.x, vport.size.y);
+            ctx.restore();
         }
     }
     update():void {

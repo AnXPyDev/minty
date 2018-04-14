@@ -2,7 +2,7 @@ const {app, BrowserWindow, globalShortcut} = require("electron");
 const path = require("path");
 const url = require("url");
 const config = require("../minty.cfg.json");
-
+const exec = require("child_process").exec;
 
 var win;
 
@@ -23,6 +23,9 @@ function createWindow () {
     win.setResizable(false);
     globalShortcut.register('F5', function() {
 		win.reload();
+    });
+    globalShortcut.register('F6', function() {
+		exec("sh build.sh", () => {console.log("Rebuilt the engine, press F5 to apply changes")});
     });
 }
 
