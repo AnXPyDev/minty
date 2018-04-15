@@ -1,4 +1,10 @@
 
+class Camera {
+    constructor() {
+        this.pos = new Vector();
+    }
+}
+
 class Background {
     constructor(imgname, type, color = "white") {
         this.img = img[imgname];
@@ -45,6 +51,72 @@ class Background {
     }
     setScroll(spd) {
         this.spd = spd;
+    }
+}
+
+// name: "display"
+// desc: "..."
+// expr: Viewport, Compiler, Layers
+class Viewport {
+    constructor(id, main) {
+        this.element = document.getElementById(id);
+        this.context = this.element.getContext("2d");
+        this.isMain = main;
+        this.scale = new Vector(1, 1);
+        this.size = new Vector(this.element.width, this.element.height);
+    }
+    resize(size) {
+        this.element.width = size.x;
+        this.element.height = size.y;
+        this.size = new Vector(size.x, size.y);
+        for (let i in [0, 1]) {
+            WINDOW.setSize(size.x, size.y, true);
+        }
+    }
+}
+class Layers {
+    constructor() {
+        this.arr = [];
+        this.temp = [];
+        this.min = 0;
+    }
+    insert(layer) {
+        if (layer.depth < this.min) {
+            this.min = layer.depth;
+        }
+        this.temp.push(layer);
+    }
+    finalize() {
+        this.temp.forEach((layer) => {
+            if (this.arr[layer.depth + this.min]) {
+                this.arr[layer.depth + this.min].push(layer.fn);
+            }
+            else {
+                this.arr[layer.depth + this.min] = [layer.fn];
+            }
+        });
+        return this.arr;
+    }
+    reset() {
+        this.arr = [];
+        this.temp = [];
+    }
+}
+class Layer {
+    constructor(depth, fn) {
+        this.depth = depth;
+        this.fn = fn;
+    }
+}
+class Compiler {
+    constructor() { }
+    ;
+    compile(layers) {
+        layers.arr.forEach((layer) => {
+            layer.forEach((fn) => {
+                fn();
+            });
+        });
     }
 }
 
@@ -117,77 +189,6 @@ class Loop {
     }
 }
 
-class Camera {
-    constructor() {
-        this.pos = new Vector();
-    }
-}
-
-// name: "display"
-// desc: "..."
-// expr: Viewport, Compiler, Layers
-class Viewport {
-    constructor(id, main) {
-        this.element = document.getElementById(id);
-        this.context = this.element.getContext("2d");
-        this.isMain = main;
-        this.scale = new Vector(1, 1);
-        this.size = new Vector(this.element.width, this.element.height);
-    }
-    resize(size) {
-        this.element.width = size.x;
-        this.element.height = size.y;
-        this.size = new Vector(size.x, size.y);
-        for (let i in [0, 1]) {
-            WINDOW.setSize(size.x, size.y, true);
-        }
-    }
-}
-class Layers {
-    constructor() {
-        this.arr = [];
-        this.temp = [];
-        this.min = 0;
-    }
-    insert(layer) {
-        if (layer.depth < this.min) {
-            this.min = layer.depth;
-        }
-        this.temp.push(layer);
-    }
-    finalize() {
-        this.temp.forEach((layer) => {
-            if (this.arr[layer.depth + this.min]) {
-                this.arr[layer.depth + this.min].push(layer.fn);
-            }
-            else {
-                this.arr[layer.depth + this.min] = [layer.fn];
-            }
-        });
-        return this.arr;
-    }
-    reset() {
-        this.arr = [];
-        this.temp = [];
-    }
-}
-class Layer {
-    constructor(depth, fn) {
-        this.depth = depth;
-        this.fn = fn;
-    }
-}
-class Compiler {
-    constructor() { }
-    ;
-    compile(layers) {
-        layers.arr.forEach((layer) => {
-            layer.forEach((fn) => {
-                fn();
-            });
-        });
-    }
-}
 
 function getLoadAnim() {
     let i0 = $MAIN.logo.parts[0];
@@ -223,53 +224,6 @@ function getLoadAnim() {
         ctx.restore();
         ctx.restore();
     };
-}
-
-
-class Scene {
-    constructor(act, bck, onload, onbeforeload, tps = 60) {
-        this.index = 0;
-        this.onload = onload;
-        this.onbeforeload = onbeforeload;
-        this.act = act;
-        this.bck = bck;
-        this.tps = tps;
-        this.next = null;
-    }
-    load() {
-        this.onbeforeload();
-        scene = this;
-        let insKeys = Object.keys(ins);
-        for (let i in ins) {
-            for (let e in ins[i]) {
-                if (!ins[i][e].persistant) {
-                    //@ts-ignore
-                    Instance.destroy(insKeys[i], e);
-                }
-            }
-        }
-        let actKeys = Object.keys(this.act);
-        for (let i in actKeys) {
-            for (let e in this.act[actKeys[i]]) {
-                Instance.spawn(actKeys[i], this.act[actKeys[i]][e]);
-            }
-        }
-        bck = {};
-        let bckKeys = Object.keys(this.bck);
-        for (let i in bckKeys) {
-            let pho = this.bck[bckKeys[i]];
-            //@ts-ignore
-            bck[bckKeys[i]] = new Background(...pho);
-        }
-        this.onload();
-    }
-    setNext(scene) {
-        this.next = scene;
-    }
-    loadnext() {
-        //@ts-ignore
-        this.next.load();
-    }
 }
 
 // name: "math"
@@ -382,27 +336,6 @@ class MCompiler extends Compiler {
     }
 }
 
-class Sprite {
-    constructor(imgname, len = 1, fps) {
-        this.img = img[imgname];
-        this.len = len;
-        this.index = 0;
-        this.width = this.img.width / len;
-        this.fps = fps;
-        this.loop = new Loop(() => {
-            this.index = wrap_np(this.index + 1, 0, this.len - 1);
-        }, this.fps);
-    }
-    update() {
-        if (this.fps != 0) {
-            this.loop.update();
-        }
-    }
-    draw(pos, size) {
-        ctx.drawImage(this.img, this.index * this.width, 0, this.width, this.img.height, pos.x - size.x / 2, pos.y - size.y / 2, size.x, size.y);
-    }
-}
-
 function clamp(val, min, max) {
     if (val < min) {
         return min;
@@ -451,5 +384,72 @@ function approach(val, val2, amt) {
     }
     else {
         return clamp(val + amt, val, val2);
+    }
+}
+
+class Sprite {
+    constructor(imgname, len = 1, fps) {
+        this.img = img[imgname];
+        this.len = len;
+        this.index = 0;
+        this.width = this.img.width / len;
+        this.fps = fps;
+        this.loop = new Loop(() => {
+            this.index = wrap_np(this.index + 1, 0, this.len - 1);
+        }, this.fps);
+    }
+    update() {
+        if (this.fps != 0) {
+            this.loop.update();
+        }
+    }
+    draw(pos, size) {
+        ctx.drawImage(this.img, this.index * this.width, 0, this.width, this.img.height, pos.x - size.x / 2, pos.y - size.y / 2, size.x, size.y);
+    }
+}
+
+class Scene {
+    constructor(act, bck, onload, onbeforeload, tps = 60) {
+        this.index = 0;
+        this.onload = onload;
+        this.onbeforeload = onbeforeload;
+        this.act = act;
+        this.bck = bck;
+        this.tps = tps;
+        this.next = null;
+    }
+    load() {
+        this.onbeforeload();
+        scene = this;
+        let insKeys = Object.keys(ins);
+        for (let i in ins) {
+            for (let e in ins[i]) {
+                if (!ins[i][e].persistant) {
+                    //@ts-ignore
+                    Instance.destroy(insKeys[i], e);
+                }
+            }
+        }
+        let actKeys = Object.keys(this.act);
+        for (let i in actKeys) {
+            for (let e in this.act[actKeys[i]]) {
+                Instance.spawn(actKeys[i], this.act[actKeys[i]][e]);
+            }
+        }
+        bck = {};
+        let bckKeys = Object.keys(this.bck);
+        for (let i in bckKeys) {
+            let pho = this.bck[bckKeys[i]];
+            //@ts-ignore
+            bck[bckKeys[i]] = new Background(...pho);
+        }
+        this.onload();
+    }
+    setNext(scene) {
+        this.next = scene;
+    }
+    loadnext() {
+        //@ts-ignore
+        this.next.load();
     }
 }
