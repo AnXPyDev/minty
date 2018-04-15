@@ -6,7 +6,7 @@
 
 
 
-# Requirements:
+# _Requirements_:
 
     Node.js (newest version recommended)
 
@@ -14,7 +14,7 @@
   
     Git + Git Bash
 
-# How to install:
+# _How to install_:
     
   Create a folder and open **_git bash_** in it, then run these commands
 
