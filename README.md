@@ -8,9 +8,7 @@
 
 # _Requirements_:
 
-    Node.js (newest version recommended)
-
-    npm
+    Node.js + npm (newest version recommended)
   
     Git + Git Bash
 
