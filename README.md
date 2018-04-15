@@ -15,11 +15,14 @@
     Git Bash
 
 # How to install:
+    
+  Create a folder and open **_git bash_** in it, then run these commands
 
-  1. **_git clone_** this repo
+    $ git clone https://github.com/AnXPyDev/MINTY-electron.git
   
-  2. run **_npm install_** in the folder
+    $ cd ./MINTY-electron
   
-  3. run **_sh build.sh_**
+    $ sh build.sh
   
-  4. run **_sh run.sh_** to launch the app
+    $ sh run.sh
+    
