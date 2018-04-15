@@ -35,6 +35,7 @@
             fs.readdir("./project/assets/snd", function (err, files) {
                 if (err) {
                     console.log("The folder 'project/assets/snd' is missing")
+                    ec++;
                 } else {
                     files.forEach(file => {
                         let extension = file.split(".")[1];
@@ -48,11 +49,14 @@
                         console.log("Sucessfully built game.cfg.json");
                     });
                 } else {
-                    console.log("Multiple errors have occured, please make sure there is 'project' folder with this structure in this folder !");
+                    console.log("Errors have occured, please make sure there is 'project' folder with this structure in this folder !");
                     console.log("project/code - folder");
                     console.log("project/assets - folder");
                     console.log("project/assets/img - subfolder");
                     console.log("project/assets/snd - subfolder");
+                    fs.writeFile("./project/game.cfg.json", JSON.stringify(json), function() {
+                        console.log("Partialy built game.cfg.json");
+                    });
                 }
             })
         })

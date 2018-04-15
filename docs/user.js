@@ -1,125 +1,4 @@
 
-class Camera {
-    constructor() {
-        this.pos = new Vector();
-    }
-}
-
-class Background {
-    constructor(imgname, type, color = "white") {
-        this.img = img[imgname];
-        this.types = ["solid", "single", "fullscreen", "tiled"];
-        this.type = (() => {
-            //@ts-ignore
-            if (this.types.includes(type)) {
-                return type;
-            }
-            return "solid";
-        })();
-        this.color = color;
-        this.x = 0;
-        this.y = 0;
-        this.scale = new Vector(1, 1);
-        this.off = new Vector();
-        this.spd = new Vector();
-    }
-    draw() {
-        if (this.type == "tiled") {
-            let goff = new Vector((camera.pos.x / this.img.width - Math.floor(camera.pos.x / this.img.width)) * this.img.width, (camera.pos.y / this.img.height - Math.floor(camera.pos.y / this.img.height)) * this.img.height);
-            for (let i = -2; i < Math.floor(vport.size.x / (this.img.width * this.scale.x)) + 2; i++) {
-                for (let e = -2; e < Math.floor(vport.size.y / (this.img.height * this.scale.y)) + 2; e++) {
-                    ctx.drawImage(this.img, i * this.img.width * this.scale.x + camera.pos.x - goff.x + this.off.x, e * this.img.height * this.scale.y + camera.pos.y - goff.y + this.off.y, this.img.width * this.scale.x, this.img.height * this.scale.y);
-                }
-            }
-        }
-        else if (this.type == "fullscreen") {
-            ctx.drawImage(this.img, 0, 0, vport.size.x, vport.size.y);
-        }
-        else if (this.type == "solid") {
-            ctx.save();
-            ctx.fillStyle = this.color;
-            ctx.fillRect(0, 0, vport.size.x, vport.size.y);
-            ctx.restore();
-        }
-    }
-    update() {
-        this.off.x = wrap(this.off.x + this.spd.x, 0, this.img.width * this.scale.x);
-        this.off.y = wrap(this.off.y + this.spd.y, 0, this.img.height * this.scale.y);
-    }
-    setScale(scale) {
-        this.scale = scale;
-    }
-    setScroll(spd) {
-        this.spd = spd;
-    }
-}
-
-// name: "display"
-// desc: "..."
-// expr: Viewport, Compiler, Layers
-class Viewport {
-    constructor(id, main) {
-        this.element = document.getElementById(id);
-        this.context = this.element.getContext("2d");
-        this.isMain = main;
-        this.scale = new Vector(1, 1);
-        this.size = new Vector(this.element.width, this.element.height);
-    }
-    resize(size) {
-        this.element.width = size.x;
-        this.element.height = size.y;
-        this.size = new Vector(size.x, size.y);
-        for (let i in [0, 1]) {
-            WINDOW.setSize(size.x, size.y, true);
-        }
-    }
-}
-class Layers {
-    constructor() {
-        this.arr = [];
-        this.temp = [];
-        this.min = 0;
-    }
-    insert(layer) {
-        if (layer.depth < this.min) {
-            this.min = layer.depth;
-        }
-        this.temp.push(layer);
-    }
-    finalize() {
-        this.temp.forEach((layer) => {
-            if (this.arr[layer.depth + this.min]) {
-                this.arr[layer.depth + this.min].push(layer.fn);
-            }
-            else {
-                this.arr[layer.depth + this.min] = [layer.fn];
-            }
-        });
-        return this.arr;
-    }
-    reset() {
-        this.arr = [];
-        this.temp = [];
-    }
-}
-class Layer {
-    constructor(depth, fn) {
-        this.depth = depth;
-        this.fn = fn;
-    }
-}
-class Compiler {
-    constructor() { }
-    ;
-    compile(layers) {
-        layers.arr.forEach((layer) => {
-            layer.forEach((fn) => {
-                fn();
-            });
-        });
-    }
-}
-
 class Actor {
     constructor() {
         this.x = 0;
@@ -189,6 +68,127 @@ class Loop {
     }
 }
 
+// name: "display"
+// desc: "..."
+// expr: Viewport, Compiler, Layers
+class Viewport {
+    constructor(id, main) {
+        this.element = document.getElementById(id);
+        this.context = this.element.getContext("2d");
+        this.isMain = main;
+        this.scale = new Vector(1, 1);
+        this.size = new Vector(this.element.width, this.element.height);
+    }
+    resize(size) {
+        this.element.width = size.x;
+        this.element.height = size.y;
+        this.size = new Vector(size.x, size.y);
+        for (let i in [0, 1]) {
+            WINDOW.setSize(size.x, size.y, true);
+        }
+    }
+}
+class Layers {
+    constructor() {
+        this.arr = [];
+        this.temp = [];
+        this.min = 0;
+    }
+    insert(layer) {
+        if (layer.depth < this.min) {
+            this.min = layer.depth;
+        }
+        this.temp.push(layer);
+    }
+    finalize() {
+        this.temp.forEach((layer) => {
+            if (this.arr[layer.depth + this.min]) {
+                this.arr[layer.depth + this.min].push(layer.fn);
+            }
+            else {
+                this.arr[layer.depth + this.min] = [layer.fn];
+            }
+        });
+        return this.arr;
+    }
+    reset() {
+        this.arr = [];
+        this.temp = [];
+    }
+}
+class Layer {
+    constructor(depth, fn) {
+        this.depth = depth;
+        this.fn = fn;
+    }
+}
+class Compiler {
+    constructor() { }
+    ;
+    compile(layers) {
+        layers.arr.forEach((layer) => {
+            layer.forEach((fn) => {
+                fn();
+            });
+        });
+    }
+}
+
+class Background {
+    constructor(imgname, type, color = "white") {
+        this.img = img[imgname];
+        this.types = ["solid", "single", "fullscreen", "tiled"];
+        this.type = (() => {
+            //@ts-ignore
+            if (this.types.includes(type)) {
+                return type;
+            }
+            return "solid";
+        })();
+        this.color = color;
+        this.x = 0;
+        this.y = 0;
+        this.scale = new Vector(1, 1);
+        this.off = new Vector();
+        this.spd = new Vector();
+    }
+    draw() {
+        if (this.type == "tiled") {
+            let goff = new Vector((camera.pos.x / this.img.width - Math.floor(camera.pos.x / this.img.width)) * this.img.width, (camera.pos.y / this.img.height - Math.floor(camera.pos.y / this.img.height)) * this.img.height);
+            for (let i = -2; i < Math.floor(vport.size.x / (this.img.width * this.scale.x)) + 2; i++) {
+                for (let e = -2; e < Math.floor(vport.size.y / (this.img.height * this.scale.y)) + 2; e++) {
+                    ctx.drawImage(this.img, i * this.img.width * this.scale.x + camera.pos.x - goff.x + this.off.x, e * this.img.height * this.scale.y + camera.pos.y - goff.y + this.off.y, this.img.width * this.scale.x, this.img.height * this.scale.y);
+                }
+            }
+        }
+        else if (this.type == "fullscreen") {
+            ctx.drawImage(this.img, 0, 0, vport.size.x, vport.size.y);
+        }
+        else if (this.type == "solid") {
+            ctx.save();
+            ctx.fillStyle = this.color;
+            ctx.fillRect(0, 0, vport.size.x, vport.size.y);
+            ctx.restore();
+        }
+    }
+    update() {
+        this.off.x = wrap(this.off.x + this.spd.x, 0, this.img.width * this.scale.x);
+        this.off.y = wrap(this.off.y + this.spd.y, 0, this.img.height * this.scale.y);
+    }
+    setScale(scale) {
+        this.scale = scale;
+    }
+    setScroll(spd) {
+        this.spd = spd;
+    }
+}
+
+
+class Camera {
+    constructor() {
+        this.pos = new Vector();
+    }
+}
 
 function getLoadAnim() {
     let i0 = $MAIN.logo.parts[0];
@@ -336,6 +336,27 @@ class MCompiler extends Compiler {
     }
 }
 
+class Sprite {
+    constructor(imgname, len = 1, fps) {
+        this.img = img[imgname];
+        this.len = len;
+        this.index = 0;
+        this.width = this.img.width / len;
+        this.fps = fps;
+        this.loop = new Loop(() => {
+            this.index = wrap_np(this.index + 1, 0, this.len - 1);
+        }, this.fps);
+    }
+    update() {
+        if (this.fps != 0) {
+            this.loop.update();
+        }
+    }
+    draw(pos, size) {
+        ctx.drawImage(this.img, this.index * this.width, 0, this.width, this.img.height, pos.x - size.x / 2, pos.y - size.y / 2, size.x, size.y);
+    }
+}
+
 function clamp(val, min, max) {
     if (val < min) {
         return min;
@@ -384,27 +405,6 @@ function approach(val, val2, amt) {
     }
     else {
         return clamp(val + amt, val, val2);
-    }
-}
-
-class Sprite {
-    constructor(imgname, len = 1, fps) {
-        this.img = img[imgname];
-        this.len = len;
-        this.index = 0;
-        this.width = this.img.width / len;
-        this.fps = fps;
-        this.loop = new Loop(() => {
-            this.index = wrap_np(this.index + 1, 0, this.len - 1);
-        }, this.fps);
-    }
-    update() {
-        if (this.fps != 0) {
-            this.loop.update();
-        }
-    }
-    draw(pos, size) {
-        ctx.drawImage(this.img, this.index * this.width, 0, this.width, this.img.height, pos.x - size.x / 2, pos.y - size.y / 2, size.x, size.y);
     }
 }
 
