@@ -10,7 +10,7 @@ const r0 = new Scene(
         bck.main.setScroll(new Vector(5,5));
     },
     () => {},
-    15
+    60
 )
 
 GAME.onload = function() {

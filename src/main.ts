@@ -148,7 +148,6 @@ $MAIN.onload = function() {
     document.addEventListener("mousedown", Key.mousedown);
     document.addEventListener("mouseup", Key.mouseup);
     GAME.onload();
-    resume();
 }
 
 $MAIN.tick = function():void {
