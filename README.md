@@ -12,7 +12,7 @@
   
     Git + Git Bash
 
-# _Installation guidel_:
+# _Installation guide_:
     
   Create a folder and open **_git bash_** in it, then run these commands
 
