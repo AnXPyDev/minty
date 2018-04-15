@@ -12,7 +12,7 @@
 
     npm
   
-    Git Bash
+    Git + Git Bash
 
 # How to install:
     
