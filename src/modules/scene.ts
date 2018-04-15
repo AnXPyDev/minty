@@ -20,6 +20,7 @@ class Scene {
     load():void {
         this.onbeforeload();
         scene = this;
+        pause();
         let insKeys:string[] = Object.keys(ins);
         for(let i in ins) {
             for(let e in ins[i]) {
@@ -44,6 +45,8 @@ class Scene {
             //@ts-ignore
             bck[bckKeys[i]] = new Background(...pho);
         }
+        $MAIN.titleupdateloop.tps = Math.floor(this.tps / 4);
+        resume(this.tps);
         this.onload();
     }
 

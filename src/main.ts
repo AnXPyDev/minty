@@ -44,7 +44,7 @@ function pause():void {
 
 function resume(tps:number = scene.tps):void {
     //@ts-ignore
-    $MAIN.mainloop = setInterval($MAIN.tick, 1000 / 60);
+    $MAIN.mainloop = setInterval($MAIN.tick, 1000 / tps);
 }
 
 // @ts-ignore
@@ -61,6 +61,7 @@ const $MAIN:{
     onload:() => void,
     tick:() => void,
     draw:() => void,
+    titleupdateloop:Loop,
     load:{
         all:number,
         done:number,
@@ -71,13 +72,13 @@ const $MAIN:{
         loading:() => boolean
     },
     fps:{
-        last:Date,
-        now:Date,
+        last:number,
+        now:number,
         total:number
     },
     tps:{
-        last:Date,
-        now:Date,
+        last:number,
+        now:number,
         total:number
     }
 } = {};
@@ -125,6 +126,14 @@ $MAIN.mLAY = new Layers;
 
 $MAIN.loadanim = getLoadAnim();
 
+$MAIN.titleupdateloop = new Loop(
+    function() {
+        if ($MAIN.cfg.developer) {
+            WINDOW.setTitle("MINTY-electron   " + $MAIN.cfg.version + "   fps: " + $MAIN.fps.total + "   tps: " + $MAIN.tps.total);
+        }
+    },15
+)
+
 $MAIN.onload = function() {
     vport = new Viewport("c0", true);
     ctx = vport.context;
@@ -158,20 +167,20 @@ $MAIN.tick = function():void {
     }
     $MAIN.cLAY.finalize();
     $MAIN.mLAY.finalize();
-    $MAIN.tps.now = new Date();
-    //@ts-ignore
+    $MAIN.tps.now = Date.now();
     $MAIN.tps.total = Math.floor(1000 / ($MAIN.tps.now - $MAIN.tps.last));
+    $MAIN.titleupdateloop.update();
 }
 
 $MAIN.fps = {
-    last: new Date(),
-    now: new Date(),
+    last: 0,
+    now: 0,
     total: 0
 }
 
 $MAIN.tps = {
-    last: new Date(),
-    now: new Date(),
+    last: 0,
+    now: 0,
     total: 0
 }
 
@@ -193,20 +202,9 @@ $MAIN.draw = function() {
     if (!$MAIN.load.doneanim) {
         $MAIN.loadanim();
     }
-    if ($MAIN.cfg.developer) {
-        ctx.fillStyle = "black";
-        ctx.textAlign = "left";
-        ctx.font = "15px Arial";
-        ctx.fillText($MAIN.cfg.name, 5, 15);
-        ctx.fillText($MAIN.cfg.version, 5, 35);
-        //@ts-ignore
-        ctx.fillText("fps: " + $MAIN.fps.total, 5, 55);
-        //@ts-ignore
-        ctx.fillText("tps: " + $MAIN.tps.total, 5, 75);
-    }
     ctx.restore();
     requestAnimationFrame($MAIN.draw);
-    $MAIN.fps.now = new Date();
+    $MAIN.fps.now = Date.now();
     //@ts-ignore
     $MAIN.fps.total = Math.floor(1000 / ($MAIN.fps.now - $MAIN.fps.last));
 }
