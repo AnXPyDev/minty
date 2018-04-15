@@ -21,7 +21,11 @@
     $ git clone https://github.com/AnXPyDev/MINTY-electron.git
   
     $ cd ./MINTY-electron
-  
+    
+    $ npm install 
+    
+    $ npm i -g typescript
+    
     $ sh build.sh
   
     $ sh run.sh
