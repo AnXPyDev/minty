@@ -7,7 +7,7 @@ const r0 = new Scene(
     },
     () => {
         bck.main.setScale(new Vector(1,1));
-        bck.main.setScroll(new Vector(5,5));
+        bck.main.setScroll(new Vector(1,1));
     },
     () => {},
     60

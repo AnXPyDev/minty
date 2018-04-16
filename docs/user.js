@@ -117,12 +117,6 @@ class Background {
     }
 }
 
-class Camera {
-    constructor() {
-        this.pos = new Vector();
-    }
-}
-
 // name: "display"
 // desc: "..."
 // expr: Viewport, Compiler, Layers
@@ -189,6 +183,12 @@ class Compiler {
     }
 }
 
+
+class Camera {
+    constructor() {
+        this.pos = new Vector();
+    }
+}
 
 obtain("../build/modules/display.js");
 obtain("../build/modules/math.js");

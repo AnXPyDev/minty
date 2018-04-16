@@ -1,0 +1,44 @@
+<head>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            background-color: white;
+        }
+    </style>
+    
+</head>
+
+<body>
+    <canvas id = "c" width = 400 height = 400></canvas>
+    <script>
+            const i = [
+                new Image(), new Image()
+            ]
+            i[0].src = "../icon/parts/1.svg";
+            i[1].src = "../icon/parts/2.svg";
+    
+            const c = document.getElementById("c");
+            const ctx = c.getContext("2d");
+            ctx.fillStyle = "white";
+    
+            let sz = 0;
+            let angle = 0;
+        
+            function draw() {
+                angle = 2 * Math.PI * Math.sin(new Date() / 1000);
+                sz = c.width / 3 * 2;
+                ctx.fillRect(0,0,c.width,c.height);
+                ctx.save();
+                ctx.translate(c.width / 2, c.height / 2);
+                ctx.rotate(angle);
+                ctx.drawImage(i[0], -sz / 2, -sz / 2, sz, sz);
+                ctx.rotate(-angle * 2);
+                ctx.drawImage(i[1], -sz / 2, -sz / 2, sz, sz);
+                ctx.restore();
+                requestAnimationFrame(draw);
+            }
+            requestAnimationFrame(draw);
+    
+        </script>
+</body>
