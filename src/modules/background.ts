@@ -3,6 +3,8 @@ class Background {
     public img:HTMLImageElement;
     public color:string;
     public x:number;y:number;
+    public depth:number;
+    public alpha:number;
     public scale:Vector;
     public off:Vector;
     public spd:Vector;
@@ -24,8 +26,12 @@ class Background {
         this.scale = new Vector(1,1);
         this.off = new Vector();
         this.spd = new Vector();
+        this.depth = -15;
+        this.alpha = 1;
     }
     draw():void {
+        ctx.save();
+        ctx.globalAlpha = this.alpha;
         if(this.type == "tiled") {
             let goff:Vector = new Vector(
                     (camera.pos.x / this.img.width - Math.floor(camera.pos.x / this.img.width)) * this.img.width,
@@ -48,10 +54,12 @@ class Background {
             ctx.fillRect(0, 0, vport.size.x, vport.size.y);
             ctx.restore();
         }
+        ctx.restore();
     }
     update():void {
         this.off.x = wrap(this.off.x + this.spd.x, 0, this.img.width * this.scale.x);
         this.off.y = wrap(this.off.y + this.spd.y, 0, this.img.height * this.scale.y);
+        $MAIN.cLAY.insert(new Layer(this.depth, () => {return this.draw()}));
     }
     setScale(scale:Vector):void {
         this.scale = scale;

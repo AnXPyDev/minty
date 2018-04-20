@@ -73,7 +73,12 @@ class Angle {
     }
 }
 
+function v(x:number = 0, y:number = 0):Vector {
+    return new Vector(x,y);
+}
+
 module.exports = {
     Vector:Vector,
-    Angle:Angle
+    Angle:Angle,
+    v:v
 }

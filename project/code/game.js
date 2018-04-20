@@ -6,8 +6,8 @@ const r0 = new Scene(
         main: ["bck", "tiled"]
     },
     () => {
-        bck.main.setScale(new Vector(1,1));
-        bck.main.setScroll(new Vector(1,1));
+        bck.main.spd = v(5,5);
+        bck.main.scale = v(2,2);
     },
     () => {},
     60

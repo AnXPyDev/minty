@@ -110,7 +110,7 @@ let ctx:CanvasRenderingContext2D;
 
 const act:any = {};
 const cfg:any = {};
-const img:any = {};
+const img:any = {noimage:new Image()};
 const snd:any = {};
 
 let bck:any = {};
@@ -192,9 +192,6 @@ $MAIN.draw = function() {
     ctx.restore();
     ctx.save();
     ctx.translate(-camera.pos.x, -camera.pos.y)
-    for(let i in bck) {
-        bck[i].draw();
-    }
     $MAIN.cAPI.compile($MAIN.cLAY);
     ctx.restore();
     ctx.save();

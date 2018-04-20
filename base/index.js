@@ -9,7 +9,7 @@ var win, splash;
 function createWindow () {
     // Create the browser window.
     console.log(app.getAppPath());
-    win = new BrowserWindow({width: 800, height: 600, icon: "./icon/minty.svg.png", useContentSize: true});
+    win = new BrowserWindow({width: 800, height: 600, icon: "./icon/minty.svg.png", useContentSize: true, show: false});
     splash = new BrowserWindow({width: 400, height: 400 , transparent: true, useContentSize:true, center: true, frame: false, alwaysOnTop:true});
     splash.setMenu(null);
     win.setMenu(null);
@@ -25,13 +25,13 @@ function createWindow () {
     win.setResizable(false);
     globalShortcut.register('F5', function() {
         win.reload();
-        splash.close();
     });
     globalShortcut.register('F6', function() {
 		exec("sh build.sh", () => {console.log("Rebuilt the engine, press F5 to apply changes")});
     });
-    win.once("ready", () => {
+    win.once("ready-to-show", () => {
         splash.close();
+        win.show();
     });
 }
 

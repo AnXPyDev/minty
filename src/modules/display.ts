@@ -47,10 +47,10 @@ class Layers {
 
     finalize():(() => void)[][] {
         this.temp.forEach((layer:Layer) => {
-            if (this.arr[layer.depth + this.min]) {
-                this.arr[layer.depth + this.min].push(layer.fn);
+            if (this.arr[layer.depth - this.min]) {
+                this.arr[layer.depth - this.min].push(layer.fn);
             } else {
-                this.arr[layer.depth + this.min] = [layer.fn];
+                this.arr[layer.depth - this.min] = [layer.fn];
             }
         })
         
@@ -60,6 +60,7 @@ class Layers {
     reset():void {
         this.arr = [];
         this.temp = [];
+        this.min = 0;
     }
 }
 
