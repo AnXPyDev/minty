@@ -3,6 +3,9 @@
     const endFile = "./docs/user.js";
     var doc = "";
     
+    if (!fs.existsSync("./docs")){
+        fs.mkdirSync("./docs");
+    }
 
     fs.readdir("./build/modules", (err, files) => {
         let a = 0;
