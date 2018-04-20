@@ -1,73 +1,4 @@
 
-class Actor {
-    constructor() {
-        this.x = 0;
-        this.y = 0;
-        this.id = 0;
-        this.persistant = false;
-        this.tickrate = 1;
-        this.depth = 1;
-        this.mdepth = 1;
-    }
-    tick() { }
-    draw() { }
-    update() {
-        if (tick * 100 % Math.floor(this.tickrate * 100) == 0) {
-            this.tick();
-        }
-        $MAIN.cLAY.insert(new Layer(this.depth, () => { this.draw(); }));
-        $MAIN.mLAY.insert(new Layer(this.mdepth, () => { return this.mousedown(); }));
-    }
-    mousedown() {
-        return false;
-    }
-}
-const Instance = {
-    spawn(name, Args) {
-        let id = ins[name].length;
-        let pho = new act[name](...Args);
-        pho.id = id;
-        ins[name].push(pho);
-        return id;
-    },
-    destroy(name, id) {
-        delete ins[name][id];
-        for (let i = id; i < ins[name].length; i++) {
-            ins[name][i].id--;
-        }
-    },
-    mod(name, merge, id = "") {
-        if (typeof id == "number") {
-            //@ts-ignore
-            Object.assign(ins[name][id], merge);
-        }
-        else {
-            for (let i in ins[name]) {
-                //@ts-ignore
-                Object.assign(ins[name][i], merge);
-            }
-        }
-    },
-    get(name, id) {
-        return ins[name][id];
-    }
-};
-function def(name, actor) {
-    act[name] = actor;
-    ins[name] = [];
-}
-class Loop {
-    constructor(callback, tps) {
-        this.tps = tps;
-        this.callback = callback;
-    }
-    update() {
-        if (tick % this.tps == 0) {
-            this.callback();
-        }
-    }
-}
-
 class Background {
     constructor(imgname, type, color = "white") {
         this.img = img[imgname];
@@ -190,12 +121,81 @@ class Compiler {
     }
 }
 
+class Actor {
+    constructor() {
+        this.x = 0;
+        this.y = 0;
+        this.id = 0;
+        this.persistant = false;
+        this.tickrate = 1;
+        this.depth = 1;
+        this.mdepth = 1;
+    }
+    tick() { }
+    draw() { }
+    update() {
+        if (tick * 100 % Math.floor(this.tickrate * 100) == 0) {
+            this.tick();
+        }
+        $MAIN.cLAY.insert(new Layer(this.depth, () => { this.draw(); }));
+        $MAIN.mLAY.insert(new Layer(this.mdepth, () => { return this.mousedown(); }));
+    }
+    mousedown() {
+        return false;
+    }
+}
+const Instance = {
+    spawn(name, Args) {
+        let id = ins[name].length;
+        let pho = new act[name](...Args);
+        pho.id = id;
+        ins[name].push(pho);
+        return id;
+    },
+    destroy(name, id) {
+        delete ins[name][id];
+        for (let i = id; i < ins[name].length; i++) {
+            ins[name][i].id--;
+        }
+    },
+    mod(name, merge, id = "") {
+        if (typeof id == "number") {
+            //@ts-ignore
+            Object.assign(ins[name][id], merge);
+        }
+        else {
+            for (let i in ins[name]) {
+                //@ts-ignore
+                Object.assign(ins[name][i], merge);
+            }
+        }
+    },
+    get(name, id) {
+        return ins[name][id];
+    }
+};
+function def(name, actor) {
+    act[name] = actor;
+    ins[name] = [];
+}
+class Loop {
+    constructor(callback, tps) {
+        this.tps = tps;
+        this.callback = callback;
+    }
+    update() {
+        if (tick % this.tps == 0) {
+            this.callback();
+        }
+    }
+}
 
 class Camera {
     constructor() {
         this.pos = new Vector();
     }
 }
+
 
 obtain("../build/modules/display.js");
 obtain("../build/modules/math.js");
@@ -242,42 +242,6 @@ class MCompiler extends Compiler {
             }
         }
     }
-}
-
-function getLoadAnim() {
-    let i0 = $MAIN.logo.parts[0];
-    let angle = 0;
-    let i1 = $MAIN.logo.parts[1];
-    let szm = 6;
-    let alpha = 1;
-    return function () {
-        ctx.save();
-        if ($MAIN.load.done == $MAIN.load.all) {
-            alpha -= 0.01;
-            if (alpha <= 0) {
-                $MAIN.load.doneanim = true;
-            }
-        }
-        alpha = clamp(alpha, 0, 1);
-        let vsz = vport.size;
-        let sz = (Math.min(vsz.x, vsz.y) / 3) * 2 / szm;
-        ctx.globalAlpha = alpha;
-        ctx.fillStyle = "white";
-        ctx.fillRect(0, 0, vsz.x, vsz.y);
-        ctx.translate(vsz.x / szm * (szm - 1), vsz.y / szm * (szm - 1));
-        //@ts-ignore
-        angle = 2 * Math.PI * Math.sin(new Date() / 1000);
-        //if (angle < -2 * Math.PI) {angle = 0};
-        ctx.save();
-        ctx.rotate(angle);
-        ctx.drawImage(i0, -sz / 2, -sz / 2, sz, sz);
-        ctx.restore();
-        ctx.save();
-        ctx.rotate(-angle);
-        ctx.drawImage(i1, -sz / 2, -sz / 2, sz, sz);
-        ctx.restore();
-        ctx.restore();
-    };
 }
 
 // name: "math"
@@ -346,53 +310,40 @@ function v(x = 0, y = 0) {
     return new Vector(x, y);
 }
 
-class Scene {
-    constructor(act, bck, onload, onbeforeload, tps = 60) {
-        this.index = 0;
-        this.onload = onload;
-        this.onbeforeload = onbeforeload;
-        this.act = act;
-        this.bck = bck;
-        this.tps = tps;
-        this.next = null;
-    }
-    load() {
-        this.onbeforeload();
-        scene = this;
-        pause();
-        let insKeys = Object.keys(ins);
-        for (let i in ins) {
-            for (let e in ins[i]) {
-                if (!ins[i][e].persistant) {
-                    //@ts-ignore
-                    Instance.destroy(insKeys[i], e);
-                }
+function getLoadAnim() {
+    let i0 = $MAIN.logo.parts[0];
+    let angle = 0;
+    let i1 = $MAIN.logo.parts[1];
+    let szm = 6;
+    let alpha = 1;
+    return function () {
+        ctx.save();
+        if ($MAIN.load.done == $MAIN.load.all) {
+            alpha -= 0.01;
+            if (alpha <= 0) {
+                $MAIN.load.doneanim = true;
             }
         }
-        let actKeys = Object.keys(this.act);
-        for (let i in actKeys) {
-            for (let e in this.act[actKeys[i]]) {
-                Instance.spawn(actKeys[i], this.act[actKeys[i]][e]);
-            }
-        }
-        bck = {};
-        let bckKeys = Object.keys(this.bck);
-        for (let i in bckKeys) {
-            let pho = this.bck[bckKeys[i]];
-            //@ts-ignore
-            bck[bckKeys[i]] = new Background(...pho);
-        }
-        $MAIN.titleupdateloop.tps = Math.floor(this.tps / 4);
-        resume(this.tps);
-        this.onload();
-    }
-    setNext(scene) {
-        this.next = scene;
-    }
-    loadnext() {
+        alpha = clamp(alpha, 0, 1);
+        let vsz = vport.size;
+        let sz = (Math.min(vsz.x, vsz.y) / 3) * 2 / szm;
+        ctx.globalAlpha = alpha;
+        ctx.fillStyle = "white";
+        ctx.fillRect(0, 0, vsz.x, vsz.y);
+        ctx.translate(vsz.x / szm * (szm - 1), vsz.y / szm * (szm - 1));
         //@ts-ignore
-        this.next.load();
-    }
+        angle = 2 * Math.PI * Math.sin(new Date() / 1000);
+        //if (angle < -2 * Math.PI) {angle = 0};
+        ctx.save();
+        ctx.rotate(angle);
+        ctx.drawImage(i0, -sz / 2, -sz / 2, sz, sz);
+        ctx.restore();
+        ctx.save();
+        ctx.rotate(-angle);
+        ctx.drawImage(i1, -sz / 2, -sz / 2, sz, sz);
+        ctx.restore();
+        ctx.restore();
+    };
 }
 
 function clamp(val, min, max) {
@@ -464,5 +415,54 @@ class Sprite {
     }
     draw(pos, size) {
         ctx.drawImage(this.img, this.index * this.width, 0, this.width, this.img.height, pos.x - size.x / 2, pos.y - size.y / 2, size.x, size.y);
+    }
+}
+
+class Scene {
+    constructor(act, bck, onload, onbeforeload, tps = 60) {
+        this.index = 0;
+        this.onload = onload;
+        this.onbeforeload = onbeforeload;
+        this.act = act;
+        this.bck = bck;
+        this.tps = tps;
+        this.next = null;
+    }
+    load() {
+        this.onbeforeload();
+        scene = this;
+        pause();
+        let insKeys = Object.keys(ins);
+        for (let i in ins) {
+            for (let e in ins[i]) {
+                if (!ins[i][e].persistant) {
+                    //@ts-ignore
+                    Instance.destroy(insKeys[i], e);
+                }
+            }
+        }
+        let actKeys = Object.keys(this.act);
+        for (let i in actKeys) {
+            for (let e in this.act[actKeys[i]]) {
+                Instance.spawn(actKeys[i], this.act[actKeys[i]][e]);
+            }
+        }
+        bck = {};
+        let bckKeys = Object.keys(this.bck);
+        for (let i in bckKeys) {
+            let pho = this.bck[bckKeys[i]];
+            //@ts-ignore
+            bck[bckKeys[i]] = new Background(...pho);
+        }
+        $MAIN.titleupdateloop.tps = Math.floor(this.tps / 4);
+        resume(this.tps);
+        this.onload();
+    }
+    setNext(scene) {
+        this.next = scene;
+    }
+    loadnext() {
+        //@ts-ignore
+        this.next.load();
     }
 }
