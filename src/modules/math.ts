@@ -47,7 +47,7 @@ class Angle {
         }(this.default);
         this.rad = function(type:string):number {
             if (type == "deg") {
-                return value * Math.PI / 180;
+                return value / 180 * Math.PI;
             }
             return value;
         }(this.default);
@@ -96,13 +96,34 @@ class Angle {
     between(v1:Vector, v2:Vector):void {
         this.set(Math.atan2(v1.y - v2.y, v1.x - v2.x), "rad");
     }
+    
+    interpolate(angle:Angle, amt:number):void {
+        let ang = [Math.max(this.deg, angle.deg), Math.min(this.deg, angle.deg)];
+        let alpha = 360 - ang[0] + ang[1];
+        let beta = ang[0] - ang[1];
+        if (alpha < beta) {
+            if (this.deg < 180) {
+                this.set(wrap(lerp(this.deg, this.deg - alpha, amt), 0, 360), "deg");
+            } else {
+                this.set(wrap(lerp(this.deg, this.deg + alpha, amt), 0, 360), "deg");
+            }
+        } else {
+            this.set(lerp(this.deg, angle.deg, amt), "deg");
+        }
+    }
 }
 
 class Polygon {
     public val:Vector[]
     constructor(type:string = "rect") {
         this.val = [];
-
+    }
+    edit(callback:(x:Vector) => Vector):void {
+        let temp = this.val;
+        for(let i in temp) {
+            temp[i] = callback(temp[i]);
+        }
+        this.val = temp;
     }
 }
 
