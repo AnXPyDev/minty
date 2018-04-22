@@ -1,3 +1,5 @@
+import { runInThisContext } from "vm";
+
 // name: "math"
 // desc: "..."
 // exports: Vector 
@@ -17,8 +19,10 @@ class Vector {
     rotate(angle:Angle) {
         let sin:number = Math.sin(angle.rad);
         let cos:number = Math.cos(angle.rad);
-        this.x = ((this.x - this.origin.x) * cos - (this.y - this.origin.y) * sin) + this.origin.x;
-        this.x = ((this.x - this.origin.x) * sin + (this.y - this.origin.y) * cos) + this.origin.x;
+        let x = this.x - this.origin.x;
+        let y = this.y - this.origin.y;
+        this.x = (x * cos - y * sin) + this.origin.x;
+        this.y = (x * sin + y * cos) + this.origin.y;
     }   
 
     setorigin(v:Vector) {
@@ -144,10 +148,12 @@ class Polygon {
 
     center(origin:Vector = new Vector()):void {
         this.edit(vec => {
-            return v(
+            let pho = v(
                 vec.x - this.offset.x + origin.x,
                 vec.y - this.offset.y + origin.y
             )
+            pho.setorigin(this.offset);
+            return pho;
         })
         this.grabinfo();
     }
@@ -155,8 +161,9 @@ class Polygon {
     rotate(angle:Angle):void {
         this.edit(vec => {
             let pho = vec;
+            pho.setorigin(this.offset);
             pho.rotate(angle);
-            return vec;
+            return pho;
         })
     }
 
@@ -181,6 +188,52 @@ class Polygon {
     }
 
     collides(poly:Polygon):boolean {
+        let isUndefined = (x:any) => x == null;
+        let a:Vector[] = this.val;
+        let b:Vector[] = poly.val;
+        var polygons = [this.val, poly.val];
+        var minA, maxA, projected, i, i1, j, minB, maxB;
+        for (i = 0; i < polygons.length; i++) {
+            var polygon = polygons[i];
+            for (i1 = 0; i1 < polygon.length; i1++) {
+                var i2 = (i1 + 1) % polygon.length;
+                var p1 = polygon[i1];
+                var p2 = polygon[i2];
+                var normal = { x: p2.y - p1.y, y: p1.x - p2.x };
+                minA = maxA = undefined;
+                //@ts-ignore
+                for (j = 0; j < a.length; j++) {
+                    //@ts-ignore
+                    projected = normal.x * a[j].x + normal.y * a[j].y;
+                    //@ts-ignore
+                    if (isUndefined(minA) || projected < minA) {
+                        minA = projected;
+                    }
+                    //@ts-ignore
+                    if (isUndefined(maxA) || projected > maxA) {
+                        maxA = projected;
+                    }
+                }
+                minB = maxB = undefined;
+                //@ts-ignore
+                for (j = 0; j < b.length; j++) {
+                    //@ts-ignore
+                    projected = normal.x * b[j].x + normal.y * b[j].y;
+                    //@ts-ignore
+                    if (isUndefined(minB) || projected < minB) {
+                        minB = projected;
+                    }
+                    //@ts-ignore
+                    if (isUndefined(maxB) || projected > maxB) {
+                        maxB = projected;
+                    }
+                }
+                //@ts-ignore
+                if (maxA < minB || maxB < minA) {
+                    return false;
+                }
+            }
+        }
         return true;
     }
 
@@ -208,6 +261,22 @@ class Polygon {
         })();
     }
 
+    draw(fill:string = "lightblue", stroke:string = "blue") {
+        ctx.save();
+        ctx.beginPath()
+        ctx.moveTo(this.val[0].x, this.val[1].y);
+        for(let i = 0; i < this.val.length; i++) {
+            ctx.lineTo(this.val[i].x, this.val[i].y);
+    
+        }
+        ctx.closePath();
+        ctx.strokeStyle = stroke;
+        ctx.fillStyle = fill;
+        ctx.fill();
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.restore();
+    }
 
 }
 

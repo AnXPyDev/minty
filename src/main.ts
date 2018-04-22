@@ -1,10 +1,7 @@
 function obtain(path:string, scope:any = null):void {
-    // @ts-ignore
     if(scope != null) {
-        // @ts-ignore
         Object.assign(scope, require(path));
     } else {
-        // @ts-ignore
         Object.assign(window, require(path)); 
     }
 }
