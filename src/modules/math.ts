@@ -114,16 +114,47 @@ class Angle {
 }
 
 class Polygon {
-    public val:Vector[]
+    public val:Vector[];
+    public offset:Vector;
+
     constructor(type:string = "rect") {
         this.val = [];
+        this.offset = v();
     }
+
+    set(polygon:number[][]) {
+        let temp:Vector[] = [];
+        polygon.forEach(x => {
+            temp.push(new Vector(...x))
+        })
+        this.val = temp;
+        this.grabinfo();
+        this.center();
+    }
+    
     edit(callback:(x:Vector) => Vector):void {
         let temp = this.val;
         for(let i in temp) {
             temp[i] = callback(temp[i]);
         }
         this.val = temp;
+    }
+
+    center(origin:Vector = new Vector):void {
+        
+    }
+
+    grabinfo():void {
+        let x:number[] = [];
+        let y:number[] = [];
+        this.val.forEach(v => {
+            x.push(v.x);
+            y.push(v.y);
+        })
+        this.offset = v(
+            Math.max(...x) - Math.min(...x),
+            Math.max(...y) - Math.min(...y)
+        )
     }
 }
 
@@ -136,3 +167,4 @@ module.exports = {
     Angle:Angle,
     v:v
 }
+
