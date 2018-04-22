@@ -77,10 +77,10 @@ class Angle {
         return value;
     }
 
-    get():number {
-        if (this.default == "rad") {
+    get(type:string = this.default):number {
+        if (type == "rad") {
             return this.rad;
-        } else if (this.default == "deg") {
+        } else if (type == "deg") {
             return this.deg;
         }
         return 1;
@@ -116,13 +116,15 @@ class Angle {
 class Polygon {
     public val:Vector[];
     public offset:Vector;
+    public corner:{min:Vector, max:Vector};
 
     constructor(type:string = "rect") {
         this.val = [];
         this.offset = v();
+        this.corner = {min:v(), max:v()};
     }
 
-    set(polygon:number[][]) {
+    set(polygon:number[][]):void {
         let temp:Vector[] = [];
         polygon.forEach(x => {
             temp.push(new Vector(...x))
@@ -132,7 +134,7 @@ class Polygon {
         this.center();
     }
     
-    edit(callback:(x:Vector) => Vector):void {
+    edit(callback:(vec:Vector) => Vector):void {
         let temp = this.val;
         for(let i in temp) {
             temp[i] = callback(temp[i]);
@@ -140,22 +142,73 @@ class Polygon {
         this.val = temp;
     }
 
-    center(origin:Vector = new Vector):void {
-        
+    center(origin:Vector = new Vector()):void {
+        this.edit(vec => {
+            return v(
+                vec.x - this.offset.x + origin.x,
+                vec.y - this.offset.y + origin.y
+            )
+        })
+        this.grabinfo();
+    }
+
+    rotate(angle:Angle):void {
+        this.edit(vec => {
+            let pho = vec;
+            pho.rotate(angle);
+            return vec;
+        })
+    }
+
+    size(size:Vector):void {
+        let sz:Vector = v(
+            this.corner.max.x - this.corner.min.x,
+            this.corner.max.y - this.corner.min.y
+        );
+        this.scale(v(
+            size.x / sz.x,
+            size.y / sz.y
+        ))
+    }
+
+    scale(scale:Vector):void {
+        this.center();
+        this.edit(vec => {
+            return v(vec.x * scale.x, vec.y * scale.y);
+        })
+        this.center(this.offset);
+        this.grabinfo();
+    }
+
+    collides(poly:Polygon):boolean {
+        return true;
     }
 
     grabinfo():void {
-        let x:number[] = [];
-        let y:number[] = [];
-        this.val.forEach(v => {
-            x.push(v.x);
-            y.push(v.y);
-        })
-        this.offset = v(
-            Math.max(...x) - Math.min(...x),
-            Math.max(...y) - Math.min(...y)
-        )
+        (() => {
+            let x:number[] = [];
+            let y:number[] = [];
+            this.val.forEach(v => {
+                x.push(v.x);
+                y.push(v.y);
+            })
+            let min:Vector = v(Math.min(...x), Math.min(...y));
+            let max:Vector = v(Math.max(...x), Math.max(...y));
+            this.corner.min = min;
+            this.corner.max = max;
+            this.offset = v(
+                min.x + (max.x - min.x) / 2,
+                min.y + (max.y - min.y) / 2
+            )
+            this.edit(vec => {
+                let pho = vec;
+                pho.setorigin(this.offset);
+                return pho;
+            })
+        })();
     }
+
+
 }
 
 function v(x:number = 0, y:number = 0):Vector {
@@ -165,6 +218,7 @@ function v(x:number = 0, y:number = 0):Vector {
 module.exports = {
     Vector:Vector,
     Angle:Angle,
+    Polygon:Polygon,
     v:v
 }
 
