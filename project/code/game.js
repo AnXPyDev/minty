@@ -37,7 +37,7 @@ def("main", class extends Actor {
         this.x = Mouse.x;
         this.y = Mouse.y;
         this.sprite.update();
-        //this.poly.center(Mouse);
+        this.poly.center(Mouse);
         console.log(this.poly.collides(this.poly1));
     }
     draw() {

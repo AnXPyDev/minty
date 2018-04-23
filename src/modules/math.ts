@@ -262,7 +262,7 @@ class Polygon {
     draw(fill:string = "lightblue", stroke:string = "blue") {
         ctx.save();
         ctx.beginPath()
-        ctx.moveTo(this.val[0].x, this.val[1].y);
+        ctx.moveTo(this.val[0].x, this.val[0].y);
         for(let i = 1; i < this.val.length; i++) {
             ctx.lineTo(this.val[i].x, this.val[i].y);
         }
@@ -270,7 +270,6 @@ class Polygon {
         ctx.strokeStyle = stroke;
         ctx.fillStyle = fill;
         ctx.fill();
-        ctx.lineWidth = 2;
         ctx.stroke();
         ctx.restore();
     }

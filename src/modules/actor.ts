@@ -29,7 +29,7 @@ class Actor {
     mousedown():boolean {
         return false;
     }
-}
+} 
 
 const Instance:{
     spawn:(name:string, Args:any) => number,
