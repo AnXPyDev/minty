@@ -1,5 +1,3 @@
-import { runInThisContext } from "vm";
-
 // name: "math"
 // desc: "..."
 // exports: Vector 
@@ -265,9 +263,8 @@ class Polygon {
         ctx.save();
         ctx.beginPath()
         ctx.moveTo(this.val[0].x, this.val[1].y);
-        for(let i = 0; i < this.val.length; i++) {
+        for(let i = 1; i < this.val.length; i++) {
             ctx.lineTo(this.val[i].x, this.val[i].y);
-    
         }
         ctx.closePath();
         ctx.strokeStyle = stroke;
