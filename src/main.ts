@@ -94,7 +94,7 @@ WINDOW = ELECTRON.remote.getCurrentWindow();
 
 // obtains all MAKEBA modules
 $MAIN.cfg.modules.forEach((file:string) => {
-    obtain("../build/modules/" + file + ".js");
+    obtain("../compiled/modules/" + file + ".js");
 });
 
 $MAIN.logo = new Image(); $MAIN.logo.src = "../icon/minty.svg";

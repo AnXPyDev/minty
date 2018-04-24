@@ -27,7 +27,7 @@ function createWindow () {
         win.reload();
     });
     globalShortcut.register('F6', function() {
-		exec("sh build.sh", () => {console.log("Rebuilt the engine, press F5 to apply changes")});
+		exec("sh compile.sh", () => {console.log("Rebuilt the engine, press F5 to apply changes")});
     });
     win.once("ready-to-show", () => {
         splash.close();

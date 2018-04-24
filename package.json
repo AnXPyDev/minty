@@ -4,7 +4,9 @@
   "description": "",
   "main": "./base/index.js",
   "scripts": {
-    "test": "build.ps1"
+    "package": "electron-packager .",
+    "build": "tsc",
+    "launch": "electron ."
   },
   "author": "",
   "license": "ISC",

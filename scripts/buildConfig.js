@@ -1,7 +1,7 @@
 {
     const fs = require("fs");
     const json = require("./base/refference.json");
-    fs.readdir("./build/modules", function(err, files) {
+    fs.readdir("./compiled/modules", function(err, files) {
         files.forEach(file => {
             json.modules.push(file.split(".")[0]);
         });
