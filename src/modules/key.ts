@@ -1,6 +1,6 @@
 
-obtain("../build/modules/display.js");
-obtain("../build/modules/math.js");
+obtain("../compiled/modules/display.js");
+obtain("../compiled/modules/math.js");
 
 //@ts-ignore
 const Key:{

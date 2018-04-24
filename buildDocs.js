@@ -7,10 +7,10 @@
         fs.mkdirSync("./docs");
     }
 
-    fs.readdir("./build/modules", (err, files) => {
+    fs.readdir("./compiled/modules", (err, files) => {
         let a = 0;
         files.forEach(file => {
-            fs.readFile("./build/modules/" + file, (err, data) => {
+            fs.readFile("./compiled/modules/" + file, (err, data) => {
                 a++;
                 doc += function() {
                     return data.toString().replace('"use strict";', "").split("module.exports")[0];

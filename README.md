@@ -22,9 +22,8 @@
     
     $ npm install 
     
-    $ npm i -g typescript
-    
-    $ sh build.sh
+    $ sh compile.sh
   
     $ sh run.sh
     
+# _Packaging the app_:
