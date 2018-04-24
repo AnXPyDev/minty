@@ -22,7 +22,7 @@ function createWindow () {
             win.toggleDevTools();
         });
     }
-    win.setResizable(false);
+    //win.setResizable(false);
     globalShortcut.register('F5', function() {
         win.reload();
     });

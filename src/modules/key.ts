@@ -26,8 +26,9 @@ Key.mouse = function (evt:any):void {
 }
 
 Key.mouselog = function ():void {
-    Mouse.x = MClient.x + camera.pos.x;
-    Mouse.y = MClient.y + camera.pos.y;
+    let pos = vport.element.getBoundingClientRect();
+    Mouse.x = (MClient.x - pos.x) * (1 / vport.scale.x) + camera.pos.x;
+    Mouse.y = (MClient.y - pos.y) * (1 / vport.scale.y) + camera.pos.y; 
 }
 
 Key.mousedown = function (evt:any) {

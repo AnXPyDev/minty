@@ -7,6 +7,7 @@ class Viewport {
     public context:CanvasRenderingContext2D;
     public scale:Vector;
     public size:Vector;
+    public screen:Vector;
     private isMain:boolean;
 
     constructor(id:string, main:boolean) {
@@ -15,16 +16,34 @@ class Viewport {
         this.isMain = main;
         this.scale = new Vector(1,1);
         this.size = new Vector(this.element.width, this.element.height);
+        this.screen = this.size;
     } 
 
-    resize(size:Vector):void {
+    resize(size:Vector, window:boolean = true):void {
         this.element.width = size.x;
         this.element.height = size.y;
-        this.size = new Vector(size.x, size.y);
-        for (let i in [0,1]) {
-            WINDOW.setSize(size.x, size.y, true);
-        }    
+        this.size = size;
+        this.update();
+        if (window) {
+            this.screen = size;
+            for (let i in [0,1]) {
+                WINDOW.setSize(size.x, size.y, true);
+            }    
+        }
     }
+    
+    update():void {
+        let win = WINDOW.getBounds();
+        this.screen = v(win.width, win.height);
+        if (this.screen.x > this.screen.y) {
+            this.scale = v(this.screen.y / this.size.y,this.screen.y / this.size.y);
+        } else {
+            this.scale = v(this.screen.x / this.size.x  , this.screen.x / this.size.x);
+        }
+        this.element.width = this.screen.y;
+        this.element.height = this.screen.x;
+        
+    } 
 }
 
 class Layers {
