@@ -1,18 +1,30 @@
 <head> 
     <style> 
         * { 
-            background: white; 
+            background: black; 
             margin: 0; 
             padding: 0; 
             overflow-x: hidden; 
             overflow-y: hidden; 
-            cursor: none; 
+             
         } 
+        div {
+            width:100%;
+            height:100vh;
+            position:relative;
+        }
+        canvas {
+            position:absolute;
+            top:0;bottom:0;right:0;left:0;
+            margin:auto;
+        }
     </style> 
     <script src = "../compiled/main.js"></script> 
 </head> 
  
 <body> 
-    <canvas id = "c0"></canvas> 
+    <div>
+        <canvas id = "c0"></canvas> 
+    </div>
 </body> 
  

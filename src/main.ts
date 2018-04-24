@@ -166,6 +166,7 @@ $MAIN.tick = function():void {
     $MAIN.tps.now = Date.now();
     $MAIN.tps.total = Math.floor(1000 / ($MAIN.tps.now - $MAIN.tps.last));
     $MAIN.titleupdateloop.update();
+    vport.update();
 }
 
 $MAIN.fps = {
@@ -184,6 +185,8 @@ $MAIN.tps = {
 $MAIN.draw = function() {
     $MAIN.fps.last = $MAIN.fps.now;
     ctx.save();
+    ctx.scale(vport.scale.x, vport.scale.y);
+    ctx.save();
     ctx.fillStyle = "white";
     ctx.fillRect(0 , 0, vport.size.x, vport.size.y);
     ctx.restore();
@@ -195,6 +198,7 @@ $MAIN.draw = function() {
     if (!$MAIN.load.doneanim) {
         $MAIN.loadanim();
     }
+    ctx.restore();
     ctx.restore();
     requestAnimationFrame($MAIN.draw);
     $MAIN.fps.now = Date.now();
