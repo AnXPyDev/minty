@@ -141,7 +141,7 @@ $MAIN.onload = function() {
     }
     document.addEventListener("keydown", Key.add);
     document.addEventListener("keyup", Key.remove);
-    document.addEventListener("mousemove", Key.mouse);
+    vport.element.addEventListener("mousemove", Key.mouse);
     document.addEventListener("mousedown", Key.mousedown);
     document.addEventListener("mouseup", Key.mouseup);
     GAME.onload();

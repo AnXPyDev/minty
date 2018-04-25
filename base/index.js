@@ -29,6 +29,11 @@ function createWindow () {
     globalShortcut.register('F6', function() {
 		exec("sh compile.sh", () => {console.log("Rebuilt the engine, press F5 to apply changes")});
     });
+    let fullscreen = false;
+    globalShortcut.register('F11', () => {
+        win.setFullScreen(!fullscreen);
+        fullscreen = !fullscreen;
+    })
     win.once("ready-to-show", () => {
         splash.close();
         win.show();

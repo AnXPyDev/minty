@@ -41,7 +41,7 @@ def("main", class extends Actor {
         console.log(this.poly.collides(this.poly1));
     }
     draw() {
-        this.sprite.draw(new Vector(this.x, this.y), new Vector(20,30));
+        //this.sprite.draw(new Vector(this.x, this.y), new Vector(20,30));
         this.poly1.draw();
         this.poly.draw();
     }

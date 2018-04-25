@@ -33,6 +33,7 @@ class Viewport {
     }
     
     update():void {
+        let sc = this.scale;
         let win = WINDOW.getBounds();
         this.screen = v(win.width, win.height);
         if (this.screen.x > this.screen.y) {
