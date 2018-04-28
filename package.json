@@ -16,5 +16,7 @@
     "shelljs": "^0.8.1",
     "typescript": "^2.8.3"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "fs-extra": "^5.0.0"
+  }
 }

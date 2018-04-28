@@ -1,2 +1,2 @@
 echo "Launching the app ...";
-npm run launch;
+./node_modules/.bin/electron .;
