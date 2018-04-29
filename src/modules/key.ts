@@ -11,7 +11,9 @@ const Key:{
     mouselog:() => void,
     mousedown:(evt:any) => void,
     mouseup:(evt:any) => void,
-    holder:boolean[]
+    holder:boolean[],
+    mupdated:boolean,
+    lastsc:Vector
 } = {};
 
 Key.holder = [];
@@ -21,6 +23,8 @@ Key.check = function (kc:number):boolean {
 }
 
 Key.mouse = function (evt:any):void {
+    Key.lastsc = vport.screen;
+    Key.mupdated = true;
     MClient.x = evt.clientX;
     MClient.y = evt.clientY;
 }

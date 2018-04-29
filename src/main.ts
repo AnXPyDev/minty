@@ -150,6 +150,7 @@ $MAIN.onload = function() {
 $MAIN.tick = function():void {
     $MAIN.tps.last = $MAIN.tps.now;
     tick ++;
+    camera.update();
     Key.mouselog();
     $MAIN.cLAY.reset();
     $MAIN.mLAY.reset();
