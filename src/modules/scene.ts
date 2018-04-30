@@ -6,8 +6,9 @@ class Scene {
     public bck:any;
     public tps:number;
     public next:Scene | null;
+    public size:Vector;
 
-    constructor(act:any, bck:any, onload:() => void, onbeforeload:() => void, tps:number = 60) {
+    constructor(size:Vector, act:any, bck:any, onload:() => void, onbeforeload:() => void, tps:number = 60) {
         this.index = 0;
         this.onload = onload;
         this.onbeforeload = onbeforeload;
@@ -15,6 +16,7 @@ class Scene {
         this.bck = bck;
         this.tps = tps;
         this.next = null;
+        this.size = size;
     } 
 
     load():void {

@@ -1,13 +1,16 @@
 const r0 = new Scene(
+    v(600,600),
     {
         main: [[]]
     },
     {
-        main: ["bck", "tiled"]
+        //main: ["bck", "tiled"]
     },
     () => {
-        bck.main.spd = v(5,5);
-        bck.main.scale = v(2,2);
+        //bck.main.spd = v(0,5);
+        //bck.main.scale = v(2,2);
+        camera = new Camera();
+        vport.resize(v(600,600));
     },
     () => {},
     60
@@ -17,33 +20,27 @@ GAME.onload = function() {
     r0.load();
 }
 
+function prect(sz) {
+    let p = new Polygon();
+    p.set([[0,0],[sz.x,0],[sz.x,sz.y],[0,sz.y]]);
+    p.center(v());
+    return p;
+}
+
 def("main", class extends Actor {
     constructor() {
         super();
-        this.x = 50;
-        this.y = 50;
-        this.spd = 5;
-        this.tickrate = 1;
-        this.sprite = new Sprite("cursor", 2, 10);
-        this.poly = new Polygon();
-        this.poly.set([[0,0],[40,0],[40,40],[0,40]]);
-        this.poly.center();
-        this.poly1 = new Polygon();
-        this.poly1.set([[0,0],[40,40],[0,40]]);
-        this.poly1.scale(v(4,4));
-        this.poly1.center(v(300,300));
-    }
-    tick() {
-        this.x = Mouse.x;
-        this.y = Mouse.y;
-        this.sprite.update();
-        this.poly.center(Mouse);
-        console.log(this.poly.collides(this.poly1));
+        this.y = Math.floor(scene.size.y * 0.8);
+        this.x = Math.floor(scene.size.x * 0.5);
+        this.mask = prect(v(20,40));
+        this.size = v(20,40);
     }
     draw() {
-        //this.sprite.draw(new Vector(this.x, this.y), new Vector(20,30));
-        this.poly1.draw();
-        this.poly.draw();
+        let m = this.mask;
+        m.size(this.size);
+        m.center(this.pos);
+        m.rotate(this.angle);
+        m.draw(this);
     }
-})
-
+    
+}) 

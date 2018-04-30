@@ -57,9 +57,10 @@
                     if (types.sound.includes(extension)) { 
                         json.assets.sounds.push(file); 
                     } 
-                }); 
+                });
+                fs.writeFile("./project/game.cfg.json", JSON.stringify(json), () => {console.log("Sucessfully built game.cfg.json"); }); 
             }) 
-            console.log("Sucessfully built game.cfg.json"); 
+            
         }) 
     }); 
 } 
@@ -72,6 +73,12 @@
     if (!fs.existsSync("./docs")){
         fs.mkdirSync("./docs");
     }
+
+    fs.readFile("./compiled/main.js", (err, data) => {
+        doc += function() {
+            return data.toString().replace('"use strict";', "").split("module.exports")[0].split("//minty-compile-ignore")[1];
+        }();
+    })
 
     fs.readdir("./compiled/modules", (err, files) => {
         let a = 0;

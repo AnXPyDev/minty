@@ -1,8 +1,10 @@
+const reqget:any = require; //minty-compile-ignore
+
 function obtain(path:string, scope:any = null):void {
     if(scope != null) {
-        Object.assign(scope, require(path));
+        Object.assign(scope, reqget(path));
     } else {
-        Object.assign(window, require(path)); 
+        Object.assign(window, reqget(path)); 
     }
 }
 
@@ -87,9 +89,9 @@ const GAME:{
     onload() {}
 }
 
-$MAIN.cfg = require("../minty.cfg.json");
-$MAIN.game_cfg = require("../project/game.cfg.json");
-const ELECTRON:any = require("electron");
+$MAIN.cfg = reqget("../minty.cfg.json");
+$MAIN.game_cfg = reqget("../project/game.cfg.json");
+const ELECTRON:any = reqget("electron");
 WINDOW = ELECTRON.remote.getCurrentWindow();
 
 // obtains all MAKEBA modules
@@ -113,7 +115,7 @@ const snd:any = {};
 let bck:any = {};
 let ins:any = {};
 let camera:Camera = new Camera();
-let scene:Scene;
+let scene:Scene = new Scene(v(),[],[],()=>{},()=>{});
 let tick:number = 0;
 
 $MAIN.cAPI = new Compiler;
@@ -229,7 +231,7 @@ $MAIN.load = {
 }
 
 $MAIN.game_cfg.code.json.forEach((file:string) => {
-    cfg[file.split(".")[0]] = require("../project/code/" + file);
+    cfg[file.split(".")[0]] = reqget("../project/code/" + file);
 });
 $MAIN.game_cfg.code.js.forEach((file:string) => {
     loadscript("../project/code/" + file);

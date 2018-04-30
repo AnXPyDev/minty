@@ -47,6 +47,24 @@ function approach(val:number, val2:number, amt:number):number {
     }
 }
 
+function collides(that:Actor, otherName:string) {
+    let p1 = that.mask;
+    let final:{is:boolean, id:number[]} = {is:false, id:[]};
+    p1.size(that.size);
+    p1.center(that.pos);
+    p1.rotate(that.angle);
+    for(let i = 0; i < ins[otherName].length; i++) {
+        let p2 = ins[otherName][i];
+        p2.size(ins[otherName][i].size);
+        p2.center(ins[otherName][i].pos);
+        p2.rotate(ins[otherName][i].angle);
+        if (p1.collides(p2)) {
+            final.is = true;
+            final.id.push(i);
+        }
+    }
+}
+
 module.exports = {
     clamp:clamp,
     wrap:wrap,

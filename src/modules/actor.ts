@@ -1,6 +1,9 @@
 class Actor {
-    public x:number;
-    public y:number;
+    public pos:Vector;
+    public size:Vector;
+    public angle:Angle;
+    public sprite:Sprite;
+    public mask:Polygon;
     public id:number;
     public persistant:boolean;
     public tickrate:number;
@@ -8,8 +11,11 @@ class Actor {
     public mdepth:number;
 
     constructor() {
-        this.x = 0;
-        this.y = 0;
+        this.pos = v();
+        this.size = v();
+        this.angle = new Angle("deg", 0);
+        this.sprite = new Sprite("noimage",1,0);
+        this.mask = new Polygon();
         this.id = 0;
         this.persistant = false;
         this.tickrate = 1;
