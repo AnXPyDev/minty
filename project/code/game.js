@@ -1,7 +1,8 @@
 const r0 = new Scene(
     v(600,600),
     {
-        main: [[]]
+        main: [[]],
+        spawner: [[]]
     },
     {
         //main: ["bck", "tiled"]
@@ -30,17 +31,50 @@ function prect(sz) {
 def("main", class extends Actor {
     constructor() {
         super();
-        this.y = Math.floor(scene.size.y * 0.8);
-        this.x = Math.floor(scene.size.x * 0.5);
-        this.mask = prect(v(20,40));
-        this.size = v(20,40);
+        this.pos.y = Math.floor(scene.size.y * 0.8);
+        this.pos.x = Math.floor(scene.size.x * 0.5);
+        this.mask = prect(v(40,40));
+        this.size = v(30,40);
+        this.depth = 15;
+    }
+    tick() {
+        this.pos.x = Mouse.x;
     }
     draw() {
         let m = this.mask;
         m.size(this.size);
         m.center(this.pos);
         m.rotate(this.angle);
-        m.draw(this);
+        m.draw((collides(this, "enemy").is ? "red" : "green"));
     }
     
 }) 
+
+def("spawner", class extends Actor {
+    constructor() {
+        super();
+        this.loop("spn", () => {Instance.spawn("enemy", [])}, 5);
+    }
+}) 
+
+def("enemy", class extends Actor {
+    constructor() {
+        super();
+        this.pos.x =  Math.floor(Math.random() * scene.size.x);
+        this.pos.y = -60;
+        this.size = v(Math.floor(Math.random() * 5 + 20),Math.floor(Math.random() * 40 + 40));
+        this.spd = Math.floor(Math.random() * 10 + 5); 
+        this.mask = prect(v(40,40));
+    }
+    tick() {
+        this.pos.y += this.spd;
+        this.angle.set(this.angle.deg+this.spd, "deg")
+    }
+    draw() {
+        let m = this.mask;
+        m.size(this.size);
+        m.center(this.pos);
+        m.rotate(this.angle);
+        m.draw();
+    }
+})

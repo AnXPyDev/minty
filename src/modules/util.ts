@@ -54,7 +54,7 @@ function collides(that:Actor, otherName:string) {
     p1.center(that.pos);
     p1.rotate(that.angle);
     for(let i = 0; i < ins[otherName].length; i++) {
-        let p2 = ins[otherName][i];
+        let p2 = ins[otherName][i].mask;
         p2.size(ins[otherName][i].size);
         p2.center(ins[otherName][i].pos);
         p2.rotate(ins[otherName][i].angle);
@@ -63,6 +63,7 @@ function collides(that:Actor, otherName:string) {
             final.id.push(i);
         }
     }
+    return final;
 }
 
 module.exports = {
@@ -71,5 +72,6 @@ module.exports = {
     flip:flip,
     lerp:lerp,
     wrap_np:wrap_np,
-    approach:approach
+    approach:approach,
+    collides:collides
 }
