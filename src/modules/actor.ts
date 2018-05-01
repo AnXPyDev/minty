@@ -9,6 +9,8 @@ class Actor {
     public tickrate:number;
     public depth:number;
     public mdepth:number;
+    public loops:any;
+
 
     constructor() {
         this.pos = v();
@@ -21,10 +23,14 @@ class Actor {
         this.tickrate = 1;
         this.depth = 1;
         this.mdepth = 1;
+        this.loops = {};
     }
     tick():void {}
     draw():void {}
     update():void {
+        for(let i in this.loops) {
+            this.loops[i].update();
+        }
         if (tick * 100 % Math.floor(this.tickrate * 100) == 0) {
             this.tick();
         }
@@ -34,6 +40,12 @@ class Actor {
     }
     mousedown():boolean {
         return false;
+    }
+    loop(name:string, callback:() => void, tps:number):void {
+        this.loops[name] = new Loop(callback, tps);
+    }
+    destroyloop(name:string) {
+        delete this.loops[name];
     }
 } 
 
@@ -51,12 +63,12 @@ const Instance:{
         return id;
     },
     destroy(name:string, id:number):void {
-        delete ins[name][id];
-        for(let i:number = id; i < ins[name].length; i ++) {
-            ins[name][i].id --;
+        ins[name].splice(id, 1);
+        for(let i:number = id; i < ins[name].length; i++) {
+            ins[name][i].id--;
         }
     },
-    mod(name:string, merge:any, id:string | number = ""):void {
+    mod(name:string, merge:any, id:string | number = "all"):void {
         if (typeof id == "number") {
             //@ts-ignore
             Object.assign(ins[name][id], merge);

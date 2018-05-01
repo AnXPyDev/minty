@@ -117,6 +117,7 @@ class Angle {
 
 class Polygon {
     public val:Vector[];
+    public root:number[][];
     public offset:Vector;
     public corner:{min:Vector, max:Vector};
 
@@ -124,6 +125,7 @@ class Polygon {
         this.val = [];
         this.offset = v();
         this.corner = {min:v(), max:v()};
+        this.root = [];
     }
 
     set(polygon:number[][]):void {
@@ -132,6 +134,7 @@ class Polygon {
             temp.push(new Vector(...x))
         })
         this.val = temp;
+        this.root = polygon;
         this.grabinfo();
         this.center();
     }
@@ -276,6 +279,16 @@ class Polygon {
 
 }
 
+function MorphPolygon(poly:Polygon, that:Actor):Polygon{
+    let p = new Polygon();
+    p.set(poly.root);
+    p.grabinfo();
+    p.size(that.size);
+    p.center(that.pos);
+    p.rotate(that.angle);
+    return p;
+} 
+
 function v(x:number = 0, y:number = 0):Vector {
     return new Vector(x,y);
 }
@@ -284,6 +297,7 @@ module.exports = {
     Vector:Vector,
     Angle:Angle,
     Polygon:Polygon,
+    MorphPolygon:MorphPolygon,
     v:v
 }
 
