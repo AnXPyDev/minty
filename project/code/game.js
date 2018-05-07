@@ -38,7 +38,7 @@ def("main", class extends Actor {
         this.depth = 15;
     }
     tick() {
-        this.pos.x = Mouse.x;
+        this.pos.x = lerp(this.pos.x, Mouse.x, 0.5, true);
     }
     draw() {
         let p = MorphPolygon(this.mask, this);
