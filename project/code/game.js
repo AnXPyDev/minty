@@ -1,5 +1,5 @@
 const r0 = new Scene(
-    v(600,600),
+    v(1024,576),
     {
         main: [[]],
         spawner: [[]]
@@ -11,7 +11,7 @@ const r0 = new Scene(
         //bck.main.spd = v(0,5);
         //bck.main.scale = v(2,2);
         camera = new Camera();
-        vport.resize(v(600,600));
+        vport.resize(v(1024,576));
     },
     () => {},
     60

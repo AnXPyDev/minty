@@ -161,7 +161,17 @@ $MAIN.tick = function():void {
     }
     for(let i in ins) {
         for(let e in ins[i]) {
-            ins[i][e].update();
+            ins[i][e] && ins[i][e].update();
+        }
+    }
+    for(let i in ins) {
+        for(let e = 0; e < ins[i].length; e++) {
+            if(!ins[i][e]) {
+                ins[i].splice(e,1);
+                e--;
+            } else {
+                ins[i][e].id = e;
+            }
         }
     }
     $MAIN.cLAY.finalize();

@@ -63,10 +63,7 @@ const Instance:{
         return id;
     },
     destroy(name:string, id:number):void {
-        ins[name].splice(id, 1);
-        for(let i:number = id; i < ins[name].length; i++) {
-            ins[name][i].id--;
-        }
+        delete ins[name][id];
     },
     mod(name:string, merge:any, id:string | number = "all"):void {
         if (typeof id == "number") {
@@ -103,6 +100,7 @@ class Loop {
         }
     }
 }
+
 module.exports = {
     Actor:Actor,
     Instance:Instance,
