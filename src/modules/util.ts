@@ -56,7 +56,7 @@ function collides(that:Actor, otherName:string) {
             p2 = MorphPolygon(ins[otherName][i].mask, ins[otherName][i])
             if (p1.collides(p2)) {
                 final.is = true;
-                final.id.push(i);
+                final.id.push(ins[otherName][i].id);
             }
         };
     }

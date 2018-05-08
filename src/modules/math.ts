@@ -289,6 +289,18 @@ function MorphPolygon(poly:Polygon, that:Actor):Polygon{
     return p;
 } 
 
+const Random:{
+    int:(min:number, max:number) => number,
+    float:(min:number, max:number) => number
+} = {
+    int(min:number, max:number) {
+        return Math.floor(Math.random() * (max - min + 1) + min); 
+    },
+    float(min:number, max:number) {
+        return Math.random() * (max - min) + min;
+    }
+}
+
 function v(x:number = 0, y:number = 0):Vector {
     return new Vector(x,y);
 }
@@ -298,6 +310,7 @@ module.exports = {
     Angle:Angle,
     Polygon:Polygon,
     MorphPolygon:MorphPolygon,
+    Random:Random,
     v:v
 }
 

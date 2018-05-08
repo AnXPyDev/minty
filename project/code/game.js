@@ -1,5 +1,5 @@
 const r0 = new Scene(
-    v(1024,576),
+    v(600,600),
     {
         main: [[]],
         spawner: [[]]
@@ -11,11 +11,12 @@ const r0 = new Scene(
         //bck.main.spd = v(0,5);
         //bck.main.scale = v(2,2);
         camera = new Camera();
-        vport.resize(v(1024,576));
+        vport.resize(scene.size);
     },
     () => {},
     60
 )
+
 
 GAME.onload = function() {
     r0.load();
@@ -36,6 +37,7 @@ def("main", class extends Actor {
         this.mask = prect(v(40,40));
         this.size = v(30,40);
         this.depth = 15;
+        this.loop("shoot",() => {Instance.spawn("bullet", [v(this.pos.x, this.pos.y)]);}, 15);
     }
     tick() {
         this.pos.x = lerp(this.pos.x, Mouse.x, 0.5, true);
@@ -59,8 +61,8 @@ def("enemy", class extends Actor {
         super();
         this.pos.x =  Math.floor(Math.random() * scene.size.x);
         this.pos.y = -60;
-        this.size = v(Math.floor(Math.random() * 5 + 20),Math.floor(Math.random() * 40 + 40));
-        this.spd = Math.floor(Math.random() * 10 + 5); 
+        this.size = v(Random.int(20,40),Random.int(40,80));
+        this.spd = Random.int(5,20); 
         this.mask = prect(v(40,40));
     }
     tick() {
@@ -72,5 +74,34 @@ def("enemy", class extends Actor {
     }
     draw() {
         MorphPolygon(this.mask, this).draw();
+    }
+})
+
+def("bullet", class extends Actor {
+    constructor(pos) {
+        super()
+        this.pos = pos;
+        this.mask = prect(v(5,20));
+        this.size = v(5,20);
+        this.spd = 15;
+        this.depth = 7;
+    }
+    tick() {
+        this.pos.y -= this.spd;
+        let c = collides(this, "enemy");
+        if(c.is) {
+            c.id.forEach(x => {
+                Instance.destroy("enemy", x);
+            })
+            Instance.destroy("bullet", this.id);
+        }
+        if(this.pos.y < -5) {
+            Instance.destroy("bullet", this.id);
+        }
+    }
+    draw() {
+        
+        MorphPolygon(this.mask, this).draw("red");
+        
     }
 })
