@@ -16,9 +16,9 @@
     
   Create a folder and open **_git bash_** in it, then run these commands
 
-    $ git clone https://github.com/AnXPyDev/MINTY-electron.git
+    $ git clone https://github.com/AnXPyDev/minty.git
   
-    $ cd ./MINTY-electron
+    $ cd ./minty
     
     $ npm install 
     
