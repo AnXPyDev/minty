@@ -1,7 +1,15 @@
-const paths = require("./base/paths.json");
+const fs = require("fs");
+
+const paths = function() {
+    const json = require("./base/refference_paths.json");
+    if (process.argv[2] != null) {
+        json.project = "../" + process.argv[2];
+    }
+    fs.writeFileSync("./paths.json", JSON.stringify(json));
+    return json;
+}()
 
 {
-    const fs = require("fs");
     const json = require("./base/refference.json");
     fs.readdir("./compiled/modules", function(err, files) {
         files.forEach(file => {
@@ -13,8 +21,7 @@ const paths = require("./base/paths.json");
     });
 }
 
-{  
-    const fs = require("fs"); 
+{
     const json = require("./base/refference_game.json"); 
     const types = { 
         image: ["jpg", "svg", "png"], 
@@ -68,7 +75,6 @@ const paths = require("./base/paths.json");
 } 
 
 {
-    const fs = require("fs");
     const endFile = "./docs/user.js";
     var doc = "";
     

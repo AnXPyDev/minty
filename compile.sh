@@ -1,3 +1,3 @@
 ./node_modules/.bin/tsc; echo "Built Minty";
-node compile.js;
+node compile.js $1;
 
