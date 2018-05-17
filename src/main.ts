@@ -1,4 +1,5 @@
 const reqget:any = require; //minty-compile-ignore
+const paths:any = reqget("../base/paths.json");
 
 function obtain(path:string, scope:any = null):void {
     if(scope != null) {
@@ -89,20 +90,20 @@ const GAME:{
     onload() {}
 }
 
-$MAIN.cfg = reqget("../minty.cfg.json");
-$MAIN.game_cfg = reqget("../project/game.cfg.json");
+$MAIN.cfg = reqget(paths.mpx + "./minty.cfg.json");
+$MAIN.game_cfg = reqget(paths.mpx + paths.project + "/game.cfg.json");
 const ELECTRON:any = reqget("electron");
 WINDOW = ELECTRON.remote.getCurrentWindow();
 
 // obtains all MAKEBA modules
 $MAIN.cfg.modules.forEach((file:string) => {
-    obtain("../compiled/modules/" + file + ".js");
+    obtain(paths.mpx + "./compiled/modules/" + file + ".js");
 });
 
-$MAIN.logo = new Image(); $MAIN.logo.src = "../icon/minty.svg";
+$MAIN.logo = new Image(); $MAIN.logo.src = paths.mpx + "./icon/minty.svg";
 $MAIN.logo.parts = [];
-$MAIN.logo.parts[0] = new Image(); $MAIN.logo.parts[0].src = "../icon/parts/1.svg";
-$MAIN.logo.parts[1] = new Image(); $MAIN.logo.parts[1].src = "../icon/parts/2.svg";
+$MAIN.logo.parts[0] = new Image(); $MAIN.logo.parts[0].src = paths.mpx + "./icon/parts/1.svg";
+$MAIN.logo.parts[1] = new Image(); $MAIN.logo.parts[1].src = paths.mpx + "./icon/parts/2.svg";
 
 let vport:Viewport;
 let ctx:CanvasRenderingContext2D;
@@ -241,16 +242,16 @@ $MAIN.load = {
 }
 
 $MAIN.game_cfg.code.json.forEach((file:string) => {
-    cfg[file.split(".")[0]] = reqget("../project/code/" + file);
+    cfg[file.split(".")[0]] = reqget(paths.mpx + paths.project + "/code/" + file);
 });
 $MAIN.game_cfg.code.js.forEach((file:string) => {
-    loadscript("../project/code/" + file);
+    loadscript(paths.mpx + paths.project + "/code/" + file);
 })
 $MAIN.game_cfg.assets.images.forEach((file:string) => {
-    preload("img", "../project/assets/img/" + file);
+    preload("img", paths.mpx + paths.project + "/assets/img/" + file);
 })
 $MAIN.game_cfg.assets.sounds.forEach((file:string) => {
-    preload("snd", "../project/assets/snd/" + file);
+    preload("snd", paths.mpx + paths.project + "/assets/snd/" + file);
 })
 
 document.onreadystatechange = function():void {
