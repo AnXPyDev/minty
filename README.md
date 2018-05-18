@@ -2,7 +2,7 @@
 
 
 
-<h1 align = "center"><em>MINTY-electron</em></h1>
+<h1 align = "center"><em>minty</em></h1>
 
 
 
