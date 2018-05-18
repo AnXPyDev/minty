@@ -5,11 +5,12 @@ class Actor {
     public sprite:Sprite;
     public mask:Polygon;
     public id:number;
-    public persistant:boolean;
+    public isPersistant:boolean;
     public tickrate:number;
     public depth:number;
     public mdepth:number;
     public loops:any;
+    public isCollidable:boolean;
 
 
     constructor() {
@@ -19,11 +20,12 @@ class Actor {
         this.sprite = new Sprite("noimage",1,0);
         this.mask = new Polygon();
         this.id = 0;
-        this.persistant = false;
+        this.isPersistant = false;
         this.tickrate = 1;
         this.depth = 1;
         this.mdepth = 1;
         this.loops = {};
+        this.isCollidable = true;
     }
     tick():void {}
     draw():void {}

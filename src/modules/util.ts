@@ -54,7 +54,7 @@ function collides(that:Actor, otherName:string) {
         let p2:Polygon;
         if(ins[otherName][i]) {
             p2 = MorphPolygon(ins[otherName][i].mask, ins[otherName][i])
-            if (p1.collides(p2)) {
+            if (ins[otherName][i].isCollidable && p1.collides(p2)) {
                 final.is = true;
                 final.id.push(ins[otherName][i].id);
             }
