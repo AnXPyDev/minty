@@ -2,7 +2,7 @@
 
 
 
-<h1 align = "center"><em>MINTY-electron</em></h1>
+<h1 align = "center"><em>minty</em></h1>
 
 
 
@@ -22,11 +22,16 @@
     
     $ npm install 
     
-    $ sh compile.sh
+    $ sh compile.sh (you may insert the name of a project here)
   
     $ sh run.sh
-    
+
+# _Examples_: 
+
+    https://github.com/AnXPyDev/minty-projects
+
 # _Packaging the app_:
 
 
     comming soon
+
