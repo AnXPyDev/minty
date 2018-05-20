@@ -2,3 +2,4 @@ node_modules
 compiled
 docs
 package-lock.json
+paths.json

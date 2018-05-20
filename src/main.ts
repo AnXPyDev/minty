@@ -105,8 +105,9 @@ $MAIN.logo.parts = [];
 $MAIN.logo.parts[0] = new Image(); $MAIN.logo.parts[0].src = paths.mpx + "./icon/parts/1.svg";
 $MAIN.logo.parts[1] = new Image(); $MAIN.logo.parts[1].src = paths.mpx + "./icon/parts/2.svg";
 
-let vport:Viewport;
-let ctx:CanvasRenderingContext2D;
+let vport:Viewport = new Viewport("null", false);
+//@ts-ignore
+let ctx:CanvasRenderingContext2D = document.createElement("canvas").getContext("2d");
 
 const act:any = {};
 const cfg:any = {};
@@ -137,7 +138,7 @@ $MAIN.titleupdateloop = new Loop(
 $MAIN.onload = function() {
     vport = new Viewport("c0", true);
     ctx = vport.context;
-    vport.resize(new Vector(600,600));
+    vport.resize(new Vector(600,600), true);
     requestAnimationFrame($MAIN.draw);
     if ($MAIN.cfg.developer) {
       console.warn("You Are In Developer Mode");

@@ -12,29 +12,39 @@ class Viewport {
 
     constructor(id:string, main:boolean) {
         this.element = document.getElementById(id);
-        this.context = this.element.getContext("2d");
-        this.isMain = main;
-        this.scale = new Vector(1,1);
-        this.size = new Vector(this.element.width, this.element.height);
-        this.screen = this.size;
+        if(this.element) {
+            this.context = this.element.getContext("2d");
+            this.isMain = main;
+            this.scale = new Vector(1,1);
+            this.size = new Vector(this.element.width, this.element.height);
+            this.screen = this.size;
+        } else {
+            //@ts-ignore
+            this.context = document.createElement("canvas").getContext("2d");
+            this.isMain = false;
+            this.scale = v();
+            this.size = v();
+            this.screen = v();
+        }
+        
     } 
 
     resize(size:Vector, window:boolean = true):void {
         this.element.width = size.x;
         this.element.height = size.y;
         this.size = size;
-        this.update();
         if (window) {
             this.screen = size;
             for (let i in [0,1]) {
-                WINDOW.setSize(size.x, size.y, true);
+                WINDOW.setContentSize(size.x, size.y);
             }    
         }
+        this.update();
     }
     
     update():void {
         let sc = this.scale;
-        let win = WINDOW.getBounds();
+        let win = WINDOW.getContentBounds();
         this.screen = v(win.width, win.height);
         if (this.screen != sc) {
             Key.mupdated = false;
