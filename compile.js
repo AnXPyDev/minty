@@ -25,7 +25,7 @@ const paths = function() {
     const json = require("./base/refference_game.json"); 
     const types = { 
         image: ["jpg", "svg", "png"], 
-        sound: ["mp3"] 
+        sound: ["mp3", "wav"] 
     } 
     if (!fs.existsSync(paths.project)){ 
         fs.mkdirSync(paths.project); 

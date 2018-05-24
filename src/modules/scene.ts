@@ -7,8 +7,9 @@ class Scene {
     public tps:number;
     public next:Scene | null;
     public size:Vector;
+    public aps:number;
 
-    constructor(size:Vector, act:any, bck:any, onload:() => void, onbeforeload:() => void, tps:number = 60) {
+    constructor(size:Vector, act:any, bck:any, onload:() => void, onbeforeload:() => void, tps:number = 60, aps:number = tps) {
         this.index = 0;
         this.onload = onload;
         this.onbeforeload = onbeforeload;
@@ -17,6 +18,7 @@ class Scene {
         this.tps = tps;
         this.next = null;
         this.size = size;
+        this.aps = aps;
     } 
 
     load():void {
@@ -48,7 +50,7 @@ class Scene {
             bck[bckKeys[i]] = new Background(...pho);
         }
         $MAIN.titleupdateloop.tps = Math.floor(this.tps / 4);
-        resume(this.tps);
+        resume(this.tps, this.aps);
         this.onload();
     }
 

@@ -57,8 +57,8 @@ class Background {
         ctx.restore();
     }
     update():void {
-        this.off.x = wrap(this.off.x + this.spd.x, 0, this.img.width * this.scale.x);
-        this.off.y = wrap(this.off.y + this.spd.y, 0, this.img.height * this.scale.y);
+        this.off.x = wrap(this.off.x + this.spd.x * dt, 0, this.img.width * this.scale.x);
+        this.off.y = wrap(this.off.y + this.spd.y * dt, 0, this.img.height * this.scale.y);
         $MAIN.cLAY.insert(new Layer(this.depth, () => {return this.draw()}));
     }
     setScale(scale:Vector):void {

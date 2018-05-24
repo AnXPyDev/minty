@@ -39,12 +39,17 @@ function preload(type:string, path:string):void {
 let WINDOW:any;
 
 function pause():void {
-    clearInterval($MAIN.mainloop);
+    if ($MAIN.mainloop) {
+        clearInterval($MAIN.mainloop)
+    }
+    $MAIN.mainloop = null;
 }
 
-function resume(tps:number = scene.tps):void {
+function resume(tps:number = scene.tps, aps:number = tps):void {
     //@ts-ignore
+    pause();
     $MAIN.mainloop = setInterval($MAIN.tick, 1000 / tps);
+    dt = aps / tps;
 }
 
 // @ts-ignore
@@ -52,7 +57,7 @@ const $MAIN:{
     cfg:any,
     game_cfg:any,
     logo:any,
-    mainloop:number,
+    mainloop:any,
     cAPI:Compiler,
     cLAY:Layers,
     mAPI:MCompiler,
@@ -119,6 +124,7 @@ let ins:any = {};
 let camera:Camera = new Camera();
 let scene:Scene = new Scene(v(),[],[],()=>{},()=>{});
 let tick:number = 0;
+let dt:number = 1;
 
 $MAIN.cAPI = new Compiler;
 $MAIN.cLAY = new Layers;
@@ -138,6 +144,7 @@ $MAIN.titleupdateloop = new Loop(
 $MAIN.onload = function() {
     vport = new Viewport("c0", true);
     ctx = vport.context;
+    ctx.imageSmoothingEnabled = $MAIN.game_cfg.imgSmoothing;
     vport.resize(new Vector(600,600), true);
     requestAnimationFrame($MAIN.draw);
     if ($MAIN.cfg.developer) {
@@ -206,7 +213,8 @@ $MAIN.draw = function() {
     ctx.fillRect(0 , 0, vport.size.x, vport.size.y);
     ctx.restore();
     ctx.save();
-    ctx.translate(-camera.pos.x, -camera.pos.y)
+    ctx.translate(-camera.pos.x, -camera.pos.y);
+    ctx.scale(camera.scale.x, camera.scale.y);
     $MAIN.cAPI.compile($MAIN.cLAY);
     ctx.restore();
     ctx.save();

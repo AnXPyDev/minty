@@ -7,5 +7,6 @@
   "assets": {
     "images": [],
     "sounds": []
-  }
+  },
+  "imgSmoothing": false
 }

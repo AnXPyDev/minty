@@ -63,6 +63,30 @@ function collides(that:Actor, otherName:string) {
     return final;
 }
 
+const whenID:any = {};
+
+function when(condition:boolean, fn:() => void) {
+    let bool = false;
+    let boolID:any = "" + new Error().stack;
+    boolID = boolID.split("at")[2];
+    boolID = boolID.split("(")[1].split(")")[0];
+    if(whenID[boolID]) {
+        bool = whenID[boolID]; 
+    } else {
+        whenID[boolID] = bool = !condition;
+    }
+    if (!bool && !condition) {
+        whenID[boolID] = false;
+    } else if (!bool && condition) {
+        fn();
+        whenID[boolID] = true;
+    } else if (bool && !condition) {
+        whenID[boolID] = false;
+    } else if (bool && condition) {
+        whenID[boolID] = true;
+    }
+}
+
 module.exports = {
     clamp:clamp,
     wrap:wrap,
@@ -70,5 +94,7 @@ module.exports = {
     lerp:lerp,
     wrap_np:wrap_np,
     approach:approach,
-    collides:collides
+    collides:collides,
+    whenID:whenID,
+    when:when
 }

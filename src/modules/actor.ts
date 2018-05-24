@@ -97,7 +97,7 @@ class Loop {
         this.callback = callback;   
     }
     update():void {
-        if (tick % this.tps == 0) {
+        if (tick * dt % this.tps == 0) {
             this.callback();
         }
     }
