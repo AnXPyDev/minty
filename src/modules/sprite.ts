@@ -5,6 +5,8 @@ class Sprite {
     public width:number;
     public loop:Loop;
     public fps:number;
+    public attachments:any;
+
     constructor(imgname:string, len:number = 1, fps:number) {
         this.img = new ImageArray(imgname);
         this.len = len;
@@ -14,15 +16,20 @@ class Sprite {
         this.loop = new Loop(() => {
             this.index = wrap_np(this.index + 1, 0, this.len - 1);
         }, this.fps);
+        this.attachments = {};
     }
     update() {
         if (this.fps != 0) {
             this.loop.update();
         }
     }
-    draw(pos:Vector,size:Vector):void {
+    draw(pos:Vector,size:Vector, angle:Angle = new Angle("rad", 0)):void {
+        ctx.save();
+        ctx.rotate(angle.rad);
         ctx.drawImage(this.img.get(), this.index * this.width, 0, this.width, this.img.get().height, pos.x - size.x / 2, pos.y - size.y / 2, size.x, size.y);
+        ctx.restore();
     }
+    
 }
 
 class ImageArray {

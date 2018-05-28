@@ -40,10 +40,10 @@ class Background {
             for(let i:number = -2; i < Math.floor(vport.size.x / (this.img.width * this.scale.x)) + 2; i++) {
                 for(let e:number = -2; e < Math.floor(vport.size.y / (this.img.height * this.scale.y)) + 2; e++) {
                     ctx.drawImage(this.img, 
-                        i * this.img.width * this.scale.x + camera.pos.x - goff.x + this.off.x,  
-                        e * this.img.height * this.scale.y + camera.pos.y - goff.y + this.off.y, 
-                        this.img.width * this.scale.x, 
-                        this.img.height * this.scale.y)
+                        i * this.img.width * this.scale.x + camera.pos.x - goff.x + this.off.x - 1,  
+                        e * this.img.height * this.scale.y + camera.pos.y - goff.y + this.off.y - 1, 
+                        this.img.width * this.scale.x + 1, 
+                        this.img.height * this.scale.y + 1)
                 }
             }
         } else if (this.type == "fullscreen") {

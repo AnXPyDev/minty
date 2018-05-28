@@ -213,8 +213,9 @@ $MAIN.draw = function() {
     ctx.fillRect(0 , 0, vport.size.x, vport.size.y);
     ctx.restore();
     ctx.save();
-    ctx.translate(-camera.pos.x, -camera.pos.y);
+    ctx.translate(-camera.pos.x + vport.size.x / 2, -camera.pos.y + vport.size.y / 2);
     ctx.scale(camera.scale.x, camera.scale.y);
+    ctx.rotate(camera.angle.get("rad"));
     $MAIN.cAPI.compile($MAIN.cLAY);
     ctx.restore();
     ctx.save();
