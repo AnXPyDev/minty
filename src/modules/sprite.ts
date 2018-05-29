@@ -25,8 +25,9 @@ class Sprite {
     }
     draw(pos:Vector,size:Vector, angle:Angle = new Angle("rad", 0)):void {
         ctx.save();
+        ctx.translate(pos.x,pos.y);
         ctx.rotate(angle.rad);
-        ctx.drawImage(this.img.get(), this.index * this.width, 0, this.width, this.img.get().height, pos.x - size.x / 2, pos.y - size.y / 2, size.x, size.y);
+        ctx.drawImage(this.img.get(), this.index * this.width, 0, this.width, this.img.get().height, 0 - size.x / 2, 0 - size.y / 2, size.x, size.y);
         ctx.restore();
     }
     

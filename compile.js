@@ -4,6 +4,7 @@ const paths = function() {
     const json = require("./base/refference_paths.json");
     if (process.argv[2] != null) {
         json.project = "../" + process.argv[2];
+        json.project_name = process.argv[2];
     }
     fs.writeFileSync("./paths.json", JSON.stringify(json));
     return json;
