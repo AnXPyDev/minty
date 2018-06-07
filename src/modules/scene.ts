@@ -26,9 +26,9 @@ class Scene {
         scene = this;
         pause();
         let insKeys:string[] = Object.keys(ins);
-        for(let i in ins) {
-            for(let e in ins[i]) {
-                if (!ins[i][e].persistant) {
+        for(let i in insKeys) {
+            for(let e in ins[insKeys[i]]) {
+                if (ins[insKeys[i]][e] != null && !ins[insKeys[i]][e].persistant) {
                     //@ts-ignore
                     Instance.destroy(insKeys[i], e);
                 }
@@ -50,6 +50,7 @@ class Scene {
             bck[bckKeys[i]] = new Background(...pho);
         }
         $MAIN.titleupdateloop.tps = Math.floor(this.tps / 4);
+        tick = 0;
         resume(this.tps, this.aps);
         this.onload();
     }

@@ -136,7 +136,7 @@ $MAIN.loadanim = getLoadAnim();
 $MAIN.titleupdateloop = new Loop(
     function() {
         if ($MAIN.cfg.developer) {
-            WINDOW.setTitle("MINTY-electron   " + $MAIN.cfg.version + "   fps: " + $MAIN.fps.total + "   tps: " + $MAIN.tps.total);
+            WINDOW.setTitle(`${paths.project_name} ` + $MAIN.cfg.version + "   fps: " + $MAIN.fps.total + "   tps: " + $MAIN.tps.total);
         }
     },15
 )
