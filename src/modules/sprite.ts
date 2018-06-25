@@ -1,5 +1,5 @@
 class Sprite {
-    private img:ImageArray;
+    public img:ImageArray;
     public len:number;
     public index:number;
     public width:number;
@@ -18,7 +18,7 @@ class Sprite {
         }, this.fps);
         this.attachments = {};
     }
-    update() {
+    update():void {
         if (this.fps != 0) {
             this.loop.update();
         }
@@ -30,8 +30,36 @@ class Sprite {
         ctx.drawImage(this.img.get(), this.index * this.width, 0, this.width, this.img.get().height, 0 - size.x / 2, 0 - size.y / 2, size.x, size.y);
         ctx.restore();
     }
+    attach(name:string, imgname:string, len:number = 1, fps:number, offset:Vector, angle:Angle):void {
+        this.attachments[name] = new SpriteAttachment(imgname, len, fps, offset,angle);
+
+    }
     
 }
+
+class SpriteAttachment extends Sprite {
+    public offset:Vector;
+    public angle:Angle;
+
+    constructor(imgname:string, len:number = 1, fps:number, offset:Vector, angle:Angle) {
+        super(imgname, len, fps);
+        this.offset = offset;
+        this.angle = angle;
+    }
+    update() {
+        if (this.fps != 0) {
+            this.loop.update();
+        }
+        
+    }
+    draw(size:Vector) {
+        ctx.save();
+        ctx.translate(this.offset.x,this.offset.y);
+        ctx.rotate(this.angle.rad);
+        ctx.drawImage(this.img.get(), this.index * this.width, 0, this.width, this.img.get().height, 0 - size.x / 2, 0 - size.y / 2, size.x, size.y);
+        ctx.restore();
+    }
+} 
 
 class ImageArray {
     public img:HTMLImageElement[];

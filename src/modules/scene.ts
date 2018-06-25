@@ -8,6 +8,7 @@ class Scene {
     public next:Scene | null;
     public size:Vector;
     public aps:number;
+    public ignore_persistant:boolean;
 
     constructor(size:Vector, act:any, bck:any, onload:() => void, onbeforeload:() => void, tps:number = 60, aps:number = tps) {
         this.index = 0;
@@ -19,6 +20,7 @@ class Scene {
         this.next = null;
         this.size = size;
         this.aps = aps;
+        this.ignore_persistant = false;
     } 
 
     load():void {
@@ -28,7 +30,7 @@ class Scene {
         let insKeys:string[] = Object.keys(ins);
         for(let i in insKeys) {
             for(let e in ins[insKeys[i]]) {
-                if (ins[insKeys[i]][e] != null && !ins[insKeys[i]][e].persistant) {
+                if (!(ins[insKeys[i]][e] == null) && (!(ins[insKeys[i]][e].isPersistant) || ((this.ignore_persistant)))) {
                     //@ts-ignore
                     Instance.destroy(insKeys[i], e);
                 }

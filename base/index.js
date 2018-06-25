@@ -7,6 +7,8 @@ const exec = require("child_process").exec;
 
 var win, splash;
 
+console.log(process.argv[2]);
+
 function createWindow () {
     // Create the browser window.
     console.log(app.getAppPath());

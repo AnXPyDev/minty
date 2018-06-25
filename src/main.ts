@@ -1,5 +1,6 @@
 const reqget:any = require; //minty-compile-ignore
 const paths:any = reqget("../paths.json");
+const electron:any = reqget("electron");
 
 function obtain(path:string, scope:any = null):void {
     if(scope != null) {
@@ -11,11 +12,15 @@ function obtain(path:string, scope:any = null):void {
 
 function loadscript(path:string):void {
     let scr = document.createElement("script");
+    $MAIN.load.start();
     scr.src = path;
+    scr.onload = function() {
+        $MAIN.load.stop();
+    }
     document.head.appendChild(scr);
 } 
 
-function preload(type:string, path:string):void {
+function preload(type:string, path:string, traits:string[] = [""]):void {
     let pho:string[] = path.split("/");
     let name:string = pho[pho.length - 1].split(".")[0];
     if (type == "img") {
@@ -64,6 +69,7 @@ const $MAIN:{
     mLAY:Layers,
     loadanim:() => void,
     onload:() => void,
+    onloaded:boolean,
     tick:() => void,
     draw:() => void,
     titleupdateloop:Loop,
@@ -71,7 +77,7 @@ const $MAIN:{
         all:number,
         done:number,
         pending:number,
-        doneanim:boolean;
+        doneanim:boolean,
         stop:() => void,
         start:() => void,
         loading:() => boolean
@@ -85,14 +91,38 @@ const $MAIN:{
         last:number,
         now:number,
         total:number
-    }
+    },
+    edit:boolean
 } = {};
 
-//@ts-ignore
+$MAIN.edit = electron.remote.getGlobal("process").argv[2] == "edit";
+$MAIN.onloaded = false;
+
 const GAME:{
-    onload:() => void
+    onload:{
+        set(fn:() => void):void,
+        fn():void,
+        doneedit:boolean
+    },
 } = {
-    onload() {}
+    onload:{
+        set(fn:() => void):void {
+            if (this.doneedit || !$MAIN.edit) {
+                console.log("weak");
+                GAME.onload.fn = fn;
+            } else {
+                //$MAIN.edit = false;
+                this.doneedit = true;
+                GAME.onload.fn = () => {
+                    $MAIN.game_cfg = reqget(paths.mpx + paths.editor + "/game.cfg.json");
+                    GAME.onload.fn = () => {};
+                    loadgame(paths.editor);
+                }
+            }
+        },
+        fn():void {},
+        doneedit:false
+    },
 }
 
 $MAIN.cfg = reqget(paths.mpx + "./minty.cfg.json");
@@ -115,7 +145,7 @@ let vport:Viewport = new Viewport("null", false);
 let ctx:CanvasRenderingContext2D = document.createElement("canvas").getContext("2d");
 
 const act:any = {};
-const cfg:any = {};
+let cfg:any = {};
 const img:any = {noimage:new Image()};
 const snd:any = {};
 
@@ -150,12 +180,16 @@ $MAIN.onload = function() {
     if ($MAIN.cfg.developer) {
       console.warn("You Are In Developer Mode");
     }
+    if ($MAIN.edit) {
+        console.warn("You are in edit mode");
+    }
     document.addEventListener("keydown", Key.add);
     document.addEventListener("keyup", Key.remove);
     vport.element.addEventListener("mousemove", Key.mouse);
     document.addEventListener("mousedown", Key.mousedown);
     document.addEventListener("mouseup", Key.mouseup);
-    GAME.onload();
+    GAME.onload.fn();
+    $MAIN.onloaded = true;
 }
 
 $MAIN.tick = function():void {
@@ -243,7 +277,11 @@ $MAIN.load = {
         this.done ++;
         this.pending --;
         if ($MAIN.load.loading()) {
-            $MAIN.onload();
+            if (!$MAIN.onloaded) {   
+                $MAIN.onload();
+            } else {
+                GAME.onload.fn();
+            }
         }
     },
     loading() {
@@ -251,25 +289,30 @@ $MAIN.load = {
     }
 }
 
-$MAIN.game_cfg.code.json.forEach((file:string) => {
-    cfg[file.split(".")[0]] = reqget(paths.mpx + paths.project + "/code/" + file);
-});
-$MAIN.game_cfg.code.js.forEach((file:string) => {
-    loadscript(paths.mpx + paths.project + "/code/" + file);
-})
-$MAIN.game_cfg.assets.images.forEach((file:string) => {
-    preload("img", paths.mpx + paths.project + "/assets/img/" + file);
-})
-$MAIN.game_cfg.assets.sounds.forEach((file:string) => {
-    preload("snd", paths.mpx + paths.project + "/assets/snd/" + file);
-})
+function loadgame(pp:string) {
+    let pco:number = 0;
+    $MAIN.game_cfg.code.json.forEach((file:string) => {
+        cfg[file.split(".")[0]] = reqget(paths.mpx + pp + "/code/" + file);
+    });
+    $MAIN.game_cfg.code.js.forEach((file:string) => {
+        loadscript(paths.mpx + pp + "/code/" + file);
+    })
+    $MAIN.game_cfg.assets.images.forEach((file:string) => {
+        pco++;
+        preload("img", paths.mpx + pp + "/assets/img/" + file);
+    })
+    $MAIN.game_cfg.assets.sounds.forEach((file:string) => {
+        pco++;
+        preload("snd", paths.mpx + pp + "/assets/snd/" + file);
+    })
+}
+
+loadgame(paths.project);
 
 document.onreadystatechange = function():void {
     if (document.readyState == "complete") {
-        if ($MAIN.load.loading() && $MAIN.load.all == 0) {
-            setTimeout($MAIN.onload, 100);
+        if ($MAIN.load.loading() && $MAIN.load.all == 0 && !$MAIN.onloaded) {
+            $MAIN.onload();
         }
     }
 }
-
-///
