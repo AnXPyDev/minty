@@ -78,7 +78,7 @@ class Layers {
         this.temp.push(layer);
     }
 
-    finalize():(() => void)[][] {
+    finalize():(() => any)[][] {
         this.temp.forEach((layer:Layer) => {
             if (this.arr[layer.depth - this.min]) {
                 this.arr[layer.depth - this.min].push(layer.fn);

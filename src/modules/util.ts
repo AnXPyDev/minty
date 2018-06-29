@@ -47,19 +47,22 @@ function approach(val:number, val2:number, amt:number):number {
     }
 }
 
-function collides(that:Actor, otherName:string) {
+function collides(that:Actor, otherNames:string[]) {
     let p1 = MorphPolygon(that.mask, that);
-    let final:{is:boolean, id:number[]} = {is:false, id:[]};
-    for(let i = 0; i < ins[otherName].length; i++) {
-        let p2:Polygon;
-        if(ins[otherName][i]) {
-            p2 = MorphPolygon(ins[otherName][i].mask, ins[otherName][i])
-            if (ins[otherName][i].isCollidable && p1.collides(p2)) {
-                final.is = true;
-                final.id.push(ins[otherName][i].id);
-            }
-        };
-    }
+    let final:{is:boolean, other:any} = {is:false, other:{}};
+    otherNames.forEach(otherName => {
+        final.other[otherName] = [];
+        for(let i = 0; i < ins[otherName].length; i++) {
+            let p2:Polygon;
+            if(ins[otherName][i]) {
+                p2 = MorphPolygon(ins[otherName][i].mask, ins[otherName][i])
+                if (ins[otherName][i].isCollidable && p1.collides(p2)) {
+                    final.is = true;
+                    final.other[otherName].push(ins[otherName][i].id);
+                }
+            };
+        }
+    })
     return final;
 }
 
