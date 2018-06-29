@@ -20,7 +20,7 @@ function loadscript(path:string):void {
     document.head.appendChild(scr);
 } 
 
-function preload(type:string, path:string, traits:string[] = [""]):void {
+function preload(type:string, path:string):void {
     let pho:string[] = path.split("/");
     let name:string = pho[pho.length - 1].split(".")[0];
     if (type == "img") {

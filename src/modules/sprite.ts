@@ -6,6 +6,8 @@ class Sprite {
     public loop:Loop;
     public fps:number;
     public attachments:any;
+    public compiler:Compiler;
+    public layers:Layers;
 
     constructor(imgname:string, len:number = 1, fps:number) {
         this.img = new ImageArray(imgname);
@@ -17,22 +19,27 @@ class Sprite {
             this.index = wrap_np(this.index + 1, 0, this.len - 1);
         }, this.fps);
         this.attachments = {};
+        this.compiler = new SprCompiler();
+        this.layers = new Layers();
     }
     update():void {
         if (this.fps != 0) {
             this.loop.update();
         }
+        
+        
     }
-    draw(pos:Vector,size:Vector, angle:Angle = new Angle("rad", 0)):void {
+    draw(pos:Vector,size:Vector, angle:Angle = new Angle("rad", 0), ...args:any[]):void {
+        let sz:Vector = this.img.getsize();
         ctx.save();
         ctx.translate(pos.x,pos.y);
         ctx.rotate(angle.rad);
-        ctx.drawImage(this.img.get(), this.index * this.width, 0, this.width, this.img.get().height, 0 - size.x / 2, 0 - size.y / 2, size.x, size.y);
+        ctx.scale(size.x / sz.x, size.y / sz.y);
+        ctx.drawImage(this.img.get(), this.index * this.width, 0, this.width, this.img.get().height, -sz.x / (this.len * 2), -sz.y / 2, sz.x / this.len, sz.y);
         ctx.restore();
     }
-    attach(name:string, imgname:string, len:number = 1, fps:number, offset:Vector, angle:Angle):void {
-        this.attachments[name] = new SpriteAttachment(imgname, len, fps, offset,angle);
-
+    attach(name:string, imgname:string, len:number = 1, fps:number, offset:Vector, angle:Angle, scale:Vector = v(1,1)):void {
+        this.attachments[name] = new SpriteAttachment(imgname, len, fps, offset,angle,scale);
     }
     
 }
@@ -40,11 +47,13 @@ class Sprite {
 class SpriteAttachment extends Sprite {
     public offset:Vector;
     public angle:Angle;
+    public scale:Vector;
 
-    constructor(imgname:string, len:number = 1, fps:number, offset:Vector, angle:Angle) {
+    constructor(imgname:string, len:number = 1, fps:number, offset:Vector, angle:Angle, scale:Vector) {
         super(imgname, len, fps);
         this.offset = offset;
         this.angle = angle;
+        this.scale = scale;
     }
     update() {
         if (this.fps != 0) {
@@ -52,11 +61,13 @@ class SpriteAttachment extends Sprite {
         }
         
     }
-    draw(size:Vector) {
+    draw(...args:any[]) {
+        let sz:Vector = this.img.getsize();
+        sz = v(sz.x * this.scale.x, sz.y * this.scale.y);
         ctx.save();
         ctx.translate(this.offset.x,this.offset.y);
         ctx.rotate(this.angle.rad);
-        ctx.drawImage(this.img.get(), this.index * this.width, 0, this.width, this.img.get().height, 0 - size.x / 2, 0 - size.y / 2, size.x, size.y);
+        ctx.drawImage(this.img.get(), this.index * this.width, 0, this.width, this.img.get().height, -sz.x / (this.len * 2) + this.offset.x, -sz.y / 2 + this.offset.y, sz.x / this.len, sz.y);
         ctx.restore();
     }
 } 
@@ -67,7 +78,7 @@ class ImageArray {
     public numix:number;
     public keys:string[];
     constructor(...names:string[]) {
-        this.img = names.map(name => img[name]);;
+        this.img = names.map(name => img[name]);
         this.keys = names;
         this.index = names[0];
         this.numix = 0;
@@ -79,7 +90,7 @@ class ImageArray {
         this.numix = wrap(this.numix + by, 0, this.keys.length - 1);
         this.index = this.keys[this.numix];
     }
-    set(index:string | number) {
+    set(index:string | number):void {
         if (typeof index == "number") {
             this.numix = wrap(index, 0, this.keys.length - 1);
             this.index = this.keys[this.numix];
@@ -88,9 +99,28 @@ class ImageArray {
             this.numix = this.keys.indexOf(index);
         }
     }
+    getsize():Vector {
+        return v(this.img[this.numix].width, this.img[this.numix].height);
+    }
+    push(imgname:string):void {
+        this.img.push(img[imgname]);
+        this.keys.push(imgname);
+    }   
+}
+
+class SprCompiler extends Compiler{
+    compile(layers:Layers, ...args:any[]) {
+        layers.arr.forEach((layer:Function[]) => {
+            layer.forEach((fn:Function) => {
+                fn(...args);
+            });
+        });
+    }
 }
 
 module.exports = {
     Sprite:Sprite,
-    ImageArray:ImageArray
+    ImageArray:ImageArray,
+    SpriteAttachment:SpriteAttachment,
+    SprCompiler:SprCompiler
 }
