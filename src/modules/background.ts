@@ -34,11 +34,11 @@ class Background {
         ctx.globalAlpha = this.alpha;
         if(this.type == "tiled") {
             let goff:Vector = new Vector(
-                    (camera.pos.x / this.img.width - Math.floor(camera.pos.x / this.img.width)) * this.img.width,
-                    (camera.pos.y / this.img.height - Math.floor(camera.pos.y / this.img.height)) * this.img.height,
+                    (camera.pos.x / (this.img.width * this.scale.x) - Math.floor(camera.pos.x / (this.img.width * this.scale.x))) * (this.img.width * this.scale.x),
+                    (camera.pos.y / (this.img.height * this.scale.y) - Math.floor(camera.pos.y / (this.img.height * this.scale.y))) * (this.img.height * this.scale.y),
                 )
-            for(let i:number = -2; i < Math.floor(vport.size.x / (this.img.width * this.scale.x)) + 2; i++) {
-                for(let e:number = -2; e < Math.floor(vport.size.y / (this.img.height * this.scale.y)) + 2; e++) {
+            for(let i:number = -Math.floor((vport.size.x / 2) / (this.img.width * this.scale.x)) -2; i < Math.floor(vport.size.x / (this.img.width * this.scale.x)) + 2; i++) {
+                for(let e:number = -Math.floor((vport.size.y / 2) / (this.img.height * this.scale.y)) -2; e < Math.floor(vport.size.y / (this.img.height * this.scale.y)) + 2; e++) {
                     ctx.drawImage(this.img, 
                         i * this.img.width * this.scale.x + camera.pos.x - goff.x + this.off.x - 1,  
                         e * this.img.height * this.scale.y + camera.pos.y - goff.y + this.off.y - 1, 
