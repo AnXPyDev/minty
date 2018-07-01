@@ -28,7 +28,7 @@ class Sprite {
         }
         this.layers.reset();
         Object.keys(this.attachments).forEach((x:string) => {
-            this.layers.insert(new Layer(this.attachments[x].depth, this.attachments[x].draw))})
+            this.layers.insert(new Layer(this.attachments[x].depth, () => {this.attachments[x].draw()}))})
         this.layers.insert(new Layer(0, () => {
             let sz = this.img.getsize();
             ctx.drawImage(this.img.get(), this.index * this.width, 0, this.width, this.img.get().height, -sz.x / (this.len * 2), -sz.y / 2, sz.x / this.len, sz.y);
