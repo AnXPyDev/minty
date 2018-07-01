@@ -96,7 +96,7 @@ class Angle {
     }
 
     between(v1:Vector, v2:Vector):void {
-        this.set(Math.atan2(v1.y - v2.y, v1.x - v2.x), "rad");
+        this.set(Math.PI + Math.atan2(v1.y - v2.y, v1.x - v2.x), "rad");
     }
     
     interpolate(angle:Angle, amt:number):void {

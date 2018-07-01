@@ -19,15 +19,21 @@ class Sprite {
             this.index = wrap_np(this.index + 1, 0, this.len - 1);
         }, this.fps);
         this.attachments = {};
-        this.compiler = new SprCompiler();
+        this.compiler = new Compiler();
         this.layers = new Layers();
     }
     update():void {
         if (this.fps != 0) {
             this.loop.update();
         }
-        
-        
+        this.layers.reset();
+        Object.keys(this.attachments).forEach((x:string) => {
+            this.layers.insert(new Layer(this.attachments[x].depth, this.attachments[x].draw))})
+        this.layers.insert(new Layer(0, () => {
+            let sz = this.img.getsize();
+            ctx.drawImage(this.img.get(), this.index * this.width, 0, this.width, this.img.get().height, -sz.x / (this.len * 2), -sz.y / 2, sz.x / this.len, sz.y);
+        }))
+        this.layers.finalize();
     }
     draw(pos:Vector,size:Vector, angle:Angle = new Angle("rad", 0), ...args:any[]):void {
         let sz:Vector = this.img.getsize();
@@ -35,11 +41,11 @@ class Sprite {
         ctx.translate(pos.x,pos.y);
         ctx.rotate(angle.rad);
         ctx.scale(size.x / sz.x, size.y / sz.y);
-        ctx.drawImage(this.img.get(), this.index * this.width, 0, this.width, this.img.get().height, -sz.x / (this.len * 2), -sz.y / 2, sz.x / this.len, sz.y);
+        this.compiler.compile(this.layers)
         ctx.restore();
     }
-    attach(name:string, imgname:string, len:number = 1, fps:number, offset:Vector, angle:Angle, scale:Vector = v(1,1)):void {
-        this.attachments[name] = new SpriteAttachment(imgname, len, fps, offset,angle,scale);
+    attach(name:string, imgname:string, len:number = 1, fps:number, depth:number, offset:Vector, angle:Angle, scale:Vector = v(1,1)):void {
+        this.attachments[name] = new SpriteAttachment(imgname, len, fps, depth, offset,angle,scale);
     }
     
 }
@@ -48,12 +54,14 @@ class SpriteAttachment extends Sprite {
     public offset:Vector;
     public angle:Angle;
     public scale:Vector;
+    public depth:number;
 
-    constructor(imgname:string, len:number = 1, fps:number, offset:Vector, angle:Angle, scale:Vector) {
+    constructor(imgname:string, len:number = 1, fps:number, depth:number = 0, offset:Vector = v(), angle:Angle = new Angle("rad", 0), scale:Vector = v(1,1)) {
         super(imgname, len, fps);
         this.offset = offset;
         this.angle = angle;
         this.scale = scale;
+        this.depth = depth;
     }
     update() {
         if (this.fps != 0) {
@@ -62,11 +70,11 @@ class SpriteAttachment extends Sprite {
         
     }
     draw(...args:any[]) {
-        let sz:Vector = this.img.getsize();
-        sz = v(sz.x * this.scale.x, sz.y * this.scale.y);
+        let sz = this.img.getsize();
         ctx.save();
         ctx.translate(this.offset.x,this.offset.y);
         ctx.rotate(this.angle.rad);
+        ctx.scale(this.scale.x,this.scale.y);
         ctx.drawImage(this.img.get(), this.index * this.width, 0, this.width, this.img.get().height, -sz.x / (this.len * 2) + this.offset.x, -sz.y / 2 + this.offset.y, sz.x / this.len, sz.y);
         ctx.restore();
     }
