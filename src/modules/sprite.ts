@@ -9,8 +9,8 @@ class Sprite {
     public compiler:Compiler;
     public layers:Layers;
 
-    constructor(imgname:string, len:number = 1, fps:number) {
-        this.img = new ImageArray(imgname);
+    constructor(imgname:string[], len:number = 1, fps:number) {
+        this.img = new ImageArray(...imgname);
         this.len = len;
         this.index = 0;
         this.width = this.img.get().width / len;
@@ -44,7 +44,7 @@ class Sprite {
         this.compiler.compile(this.layers)
         ctx.restore();
     }
-    attach(name:string, imgname:string, len:number = 1, fps:number, depth:number, offset:Vector, angle:Angle, scale:Vector = v(1,1)):void {
+    attach(name:string, imgname:string[], len:number = 1, fps:number, depth:number, offset:Vector, angle:Angle, scale:Vector = v(1,1)):void {
         this.attachments[name] = new SpriteAttachment(imgname, len, fps, depth, offset,angle,scale);
     }
     
@@ -56,7 +56,7 @@ class SpriteAttachment extends Sprite {
     public scale:Vector;
     public depth:number;
 
-    constructor(imgname:string, len:number = 1, fps:number, depth:number = 0, offset:Vector = v(), angle:Angle = new Angle("rad", 0), scale:Vector = v(1,1)) {
+    constructor(imgname:string[], len:number = 1, fps:number, depth:number = 0, offset:Vector = v(), angle:Angle = new Angle("rad", 0), scale:Vector = v(1,1)) {
         super(imgname, len, fps);
         this.offset = offset;
         this.angle = angle;

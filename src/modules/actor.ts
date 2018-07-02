@@ -11,6 +11,8 @@ class Actor {
     public mdepth:number;
     public loops:any;
     public isCollidable:boolean;
+    public isHidden:boolean;
+    public isDrawedOutsideCamera:boolean;
     public name:string;
 
 
@@ -18,7 +20,7 @@ class Actor {
         this.pos = pos;
         this.size = v();
         this.angle = new Angle("deg", 0);
-        this.sprite = new Sprite("noimage",1,0);
+        this.sprite = new Sprite(["noimage"],1,0);
         this.mask = new Polygon();
         this.id = 0;
         this.isPersistant = false;
@@ -28,6 +30,8 @@ class Actor {
         this.loops = {};
         this.isCollidable = true;
         this.name = name;
+        this.isHidden = false;
+        this.isDrawedOutsideCamera = false;
     }
     tick():void {}
     draw():void {}
@@ -41,7 +45,10 @@ class Actor {
             }
             $MAIN.mLAY.insert(new Layer(this.mdepth, ():boolean => {return this.mousedown()}));
         }
-        $MAIN.cLAY.insert(new Layer(this.depth, ():void => {this.draw()}));
+        if (!this.isHidden) {
+            $MAIN.cLAY.insert(new Layer(this.depth, ():void => {this.draw()}));
+        }
+        
         
     }
     mousedown():boolean {
