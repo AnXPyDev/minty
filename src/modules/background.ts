@@ -1,6 +1,6 @@
 class Background {
     public type:string;
-    public img:HTMLImageElement;
+    public img:ImageArray;
     public color:string;
     public x:number;y:number;
     public depth:number;
@@ -10,8 +10,8 @@ class Background {
     public spd:Vector;
     private types:string[];
 
-    constructor(imgname:string, type:string, color:string = "white") {
-        this.img = img[imgname];
+    constructor(imgname:string[], type:string, color:string = "white") {
+        this.img = new ImageArray(...imgname);
         this.types = ["solid", "single", "fullscreen", "tiled"];
         this.type = (():string => {
             //@ts-ignore
@@ -34,20 +34,20 @@ class Background {
         ctx.globalAlpha = this.alpha;
         if(this.type == "tiled") {
             let goff:Vector = new Vector(
-                    (camera.pos.x / (this.img.width * this.scale.x) - Math.floor(camera.pos.x / (this.img.width * this.scale.x))) * (this.img.width * this.scale.x),
-                    (camera.pos.y / (this.img.height * this.scale.y) - Math.floor(camera.pos.y / (this.img.height * this.scale.y))) * (this.img.height * this.scale.y),
+                    (camera.pos.x / (this.img.get().width * this.scale.x) - Math.floor(camera.pos.x / (this.img.get().width * this.scale.x))) * (this.img.get().width * this.scale.x),
+                    (camera.pos.y / (this.img.get().height * this.scale.y) - Math.floor(camera.pos.y / (this.img.get().height * this.scale.y))) * (this.img.get().height * this.scale.y),
                 )
-            for(let i:number = -Math.floor((vport.size.x / 2) / (this.img.width * this.scale.x)) -2; i < Math.floor(vport.size.x / (this.img.width * this.scale.x)) + 2; i++) {
-                for(let e:number = -Math.floor((vport.size.y / 2) / (this.img.height * this.scale.y)) -2; e < Math.floor(vport.size.y / (this.img.height * this.scale.y)) + 2; e++) {
-                    ctx.drawImage(this.img, 
-                        i * this.img.width * this.scale.x + camera.pos.x - goff.x + this.off.x - 1,  
-                        e * this.img.height * this.scale.y + camera.pos.y - goff.y + this.off.y - 1, 
-                        this.img.width * this.scale.x + 1, 
-                        this.img.height * this.scale.y + 1)
+            for(let i:number = -Math.floor((vport.size.x / 2) / (this.img.get().width * this.scale.x)) -2; i < Math.floor(vport.size.x / (this.img.get().width * this.scale.x)) + 2; i++) {
+                for(let e:number = -Math.floor((vport.size.y / 2) / (this.img.get().height * this.scale.y)) -2; e < Math.floor(vport.size.y / (this.img.get().height * this.scale.y)) + 2; e++) {
+                    ctx.drawImage(this.img.get(), 
+                        i * this.img.get().width * this.scale.x + camera.pos.x - goff.x + this.off.x - 1,  
+                        e * this.img.get().height * this.scale.y + camera.pos.y - goff.y + this.off.y - 1, 
+                        this.img.get().width * this.scale.x + 1, 
+                        this.img.get().height * this.scale.y + 1)
                 }
             }
         } else if (this.type == "fullscreen") {
-            ctx.drawImage(this.img, 0, 0, vport.size.x, vport.size.y);
+            ctx.drawImage(this.img.get(), 0, 0, vport.size.x, vport.size.y);
         } else if (this.type == "solid") {
             ctx.save();
             ctx.fillStyle = this.color;
@@ -57,8 +57,8 @@ class Background {
         ctx.restore();
     }
     update():void {
-        this.off.x = wrap(this.off.x + this.spd.x * dt, 0, this.img.width * this.scale.x);
-        this.off.y = wrap(this.off.y + this.spd.y * dt, 0, this.img.height * this.scale.y);
+        this.off.x = wrap(this.off.x + this.spd.x * dt, 0, this.img.get().width * this.scale.x);
+        this.off.y = wrap(this.off.y + this.spd.y * dt, 0, this.img.get().height * this.scale.y);
         $MAIN.cLAY.insert(new Layer(this.depth, () => {return this.draw()}));
     }
     setScale(scale:Vector):void {

@@ -305,12 +305,16 @@ function v(x:number = 0, y:number = 0):Vector {
     return new Vector(x,y);
 }
 
+function distanceBetween(v0:Vector,v1:Vector) {
+    return (Math.sqrt(Math.pow(Math.abs(v0.x - v1.x),2) + Math.pow(Math.abs(v0.y - v1.y),2)));
+}
 module.exports = {
     Vector:Vector,
     Angle:Angle,
     Polygon:Polygon,
     MorphPolygon:MorphPolygon,
     Random:Random,
-    v:v
+    v:v,
+    distanceBetween:distanceBetween
 }
 
