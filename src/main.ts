@@ -151,6 +151,7 @@ const snd:any = {};
 
 let bck:any = {};
 let ins:any = {};
+let loop:any = [];
 let camera:Camera = new Camera();
 let scene:Scene = new Scene(v(),[],[],()=>{},()=>{});
 let tick:number = 0;
@@ -216,6 +217,9 @@ $MAIN.tick = function():void {
                 ins[i][e].id = e;
             }
         }
+    }
+    for(let i in loop) {
+        loop[i].update();
     }
     $MAIN.cLAY.finalize();
     $MAIN.mLAY.finalize();
