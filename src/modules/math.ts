@@ -90,8 +90,8 @@ class Angle {
 
     dir():Vector {
         return new Vector(
-            Math.sin(this.rad),
-            Math.cos(this.rad)
+            Math.cos(this.rad),
+            Math.sin(this.rad)
         )
     }
 

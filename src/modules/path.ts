@@ -12,6 +12,10 @@ class Path {
         }
         this.steps.push(new PathStep([this.vectors[this.vectors.length - 1], this.vectors[0]]));
     }
+    addClient(x:Vector):PathClient {
+        this.clients.push(new PathClient(this.steps, x));
+        return this.clients[this.clients.length - 1];
+    }
 }
 
 class PathStep {
@@ -30,9 +34,43 @@ class PathStep {
 class PathClient {
     public progress:number;
     public stepIndex:number;
+    public client:Vector;
+    public speed:number;
+    public steps:PathStep[];
+    public paused:boolean;
 
-    constructor(client:Vector) {
+    constructor(steps:PathStep[], client:Vector) {
         this.progress = 0;
         this.stepIndex = -1;
+        this.client = client;
+        this.speed = 0;
+        this.steps = steps;
+        this.steps[-1] = new PathStep([v(this.client.x, this.client.y), this.steps[0].vectors[0]]);
+        this.paused = false;
+        loop.push(new Loop(() => {this.update()}, 1));
     }
+    doStep() {
+        let dirMult = this.steps[this.stepIndex].angle.dir();
+        if(this.progress + this.speed < this.steps[this.stepIndex].length) {
+            this.progress += this.speed;
+            this.client.x += this.speed * dirMult.x;
+            this.client.y += this.speed * dirMult.y;
+        } else {
+            this.progress = 0;
+            this.client.x = this.steps[this.stepIndex].vectors[1].x;
+            this.client.y = this.steps[this.stepIndex].vectors[1].y;
+            this.stepIndex = wrap_np(this.stepIndex + 1, 0, this.steps.length - 1);
+        }
+    }
+    update() {
+        if(!this.paused) {
+            this.doStep();
+        }
+    }
+}
+
+module.exports = {
+    Path:Path,
+    PathClient:PathClient,
+    PathStep:PathStep
 }
