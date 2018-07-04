@@ -47,8 +47,8 @@ function approach(val:number, val2:number, amt:number):number {
     }
 }
 
-function collides(that:Actor, otherNames:string[]) {
-    let p1 = MorphPolygon(that.mask, that);
+function collides(that:Actor, otherNames:string[], pos:Vector = that.pos, size:Vector = that.size, angle:Angle = that.angle) {
+    let p1 = MorphPolygon(that.mask, that, pos, size, angle);
     let final:{is:boolean, other:any} = {is:false, other:{}};
     otherNames.forEach(otherName => {
         final.other[otherName] = [];

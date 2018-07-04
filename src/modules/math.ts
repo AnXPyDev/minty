@@ -90,8 +90,8 @@ class Angle {
 
     dir():Vector {
         return new Vector(
-            Math.sin(this.rad),
-            Math.cos(this.rad)
+            Math.cos(this.rad),
+            Math.sin(this.rad)
         )
     }
 
@@ -279,13 +279,13 @@ class Polygon {
 
 }
 
-function MorphPolygon(poly:Polygon, that:Actor):Polygon{
+function MorphPolygon(poly:Polygon, that:Actor, pos:Vector = that.pos, size:Vector = that.size, angle:Angle = that.angle):Polygon{
     let p = new Polygon();
     p.set(poly.root);
     p.grabinfo();
-    p.size(that.size);
-    p.center(that.pos);
-    p.rotate(that.angle);
+    p.size(size);
+    p.center(pos);
+    p.rotate(angle);
     return p;
 } 
 

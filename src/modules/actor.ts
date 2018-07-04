@@ -182,6 +182,7 @@ module.exports = {
     Actor:Actor,
     Instance:Instance,
     def:def,
-    Loop:Loop
+    Loop:Loop,
+    filterIns:filterIns
 }
 

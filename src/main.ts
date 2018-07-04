@@ -176,6 +176,13 @@ $MAIN.onload = function() {
     vport = new Viewport("c0", true);
     ctx = vport.context;
     ctx.imageSmoothingEnabled = $MAIN.game_cfg.imgSmoothing;
+    //@ts-ignore
+    ctx.scaleNew = ctx.scale;
+    ctx.scale = (x:number,y:number) => {
+        //@ts-ignore
+        ctx.scaleNew(x,y);
+        ctx.imageSmoothingEnabled = $MAIN.game_cfg.imgSmoothing;
+    }
     vport.resize(new Vector(600,600), true);
     requestAnimationFrame($MAIN.draw);
     if ($MAIN.cfg.developer) {
