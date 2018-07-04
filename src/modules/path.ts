@@ -1,38 +1,38 @@
 class Path {
-    public points:Vector[];
-    public steps:number;
+    public vectors:Vector[];
+    public steps:PathStep[];
     public clients:PathClient[];
-    public stepsInfo:{length:number}[];
-    constructor(points:Vector[]) {
-        this.points = points;
+
+    constructor(vectors:Vector[]) {
+        this.vectors = vectors;
+        this.steps = [];
         this.clients = [];
-        this.steps = this.points.length;
-        this.stepsInfo = [];
-        for(let x = 1; x <this.points.length; x++) {
-            this.stepsInfo.push({length:distanceBetween(this.points[x-1], this.points[x])});
+        for(let i = 0; i < this.vectors.length - 1; i++) {
+            this.steps.push(new PathStep([this.vectors[i], this.vectors[i+1]]));
         }
-        this.stepsInfo.push({length:distanceBetween(this.points[this.points.length - 1], this.points[0])});
+        this.steps.push(new PathStep([this.vectors[this.vectors.length - 1], this.vectors[0]]));
     }
-    getStep(index:number):Vector[] {
-        return [this.points[index - 1], this.points[index == this.steps ? 0 : index]]
+}
+
+class PathStep {
+    public vectors:Vector[];
+    public length:number;
+    public angle:Angle;
+
+    constructor(vectors:Vector[]) {
+        this.vectors = vectors;
+        this.length = distanceBetween(this.vectors[0], this.vectors[1]);
+        this.angle = new Angle("deg", 0);
+        this.angle.between(this.vectors[0], this.vectors[1]);    
     }
-    assignClient(x:Vector):PathClient {
-        this.clients.push(new PathClient(this.clients.length,x,this));
-        return this.clients[this.clients.length - 1];
-    } 
 }
 
 class PathClient {
-    public step:number;
-    public id:number;
-    public point:Vector;
-    public parent:Path;
-    public speed:number;
-    constructor(id:number,point:Vector,parent:Path) {
-        this.step = 0;
-        this.id = id;
-        this.point = point;
-        this.parent = parent;
-        this.speed = 0;
+    public progress:number;
+    public stepIndex:number;
+
+    constructor(client:Vector) {
+        this.progress = 0;
+        this.stepIndex = -1;
     }
 }
