@@ -230,7 +230,7 @@ class Polygon {
                     }
                 }
                 //@ts-ignore
-                if (maxA < minB || maxB < minA) {
+                if (maxA <= minB || maxB <= minA) {
                     return false;
                 }
             }
