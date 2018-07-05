@@ -1,1 +1,1 @@
-{"name":"MINTY-electron","version":"beta-0.1","developer":true,"modules":["actor","background","camera","display","draw","event","key","load","math","path","scene","sprite","util"]}
+{"name":"MINTY-electron","version":"1.0","developer":true,"modules":["actor","background","camera","display","draw","event","key","load","math","path","scene","sprite","util"]}
