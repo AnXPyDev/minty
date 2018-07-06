@@ -40,7 +40,7 @@ class Sprite {
         ctx.save();
         ctx.translate(pos.x,pos.y);
         ctx.rotate(angle.rad);
-        ctx.scale(size.x / sz.x, size.y / sz.y);
+        ctx.scale(size.x / (sz.x / this.len), size.y / sz.y);
         this.compiler.compile(this.layers)
         ctx.restore();
     }

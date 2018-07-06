@@ -27,6 +27,18 @@ class Vector {
         this.origin.x = v.x;
         this.origin.y = v.y;
     }
+    
+    toOrigin(v:Vector) {
+        this.x = this.x - this.origin.x + v.x;
+        this.y = this.y - this.origin.y + v.y;
+        this.origin.x = v.x;
+        this.origin.y = v.y;
+    }
+    copy(v:Vector) {
+        this.x = v.x;
+        this.y = v.y;
+        this.origin = v.origin;
+    }
 }
 
 class Angle {
