@@ -107,6 +107,7 @@ const Instance:{
         } else if (traits.length > 0) {
             let count:any = {};
             traits.forEach(x => {
+                inheritanceTree.byTrait[x] ? null : inheritanceTree.byTrait[x] = [];
                 inheritanceTree.byTrait[x].forEach((y:any) => {
                     if (count[y]) {
                         count[y] ++;

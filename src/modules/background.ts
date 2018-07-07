@@ -61,10 +61,12 @@ class Background {
         ctx.restore();
     }
     update():void {
-        this.off.x = wrap(this.off.x + this.spd.x * dt, 0, this.img.get().width * this.scale.x);
-        this.off.y = wrap(this.off.y + this.spd.y * dt, 0, this.img.get().height * this.scale.y);
-        this.offset.x = (this.aoff.x - Math.floor(this.aoff.x / this.img.get().width) * this.img.get().width) * this.scale.x;
-        this.offset.y = (this.aoff.y - Math.floor(this.aoff.y / this.img.get().height) * this.img.get().height) * this.scale.y;
+        if(this.type == "tiled") {
+            this.off.x = wrap(this.off.x + this.spd.x * dt, 0, this.img.get().width * this.scale.x);
+            this.off.y = wrap(this.off.y + this.spd.y * dt, 0, this.img.get().height * this.scale.y);
+            this.offset.x = (this.aoff.x - Math.floor(this.aoff.x / this.img.get().width) * this.img.get().width) * this.scale.x;
+            this.offset.y = (this.aoff.y - Math.floor(this.aoff.y / this.img.get().height) * this.img.get().height) * this.scale.y;
+        }
         $MAIN.cLAY.insert(new Layer(this.depth, () => {return this.draw()}));
     }
     setScale(scale:Vector):void {

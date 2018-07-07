@@ -7,12 +7,10 @@ const exec = require("child_process").exec;
 
 var win, splash;
 
-console.log(process.argv[2]);
-
 function createWindow () {
     // Create the browser window.
     console.log(app.getAppPath());
-    win = new BrowserWindow({width: 800, height: 600, icon: "./icon/minty.svg.png", useContentSize: true, show: false});
+    win = new BrowserWindow({width: 800, height: 600, icon: "./icon/minty.svg.png", useContentSize: true, show: false, webPreferences:{nodeIntegrationInWorker: true}});
     splash = new BrowserWindow({width: 400, height: 400 , transparent: true, useContentSize:true, center: true, frame: false, alwaysOnTop:true});
     splash.setMenu(null);
     win.setMenu(null);

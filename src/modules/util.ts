@@ -53,16 +53,18 @@ function collides(that:Actor, otherNames:string[], pos:Vector = that.pos, size:V
     otherNames.forEach(otherName => {
         final.other[otherName] = [];
         for(let i = 0; i < ins[otherName].length; i++) {
-            let p2:Polygon;
-            if(ins[otherName][i]) {
-                p2 = MorphPolygon(ins[otherName][i].mask, ins[otherName][i])
-                if (ins[otherName][i].isCollidable && p1.collides(p2)) {
-                    final.is = true;
-                    final.other[otherName].push(ins[otherName][i].id);
-                }
-            };
+            if(!(that.name == otherName && that.id == i)) {
+                let p2:Polygon;
+                if(ins[otherName][i]) {
+                    p2 = MorphPolygon(ins[otherName][i].mask, ins[otherName][i])
+                    if (ins[otherName][i].isCollidable && p1.collides(p2)) {
+                        final.is = true;
+                        final.other[otherName].push(ins[otherName][i].id);
+                    }
+                };
+            }
         }
-    })
+    });
     return final;
 }
 
