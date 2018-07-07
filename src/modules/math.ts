@@ -132,12 +132,14 @@ class Polygon {
     public root:number[][];
     public offset:Vector;
     public corner:{min:Vector, max:Vector};
+    public isRect:boolean;
 
-    constructor(type:string = "rect") {
+    constructor(type:string = "") {
         this.val = [];
         this.offset = v();
         this.corner = {min:v(), max:v()};
         this.root = [];
+        this.isRect = type == "rect";
     }
 
     set(polygon:number[][]):void {
@@ -178,6 +180,8 @@ class Polygon {
             pho.rotate(angle);
             return pho;
         })
+        this.grabinfo();
+        this.isRect = angle.deg == 0 ? true:false;
     }
 
     size(size:Vector):void {
@@ -189,6 +193,7 @@ class Polygon {
             size.x / sz.x,
             size.y / sz.y
         ))
+        this.grabinfo();
     }
 
     scale(scale:Vector):void {
@@ -201,6 +206,7 @@ class Polygon {
     }
 
     collides(poly:Polygon):boolean {
+        console.log("pccheck");
         let isUndefined = (x:any) => x == null;
         let a:Vector[] = this.val;
         let b:Vector[] = poly.val;
@@ -247,6 +253,16 @@ class Polygon {
                 }
             }
         }
+        return true;
+    }
+
+    collidesRect(poly:Polygon) {
+        // no horizontal overlap
+        if (this.corner.min.x >= poly.corner.max.x || poly.corner.min.x >=this.corner.max.x) return false;
+    
+        // no vertical overlap
+        if (this.corner.min.y >= poly.corner.max.y || poly.corner.min.y >= this.corner.max.y) return false;
+    
         return true;
     }
 
