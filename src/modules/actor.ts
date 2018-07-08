@@ -14,6 +14,7 @@ class Actor {
     public isHidden:boolean;
     public isDrawedOutsideCamera:boolean;
     public name:string;
+    public spacialpos:{min:Vector, max:Vector}
 
 
     constructor(pos:Vector = v(), name:string) {
@@ -32,18 +33,22 @@ class Actor {
         this.name = name;
         this.isHidden = false;
         this.isDrawedOutsideCamera = false;
+        this.spacialpos = {min:v(), max:v()};
     }
     tick():void {}
     draw():void {}
     update():void {
         if(!$MAIN.edit) {
+            SpGrid.assign(this);
             let lKeys = Object.keys(this.loops);
             for(let i = 0; i<lKeys.length; i++) {
                 this.loops[lKeys[i]].update();
             }
+
             if (tick * 100 % Math.floor(this.tickrate * 100) == 0) {
                 this.tick();
             }
+            this.spacialpos = SpGrid.calculateBlocks(MorphPolygon(this.mask, this));
             $MAIN.mLAY.insert(new Layer(this.mdepth, ():boolean => {return this.mousedown()}));
         }
         if (!this.isHidden) {
