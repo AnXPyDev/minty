@@ -62,10 +62,12 @@ class MCompiler extends Compiler {
         super();
     }
     compile(layers:Layers) {
-        for (let i in layers.arr) {
-            for (let e in layers.arr[i]) {
-                if (layers.arr[i][e]()) {
-                    return;
+        for (let i = 0; i < layers.arr.length; i++) {
+            if(layers.arr[i]) {
+                for (let e = 0; e < layers.arr[i].length; e++) {
+                    if (layers.arr[i][e]()) {
+                        return;
+                    }
                 }
             }
         }

@@ -144,9 +144,9 @@ class Polygon {
 
     set(polygon:number[][]):void {
         let temp:Vector[] = [];
-        polygon.forEach(x => {
-            temp.push(new Vector(...x))
-        })
+        for(let i = 0; i<polygon.length; i++) {
+            temp.push(new Vector(...polygon[i]));
+        }
         this.val = temp;
         this.root = polygon;
         this.grabinfo();
@@ -155,7 +155,7 @@ class Polygon {
     
     edit(callback:(vec:Vector) => Vector):void {
         let temp = this.val;
-        for(let i in temp) {
+        for(let i = 0; i<temp.length; i++) {
             temp[i] = callback(temp[i]);
         }
         this.val = temp;
@@ -206,7 +206,6 @@ class Polygon {
     }
 
     collides(poly:Polygon):boolean {
-        console.log("pccheck");
         let isUndefined = (x:any) => x == null;
         let a:Vector[] = this.val;
         let b:Vector[] = poly.val;
@@ -270,10 +269,10 @@ class Polygon {
         (() => {
             let x:number[] = [];
             let y:number[] = [];
-            this.val.forEach(v => {
-                x.push(v.x);
-                y.push(v.y);
-            })
+            for(let i = 0; i<this.val.length; i++) {
+                x.push(this.val[i].x);
+                y.push(this.val[i].y);
+            }
             let min:Vector = v(Math.min(...x), Math.min(...y));
             let max:Vector = v(Math.max(...x), Math.max(...y));
             this.corner.min = min;

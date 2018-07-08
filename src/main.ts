@@ -130,7 +130,7 @@ $MAIN.game_cfg = reqget(paths.mpx + paths.project + "/game.cfg.json");
 const ELECTRON:any = reqget("electron");
 WINDOW = ELECTRON.remote.getCurrentWindow();
 
-// obtains all MAKEBA modules
+// obtains all Minty modules
 $MAIN.cfg.modules.forEach((file:string) => {
     obtain(paths.mpx + "./compiled/modules/" + file + ".js");
 });
@@ -207,25 +207,29 @@ $MAIN.tick = function():void {
     $MAIN.mLAY.reset();
     camera.update();
     Key.mouselog();
-    for(let i in bck) {
-        bck[i].update();
+    let bKeys = Object.keys(bck);
+    for(let i = 0; i<bKeys.length; i++) {
+        bck[bKeys[i]].update();
     }
-    for(let i in ins) {
-        for(let e in ins[i]) {
-            ins[i][e] && ins[i][e].update();
+    let iKeys = Object.keys(ins);
+    for(let i = 0; i<iKeys.length; i++) {
+        for(let e = 0; e<ins[iKeys[i]].length; e++) {
+            ins[iKeys[i]][e] && ins[iKeys[i]][e].update();
         }
     }
-    for(let i in ins) {
-        for(let e = 0; e < ins[i].length; e++) {
-            if(!ins[i][e]) {
-                ins[i].splice(e,1);
+    for(let i = 0; i<iKeys.length; i++) {
+        for(let e = 0; e < ins[iKeys[i]].length; e++) {
+            if(!ins[iKeys[i]][e]) {
+                ins[iKeys[i]].splice(e,1);
                 e--;
             } else {
-                ins[i][e].id = e;
+                ins[iKeys[i]][e].id = e;
             }
         }
     }
-    for(let i in loop) {
+
+
+    for(let i = 0; i<loop.length; i++) {
         loop[i].update();
     }
     $MAIN.cLAY.finalize();

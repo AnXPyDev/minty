@@ -37,8 +37,9 @@ class Actor {
     draw():void {}
     update():void {
         if(!$MAIN.edit) {
-            for(let i in this.loops) {
-                this.loops[i].update();
+            let lKeys = Object.keys(this.loops);
+            for(let i = 0; i<lKeys.length; i++) {
+                this.loops[lKeys[i]].update();
             }
             if (tick * 100 % Math.floor(this.tickrate * 100) == 0) {
                 this.tick();
@@ -91,7 +92,7 @@ const Instance:{
             //@ts-ignore
             Object.assign(ins[name][id], merge);
         } else {
-            for(let i in ins[name]) {
+            for(let i = 0; i<ins[name].length; i++) {
                 //@ts-ignore
                 Object.assign(ins[name][i], merge);
             }
@@ -106,22 +107,22 @@ const Instance:{
             result.concat(inheritanceTree.byParent[parent]);
         } else if (traits.length > 0) {
             let count:any = {};
-            traits.forEach(x => {
-                inheritanceTree.byTrait[x] ? null : inheritanceTree.byTrait[x] = [];
-                inheritanceTree.byTrait[x].forEach((y:any) => {
-                    if (count[y]) {
-                        count[y] ++;
+            for(let i = 0; i<traits.length; i++) {
+                inheritanceTree.byTrait[traits[i]] ? null : inheritanceTree.byTrait[traits[i]] = [];
+                for(let e = 0; e < inheritanceTree.byTrait[traits[i]].length; e++) {
+                    if (count[inheritanceTree.byTrait[traits[i]][e]]) {
+                        count[inheritanceTree.byTrait[traits[i]][e]] ++;
                     } else {
-                        count[y] = 1;
+                        count[inheritanceTree.byTrait[traits[i]][e]] = 1;
                     }
-                })
-            })
-            let cKeys = Object.keys(count)
-            cKeys.forEach((x:any) => {
-                if(count[x] == traits.length) {
-                    result.push(x)
                 }
-            })
+            }
+            let cKeys = Object.keys(count)
+            for(let i = 0; i < cKeys.length; i++) {
+                if(count[cKeys[i]] == traits.length) {
+                    result.push(cKeys[i])
+                }
+            }
         }
         return result;        
     }
@@ -131,13 +132,13 @@ const Instance:{
 function def(name:string, actor:any, parent:string = "", traits:string[] = []):void {
     act[name] = actor;
     ins[name] = [];
-    traits.forEach(x => {
-        if(inheritanceTree.byTrait[x]) {
-            inheritanceTree.byTrait[x].push(name);
+    for(let i = 0; i<traits.length; i++) {
+        if(inheritanceTree.byTrait[traits[i]]) {
+            inheritanceTree.byTrait[traits[i]].push(name);
         } else {
-            inheritanceTree.byTrait[x] = [name];
+            inheritanceTree.byTrait[traits[i]] = [name];
         }
-    })
+    }
     if(parent) {
         if(inheritanceTree.byParent[parent]) {
             inheritanceTree.byParent[parent].push(name);
@@ -173,9 +174,9 @@ class Loop {
 
 function filterIns(insNames:string[]):any[] {
     let result:any[] = [];
-    insNames.forEach(x => {
-        result.concat(ins[x]);
-    })
+    for(let i = 0; i<insNames.length; i++) {
+        result.concat(ins[insNames[i]]);
+    }
     return result;
 }
 

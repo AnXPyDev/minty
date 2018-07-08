@@ -27,8 +27,9 @@ class Sprite {
             this.loop.update();
         }
         this.layers.reset();
-        Object.keys(this.attachments).forEach((x:string) => {
-            this.layers.insert(new Layer(this.attachments[x].depth, () => {this.attachments[x].draw()}))})
+        let keys = Object.keys(this.attachments);
+        for(let i = 0; i<keys.length; i++) {
+            this.layers.insert(new Layer(this.attachments[keys[i]].depth, () => {this.attachments[keys[i]].draw()}))}
         this.layers.insert(new Layer(0, () => {
             let sz = this.img.getsize();
             ctx.drawImage(this.img.get(), this.index * this.width, 0, this.width, this.img.get().height, -sz.x / (this.len * 2), -sz.y / 2, sz.x / this.len, sz.y);
@@ -118,11 +119,14 @@ class ImageArray {
 
 class SprCompiler extends Compiler{
     compile(layers:Layers, ...args:any[]) {
-        layers.arr.forEach((layer:Function[]) => {
-            layer.forEach((fn:Function) => {
-                fn(...args);
-            });
-        });
+        for(let i = 0; i<layers.arr.length; i++) {
+            if(layers.arr[i]) {
+                for(let e = 0; e<layers.arr[i].length; e++) {
+                    //@ts-ignore
+                    layers.arr[i][e](...args);
+                }
+            }
+        }
     }
 }
 

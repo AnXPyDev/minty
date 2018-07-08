@@ -51,24 +51,25 @@ function collides(that:Actor, otherNames:string[], pos:Vector = that.pos, size:V
     let final:{is:boolean, other:any} = {is:false, other:{}};
     if(that.isCollidable) {
         let p1 = MorphPolygon(that.mask, that, pos, size, angle);
-        otherNames.forEach(otherName => {
-            final.other[otherName] = [];
-            for(let i = 0; i < ins[otherName].length; i++) {
-                if(!(that.name == otherName && that.id == i)) {
-                    let p2:Polygon;
-                    if(ins[otherName][i] && ins[otherName][i].isCollidable) {
-                        p2 = MorphPolygon(ins[otherName][i].mask, ins[otherName][i]);
-                        if (p1.collidesRect(p2)) {
-                            console.log(p1.isRect , p2.isRect);
-                            if ((p1.isRect && p2.isRect) || p1.collides(p2)) {
-                                final.is = true;
-                                final.other[otherName].push(ins[otherName][i].id);
+        for(let e = 0; e<otherNames.length; e++) {
+            if(ins[otherNames[e]].length > 0) {
+                final.other[otherNames[e]] = [];
+                for(let i = 0; i < ins[otherNames[e]].length; i++) {
+                    if(!(that.name == otherNames[e] && that.id == i)) {
+                        let p2:Polygon;
+                        if(ins[otherNames[e]][i] && ins[otherNames[e]][i].isCollidable) {
+                            p2 = MorphPolygon(ins[otherNames[e]][i].mask, ins[otherNames[e]][i]);
+                            if (p1.collidesRect(p2)) {
+                                if ((p1.isRect && p2.isRect) || p1.collides(p2)) {
+                                    final.is = true;
+                                    final.other[otherNames[e]].push(ins[otherNames[e]][i].id);
+                                }
                             }
                         }
                     }
                 }
             }
-        });
+        }
     }
     return final;
 }

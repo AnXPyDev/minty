@@ -35,7 +35,7 @@ class Viewport {
         this.size = size;
         if (window) {
             this.screen = size;
-            for (let i in [0,1]) {
+            for (let i = 0; i<2; i++) {
                 WINDOW.setContentSize(size.x, size.y);
             }    
         }
@@ -79,13 +79,13 @@ class Layers {
     }
 
     finalize():(() => any)[][] {
-        this.temp.forEach((layer:Layer) => {
-            if (this.arr[layer.depth - this.min]) {
-                this.arr[layer.depth - this.min].push(layer.fn);
+        for(let i = 0; i<this.temp.length; i++) {
+            if (this.arr[this.temp[i].depth - this.min]) {
+                this.arr[this.temp[i].depth - this.min].push(this.temp[i].fn);
             } else {
-                this.arr[layer.depth - this.min] = [layer.fn];
+                this.arr[this.temp[i].depth - this.min] = [this.temp[i].fn];
             }
-        })
+        }
         
         return this.arr;
     }
@@ -110,11 +110,13 @@ class Layer {
 class Compiler {
     constructor() {};
     compile(layers:Layers) {
-        layers.arr.forEach((layer:Function[]) => {
-            layer.forEach((fn:Function) => {
-                fn();
-            });
-        });
+        for(let i = 0; i<layers.arr.length; i++) {
+            if(layers.arr[i]) {
+                for(let e = 0; e<layers.arr[i].length; e++) {
+                    layers.arr[i][e]();
+                }
+            }
+        }
     }
 }
 

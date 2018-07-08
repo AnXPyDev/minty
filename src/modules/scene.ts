@@ -28,8 +28,8 @@ class Scene {
         scene = this;
         pause();
         let insKeys:string[] = Object.keys(ins);
-        for(let i in insKeys) {
-            for(let e in ins[insKeys[i]]) {
+        for(let i = 0; i < insKeys.length; i++) {
+            for(let e = 0; e < ins[insKeys[i]].length; e++) {
                 if (!(ins[insKeys[i]][e] == null) && (!(ins[insKeys[i]][e].isPersistant) || ((this.ignore_persistant)))) {
                     //@ts-ignore
                     Instance.destroy(insKeys[i], e);
@@ -38,14 +38,14 @@ class Scene {
         }
 
         let actKeys:string[] = Object.keys(this.act);
-        for(let i in actKeys) {
-            for(let e in this.act[actKeys[i]]) {
+        for(let i = 0; i < actKeys.length; i++) {
+            for(let e = 0; e < this.act[actKeys[i]].length; e++) {
                 Instance.spawn(actKeys[i], this.act[actKeys[i]][e]);
             }
         }
         bck = {};
         let bckKeys:string[] = Object.keys(this.bck);
-        for(let i in bckKeys) {
+        for(let i = 0; i < bckKeys.length; i++) {
 
             let pho:any[] = this.bck[bckKeys[i]];
             //@ts-ignore
