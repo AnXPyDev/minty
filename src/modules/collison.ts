@@ -1,9 +1,13 @@
-class SpacialGrid {
-    public grid:any[][];
+class CollisionGrid {
+    public grids:any[][][];
     public block:Vector;
+    public index:number;
+    public nindex:number;
     constructor() {
-        this.grid = [];
+        this.grids = [[],[]];
         this.block = v(64,64);
+        this.index = 0;
+        this.nindex = 1;
     }
     calculateBlocks(poly:Polygon):{min:Vector, max:Vector} {
         let min:Vector, max:Vector;
@@ -15,45 +19,29 @@ class SpacialGrid {
     }
     assign(that:Actor) {
         for(let i = that.spacialpos.min.x; i<that.spacialpos.max.x + 1; i++) {
-            if(!this.grid[i]) {
-                this.grid[i] = [];
+            if(!this.grids[this.nindex][i]) {
+                this.grids[this.nindex][i] = [];
             }
             for(let e = that.spacialpos.min.y; e<that.spacialpos.max.y + 1; e++) {
-                if(!this.grid[i][e]) {
-                    this.grid[i][e] = {};
+                if(!this.grids[this.nindex][i][e]) {
+                    this.grids[this.nindex][i][e] = {};
                 }
-                if(!this.grid[i][e][that.name]) {
-                    this.grid[i][e][that.name] = [];
+                if(!this.grids[this.nindex][i][e][that.name]) {
+                    this.grids[this.nindex][i][e][that.name] = [];
                 }
-                this.grid[i][e][that.name][that.id] = that;
+                this.grids[this.nindex][i][e][that.name].push(that);
             }
         }
     }
     reset() {
-        this.grid = [];
+        this.grids[this.index] = [];
     }
-    getIns(spacialpos:{min:Vector, max:Vector}) {
-        let result:any = {};
-        for(let i = spacialpos.min.x; i<spacialpos.max.x + 1; i++) {
-            if(this.grid[i]) {
-                for(let e = spacialpos.min.y; e<spacialpos.max.y + 1; e++) {
-                    if(this.grid[i][e]) {
-                        let keys = Object.keys(this.grid[i][e]);
-                        for(let q = 0; q<keys.length; q++) {
-                            if(!result[keys[q]]) {
-                                result[keys[q]] = [];
-                            }
-                            for(let x = 0; x<this.grid[i][e][keys[q]].length; x++) {
-                                if(this.grid[i][e][keys[q]][x]) {
-                                    result[keys[q]][x] = this.grid[i][e][keys[q]][x];
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return result;
+    nextIndex() {
+        this.index = wrap_np(this.index + 1, 0, 1);
+        this.nindex = wrap_np(this.nindex + 1, 0, 1);
+    }
+    get() {
+        return this.grids[this.index];
     }
 }
 
@@ -68,7 +56,7 @@ function collides(that:Actor, otherNames:string[], pos:Vector = that.pos, size:V
                     if(!(that.name == otherNames[e] && that.id == i)) {
                         let p2:Polygon;
                         if(ins[otherNames[e]][i] && ins[otherNames[e]][i].isCollidable) {
-                            p2 = MorphPolygon(ins[otherNames[e]][i].mask, ins[otherNames[e]][i]);
+                            p2 = ins[otherNames[e]][i].morphedMask;
                             if (p1.collidesRect(p2)) {
                                 if ((p1.isRect && p2.isRect) || p1.collides(p2)) {
                                     final.is = true;
@@ -87,7 +75,40 @@ function collides(that:Actor, otherNames:string[], pos:Vector = that.pos, size:V
 function collidesNew(that:Actor, otherNames:string[], pos:Vector = that.pos, size:Vector = that.size, angle:Angle = that.angle) {
     let final:{is:boolean, other:any} = {is:false, other:{}};
     if(that.isCollidable) {
-
+        let done:any = {};
+        let p1 = MorphPolygon(that.mask, that, pos, size, angle);
+        let p2;
+        let gridpos = CG.calculateBlocks(p1);
+        let grid = CG.get();
+        console.log(that.name, grid);
+        for(let x = gridpos.min.x; x<gridpos.max.x + 1; x++) {
+            if (grid[x]) {
+                for(let y = gridpos.min.y; y<gridpos.max.y + 1; y++) {
+                    if (grid[x][y]) {
+                        let keys = Object.keys(grid[x][y]);
+                        for(let i = 0; i<keys.length; i++) {
+                            if(otherNames.includes(keys[i])) {
+                                if(!final.other[keys[i]]) {
+                                    final.other[keys[i]] = [];
+                                }
+                                for(let e = 0; e<grid[x][y][keys[i]].length; e++) {
+                                    if(keys[i] != that.name && grid[x][y][keys[i]][e].id != that.id) {
+                                        p2 = grid[x][y][keys[i]][e].morphedMask;
+                                        
+                                        if (p1.collidesRect(p2)) {
+                                            if ((p1.isRect && p2.isRect) || p1.collides(p2)) {
+                                                final.is = true;
+                                                final.other[keys[i]].push();
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
     return final;
 }
@@ -95,7 +116,7 @@ function collidesNew(that:Actor, otherNames:string[], pos:Vector = that.pos, siz
 
 
 module.exports = {
-    SpacialGrid:SpacialGrid,
+    CollisionGrid:CollisionGrid,
     collides:collides,
     collidesNew:collidesNew
 }

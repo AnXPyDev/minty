@@ -156,7 +156,7 @@ let camera:Camera = new Camera();
 let scene:Scene = new Scene(v(),[],[],()=>{},()=>{});
 let tick:number = 0;
 let dt:number = 1;
-let SpGrid:SpacialGrid = new SpacialGrid();
+let CG:CollisionGrid = new CollisionGrid();
 
 $MAIN.cAPI = new Compiler;
 $MAIN.cLAY = new Layers;
@@ -235,7 +235,8 @@ $MAIN.tick = function():void {
     }
     $MAIN.cLAY.finalize();
     $MAIN.mLAY.finalize();
-    //SpGrid.reset();
+    /*CG.reset();
+    CG.nextIndex();*/
     $MAIN.tps.now = Date.now();
     $MAIN.tps.total = Math.floor(1000 / ($MAIN.tps.now - $MAIN.tps.last));
     $MAIN.titleupdateloop.update();

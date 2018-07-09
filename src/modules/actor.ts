@@ -14,7 +14,8 @@ class Actor {
     public isHidden:boolean;
     public isDrawedOutsideCamera:boolean;
     public name:string;
-    public spacialpos:{min:Vector, max:Vector}
+    public spacialpos:{min:Vector, max:Vector};
+    public morphedMask:Polygon;
 
 
     constructor(pos:Vector = v(), name:string) {
@@ -34,12 +35,12 @@ class Actor {
         this.isHidden = false;
         this.isDrawedOutsideCamera = false;
         this.spacialpos = {min:v(), max:v()};
+        this.morphedMask = new Polygon();
     }
     tick():void {}
     draw():void {}
     update():void {
         if(!$MAIN.edit) {
-            //SpGrid.assign(this);
             let lKeys = Object.keys(this.loops);
             for(let i = 0; i<lKeys.length; i++) {
                 this.loops[lKeys[i]].update();
@@ -48,7 +49,11 @@ class Actor {
             if (tick * 100 % Math.floor(this.tickrate * 100) == 0) {
                 this.tick();
             }
-            //this.spacialpos = SpGrid.calculateBlocks(MorphPolygon(this.mask, this));
+            this.morphedMask = MorphPolygon(this.mask, this);
+            if(this.isCollidable) {
+                /*this.spacialpos = CG.calculateBlocks(this.morphedMask);
+                CG.assign(this);*/
+            }
             $MAIN.mLAY.insert(new Layer(this.mdepth, ():boolean => {return this.mousedown()}));
         }
         if (!this.isHidden) {
@@ -69,6 +74,14 @@ class Actor {
     valueOf() {
         return this.name; 
     }
+    afterConstructor() {
+        this.morphedMask = MorphPolygon(this.mask, this);
+        if (this.isCollidable) {
+            
+            /*this.spacialpos = CG.calculateBlocks(MorphPolygon(this.mask, this));
+            CG.assign(this);*/
+        }
+    }
 } 
 
 const Instance:{
@@ -80,8 +93,9 @@ const Instance:{
 } = {
     spawn(name:string, Args:any):number {
         let id:number = ins[name].length;
-        let pho:any = new act[name](...Args);
+        let pho:Actor = new act[name](...Args);
         pho.id = id;
+        if(pho.isCollidable) {pho.afterConstructor()}
         if(Args[0] != undefined) {
             pho.pos.x = Args[0].x;
             pho.pos.y = Args[0].y;
