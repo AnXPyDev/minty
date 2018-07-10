@@ -36,7 +36,6 @@ class Scene {
                 }
             }
         }
-        CG.nextIndex();
         let actKeys:string[] = Object.keys(this.act);
         for(let i = 0; i < actKeys.length; i++) {
             for(let e = 0; e < this.act[actKeys[i]].length; e++) {

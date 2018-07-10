@@ -14,7 +14,7 @@ class Actor {
     public isHidden:boolean;
     public isDrawedOutsideCamera:boolean;
     public name:string;
-    public spacialpos:{min:Vector, max:Vector};
+    public spatialpos:{min:Vector, max:Vector};
     public morphedMask:Polygon;
 
 
@@ -34,7 +34,7 @@ class Actor {
         this.name = name;
         this.isHidden = false;
         this.isDrawedOutsideCamera = false;
-        this.spacialpos = {min:v(), max:v()};
+        this.spatialpos = {min:v(), max:v()};
         this.morphedMask = new Polygon();
     }
     tick():void {}
@@ -50,10 +50,8 @@ class Actor {
                 this.tick();
             }
             this.morphedMask = MorphPolygon(this.mask, this);
-            if(this.isCollidable) {
-                /*this.spacialpos = CG.calculateBlocks(this.morphedMask);
-                CG.assign(this);*/
-            }
+            this.spatialpos = CGH.calculateBlocks(this.morphedMask);
+            ins[this.name].grid.insert(this.spatialpos, this.id);
             $MAIN.mLAY.insert(new Layer(this.mdepth, ():boolean => {return this.mousedown()}));
         }
         if (!this.isHidden) {
@@ -76,11 +74,8 @@ class Actor {
     }
     afterConstructor() {
         this.morphedMask = MorphPolygon(this.mask, this);
-        if (this.isCollidable) {
-            
-            /*this.spacialpos = CG.calculateBlocks(MorphPolygon(this.mask, this));
-            CG.assign(this);*/
-        }
+        this.spatialpos = CGH.calculateBlocks(this.morphedMask);
+        ins[this.name].grid.insert(this.spatialpos, this.id);
     }
 } 
 
@@ -151,6 +146,7 @@ const Instance:{
 function def(name:string, actor:any, parent:string = "", traits:string[] = []):void {
     act[name] = actor;
     ins[name] = [];
+    ins[name].grid = new CollisionGrid();
     for(let i = 0; i<traits.length; i++) {
         if(inheritanceTree.byTrait[traits[i]]) {
             inheritanceTree.byTrait[traits[i]].push(name);

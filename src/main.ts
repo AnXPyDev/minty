@@ -156,7 +156,7 @@ let camera:Camera = new Camera();
 let scene:Scene = new Scene(v(),[],[],()=>{},()=>{});
 let tick:number = 0;
 let dt:number = 1;
-let CG:CollisionGrid = new CollisionGrid();
+let CGH:CGHandler = new CGHandler();
 
 $MAIN.cAPI = new Compiler;
 $MAIN.cLAY = new Layers;
@@ -217,6 +217,8 @@ $MAIN.tick = function():void {
         for(let e = 0; e<ins[iKeys[i]].length; e++) {
             ins[iKeys[i]][e] && ins[iKeys[i]][e].update();
         }
+        ins[iKeys[i]].grid.reset();
+        ins[iKeys[i]].grid.nextIndex();
     }
     for(let i = 0; i<iKeys.length; i++) {
         for(let e = 0; e < ins[iKeys[i]].length; e++) {
@@ -235,8 +237,6 @@ $MAIN.tick = function():void {
     }
     $MAIN.cLAY.finalize();
     $MAIN.mLAY.finalize();
-    /*CG.reset();
-    CG.nextIndex();*/
     $MAIN.tps.now = Date.now();
     $MAIN.tps.total = Math.floor(1000 / ($MAIN.tps.now - $MAIN.tps.last));
     $MAIN.titleupdateloop.update();

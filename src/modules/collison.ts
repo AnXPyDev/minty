@@ -1,13 +1,7 @@
-class CollisionGrid {
-    public grids:any[][][];
+class CGHandler {
     public block:Vector;
-    public index:number;
-    public nindex:number;
     constructor() {
-        this.grids = [[],[]];
-        this.block = v(64,64);
-        this.index = 0;
-        this.nindex = 1;
+        this.block = v(32,32)
     }
     calculateBlocks(poly:Polygon):{min:Vector, max:Vector} {
         let min:Vector, max:Vector;
@@ -17,35 +11,57 @@ class CollisionGrid {
                 Math.floor(poly.corner.max.y / this.block.y));  
         return {min:min, max:max};
     }
-    assign(that:Actor) {
-        for(let i = that.spacialpos.min.x; i<that.spacialpos.max.x + 1; i++) {
-            if(!this.grids[this.nindex][i]) {
-                this.grids[this.nindex][i] = [];
-            }
-            for(let e = that.spacialpos.min.y; e<that.spacialpos.max.y + 1; e++) {
-                if(!this.grids[this.nindex][i][e]) {
-                    this.grids[this.nindex][i][e] = {};
-                }
-                if(!this.grids[this.nindex][i][e][that.name]) {
-                    this.grids[this.nindex][i][e][that.name] = [];
-                }
-                this.grids[this.nindex][i][e][that.name].push(that);
-            }
-        }
-    }
-    reset() {
-        this.grids[this.index] = [];
+}
+
+
+class CollisionGrid {
+    public grids:number[][][][];
+    public index:number;
+    public nindex:number;
+    constructor() {
+        this.grids = [[],[]];
+        this.index = 0;
+        this.nindex = 1;
     }
     nextIndex() {
         this.index = wrap_np(this.index + 1, 0, 1);
         this.nindex = wrap_np(this.nindex + 1, 0, 1);
     }
-    get() {
-        return this.grids[this.index];
+    insert(spos:{min:Vector, max:Vector}, id:number) {
+        let ix = [this.index, this.nindex];
+        for(let i = 0; i < 2; i++) {
+            for(let x = spos.min.x; x < spos.max.x +1; x++) {
+                this.grids[ix[i]][x] ? 0 : this.grids[ix[i]][x] = [];
+                for(let y = spos.min.y; y < spos.max.y + 1; y++) {
+                    this.grids[ix[i]][x][y] ? 0 : this.grids[ix[i]][x][y] = [];
+                    this.grids[ix[i]][x][y].push(id);
+                }
+            }
+        }
+    }
+    request(spos:{min:Vector, max:Vector}):number[] {
+        let done:boolean[] = [];
+        let final:number[] = [];
+        for(let x = spos.min.x; x < spos.max.x + 1; x++) {
+            if(this.grids[this.index][x]) {
+                for(let y = spos.min.y; y < spos.max.y + 1; y++) {
+                    if(this.grids[this.index][x][y]) {
+                        for(let i = 0; i < this.grids[this.index][x][y].length; i++) {
+                            done[this.grids[this.index][x][y][i]] ? 0:final.push(this.grids[this.index][x][y][i]);
+                            done[this.grids[this.index][x][y][i]] = true;
+                        }
+                    }
+                }
+            }
+        }
+        return final;
+    }
+    reset() {
+        this.grids[this.index] = [];
     }
 }
 
-function collides(that:Actor, otherNames:string[], pos:Vector = that.pos, size:Vector = that.size, angle:Angle = that.angle) {
+function collidesOld(that:Actor, otherNames:string[], pos:Vector = that.pos, size:Vector = that.size, angle:Angle = that.angle) {
     let final:{is:boolean, other:any} = {is:false, other:{}};
     if(that.isCollidable) {
         let p1 = MorphPolygon(that.mask, that, pos, size, angle);
@@ -72,37 +88,24 @@ function collides(that:Actor, otherNames:string[], pos:Vector = that.pos, size:V
     return final;
 }
 
-function collidesNew(that:Actor, otherNames:string[], pos:Vector = that.pos, size:Vector = that.size, angle:Angle = that.angle) {
+
+function collides(that:Actor, otherNames:string[], pos:Vector = that.pos, size:Vector = that.size, angle:Angle = that.angle) {
     let final:{is:boolean, other:any} = {is:false, other:{}};
     if(that.isCollidable) {
-        let done:any = {};
         let p1 = MorphPolygon(that.mask, that, pos, size, angle);
-        let p2;
-        let gridpos = CG.calculateBlocks(p1);
-        let grid = CG.get();
-        console.log(that.name, grid);
-        for(let x = gridpos.min.x; x<gridpos.max.x + 1; x++) {
-            if (grid[x]) {
-                for(let y = gridpos.min.y; y<gridpos.max.y + 1; y++) {
-                    if (grid[x][y]) {
-                        let keys = Object.keys(grid[x][y]);
-                        for(let i = 0; i<keys.length; i++) {
-                            if(otherNames.includes(keys[i])) {
-                                if(!final.other[keys[i]]) {
-                                    final.other[keys[i]] = [];
-                                }
-                                for(let e = 0; e<grid[x][y][keys[i]].length; e++) {
-                                    if(keys[i] != that.name && grid[x][y][keys[i]][e].id != that.id) {
-                                        p2 = grid[x][y][keys[i]][e].morphedMask;
-                                        
-                                        if (p1.collidesRect(p2)) {
-                                            if ((p1.isRect && p2.isRect) || p1.collides(p2)) {
-                                                final.is = true;
-                                                final.other[keys[i]].push();
-                                            }
-                                        }
-                                    }
-                                }
+        let spos = CGH.calculateBlocks(p1);
+        for(let e = 0; e<otherNames.length; e++) {
+            final.other[otherNames[e]] = [];
+            let gins = ins[otherNames[e]].grid.request(spos);
+            for(let i = 0; i < gins.length; i++) {
+                if(!(that.name == otherNames[e] && that.id == gins[i])) {
+                    let p2:Polygon;
+                    if(ins[otherNames[e]][gins[i]]) {
+                        p2 = ins[otherNames[e]][gins[i]].morphedMask;
+                        if (p1.collidesRect(p2)) {
+                            if ((p1.isRect && p2.isRect) || p1.collides(p2)) {
+                                final.is = true;
+                                final.other[otherNames[e]].push(gins[i]);
                             }
                         }
                     }
@@ -113,10 +116,10 @@ function collidesNew(that:Actor, otherNames:string[], pos:Vector = that.pos, siz
     return final;
 }
 
-
-
 module.exports = {
+    CGHandler:CGHandler,
     CollisionGrid:CollisionGrid,
     collides:collides,
-    collidesNew:collidesNew
+    collidesOld:collidesOld
+
 }
