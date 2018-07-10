@@ -108,7 +108,6 @@ const GAME:{
     onload:{
         set(fn:() => void):void {
             if (this.doneedit || !$MAIN.edit) {
-                console.log("weak");
                 GAME.onload.fn = fn;
             } else {
                 //$MAIN.edit = false;
