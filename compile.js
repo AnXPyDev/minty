@@ -6,6 +6,7 @@ const paths = function() {
         json.project = "../" + process.argv[2];
         json.project_name = process.argv[2];
     }
+
     fs.writeFileSync("./paths.json", JSON.stringify(json));
     return json;
 }()
@@ -16,11 +17,14 @@ const paths = function() {
         files.forEach(file => {
             json.modules.push(file.split(".")[0]);
         });
+        if(process.argv[3] == "nodev") {
+            json.developer = false;
+        }
         fs.writeFile("./minty.cfg.json", JSON.stringify(json), function() {
             console.log("Sucessfully built minty.cfg.json");
         });
     });
-}
+ }
 
 {
     const json = require("./base/refference_game.json"); 

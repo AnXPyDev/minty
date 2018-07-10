@@ -108,7 +108,6 @@ const GAME:{
     onload:{
         set(fn:() => void):void {
             if (this.doneedit || !$MAIN.edit) {
-                console.log("weak");
                 GAME.onload.fn = fn;
             } else {
                 //$MAIN.edit = false;
@@ -174,6 +173,7 @@ $MAIN.titleupdateloop = new Loop(
 )
 
 $MAIN.onload = function() {
+    WINDOW.setTitle(`${paths.project_name}`);
     vport = new Viewport("c0", true);
     ctx = vport.context;
     ctx.imageSmoothingEnabled = $MAIN.game_cfg.imgSmoothing;
