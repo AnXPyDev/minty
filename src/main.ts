@@ -173,6 +173,7 @@ $MAIN.titleupdateloop = new Loop(
 )
 
 $MAIN.onload = function() {
+    WINDOW.setTitle(`${paths.project_name}`);
     vport = new Viewport("c0", true);
     ctx = vport.context;
     ctx.imageSmoothingEnabled = $MAIN.game_cfg.imgSmoothing;

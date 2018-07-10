@@ -22,14 +22,13 @@ function createWindow () {
         globalShortcut.register('F7', function() {
             win.toggleDevTools();
         });
+        globalShortcut.register('F5', function() {
+            win.reload();
+        });
+        globalShortcut.register('F6', function() {
+            exec("sh compile.sh " + paths.project_name, () => {console.log("Rebuilt the engine, press F5 to apply changes")});
+        });
     }
-    //win.setResizable(false);
-    globalShortcut.register('F5', function() {
-        win.reload();
-    });
-    globalShortcut.register('F6', function() {
-		exec("sh compile.sh " + paths.project_name, () => {console.log("Rebuilt the engine, press F5 to apply changes")});
-    });
     let fullscreen = false;
     globalShortcut.register('F11', () => {
         win.setFullScreen(!fullscreen);
