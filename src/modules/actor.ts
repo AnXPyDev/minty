@@ -16,6 +16,7 @@ class Actor {
     public name:string;
     public spatialpos:{min:Vector, max:Vector};
     public morphedMask:Polygon;
+    public isPaused:boolean;
 
 
     constructor(pos:Vector = v(), name:string) {
@@ -36,26 +37,29 @@ class Actor {
         this.isDrawedOutsideCamera = false;
         this.spatialpos = {min:v(), max:v()};
         this.morphedMask = new Polygon();
+        this.isPaused = false;
     }
     tick():void {}
     draw():void {}
     update():void {
-        if(!$MAIN.edit) {
-            let lKeys = Object.keys(this.loops);
-            for(let i = 0; i<lKeys.length; i++) {
-                this.loops[lKeys[i]].update();
-            }
+        if(!this.isPaused) {
+            if(!$MAIN.edit) {
+                let lKeys = Object.keys(this.loops);
+                for(let i = 0; i<lKeys.length; i++) {
+                    this.loops[lKeys[i]].update();
+                }
 
-            if (tick * 100 % Math.floor(this.tickrate * 100) == 0) {
-                this.tick();
+                if (tick * 100 % Math.floor(this.tickrate * 100) == 0) {
+                    this.tick();
+                }
+                this.morphedMask = MorphPolygon(this.mask, this);
+                this.spatialpos = CGH.calculateBlocks(this.morphedMask);
+                ins[this.name].grid.insert(this.spatialpos, this.id);
+                $MAIN.mLAY.insert(new Layer(this.mdepth, ():boolean => {return this.mousedown()}));
             }
-            this.morphedMask = MorphPolygon(this.mask, this);
-            this.spatialpos = CGH.calculateBlocks(this.morphedMask);
-            ins[this.name].grid.insert(this.spatialpos, this.id);
-            $MAIN.mLAY.insert(new Layer(this.mdepth, ():boolean => {return this.mousedown()}));
-        }
-        if (!this.isHidden) {
-            $MAIN.cLAY.insert(new Layer(this.depth, ():void => {this.draw()}));
+            if (!this.isHidden) {
+                $MAIN.cLAY.insert(new Layer(this.depth, ():void => {this.draw()}));
+            }
         }
         
         
