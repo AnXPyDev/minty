@@ -33,5 +33,7 @@
 # _Packaging the app_:
 
 
-    comming soon
+    $ sh build.sh (insert name of project here)
+    
+  You will find the packaged project in the "built" folder inside the folder that contains minty
 
