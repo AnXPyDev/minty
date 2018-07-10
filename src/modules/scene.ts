@@ -9,8 +9,9 @@ class Scene {
     public size:Vector;
     public aps:number;
     public ignore_persistant:boolean;
+    public name:string;
 
-    constructor(size:Vector, act:any, bck:any, onload:() => void, onbeforeload:() => void, tps:number = 60, aps:number = tps) {
+    constructor(name:string, size:Vector, act:any, bck:any, onload:() => void, onbeforeload:() => void, tps:number = 60, aps:number = tps) {
         this.index = 0;
         this.onload = onload;
         this.onbeforeload = onbeforeload;
@@ -21,12 +22,13 @@ class Scene {
         this.size = size;
         this.aps = aps;
         this.ignore_persistant = false;
+        this.name = name;
     } 
 
     load():void {
         this.onbeforeload();
-        scene = this;
         pause();
+        scene = this;
         let insKeys:string[] = Object.keys(ins);
         for(let i = 0; i < insKeys.length; i++) {
             for(let e = 0; e < ins[insKeys[i]].length; e++) {

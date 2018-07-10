@@ -37,12 +37,13 @@ class Background {
         ctx.save();
         ctx.globalAlpha = this.alpha;
         if(this.type == "tiled") {
+            let vsize = Math.max(vport.size.x, vport.size.y) *  (1 / Math.max(camera.scale.x, camera.scale.y));
             let goff:Vector = new Vector(
                     (camera.pos.x / (this.img.get().width * this.scale.x) - Math.floor(camera.pos.x / (this.img.get().width * this.scale.x))) * (this.img.get().width * this.scale.x) + this.offset.x,
                     (camera.pos.y / (this.img.get().height * this.scale.y) - Math.floor(camera.pos.y / (this.img.get().height * this.scale.y))) * (this.img.get().height * this.scale.y) + this.offset.y
                 )
-            for(let i:number = -Math.floor((vport.size.x / 2) / (this.img.get().width * this.scale.x)) -2; i < Math.floor(vport.size.x / (this.img.get().width * this.scale.x)) + 2; i++) {
-                for(let e:number = -Math.floor((vport.size.y / 2) / (this.img.get().height * this.scale.y)) -2; e < Math.floor(vport.size.y / (this.img.get().height * this.scale.y)) + 2; e++) {
+            for(let i:number = -Math.floor((vsize / 2) / (this.img.get().width * this.scale.x)) -2; i < Math.floor(vsize / (this.img.get().width * this.scale.x)) + 2; i++) {
+                for(let e:number = -Math.floor((vsize / 2) / (this.img.get().height * this.scale.y)) -2; e < Math.floor(vsize / (this.img.get().height * this.scale.y)) + 2; e++) {
                     ctx.drawImage(this.img.get(), 
                         i * this.img.get().width * this.scale.x + camera.pos.x - goff.x + this.off.x - 1,  
                         e * this.img.get().height * this.scale.y + camera.pos.y - goff.y + this.off.y - 1, 
@@ -55,7 +56,7 @@ class Background {
         } else if (this.type == "solid") {
             ctx.save();
             ctx.fillStyle = this.color;
-            ctx.fillRect(0, 0, vport.size.x, vport.size.y);
+            ctx.fillRect(-vport.size.x, -vport.size.y, vport.size.x * 2, vport.size.y * 2);
             ctx.restore();
         }
         ctx.restore();

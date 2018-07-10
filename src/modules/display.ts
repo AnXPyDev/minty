@@ -48,10 +48,10 @@ class Viewport {
         this.screen = v(win.width, win.height);
         if (this.screen != sc) {
             Key.mupdated = false;
-            if (this.screen.x > this.screen.y) {
+            if (this.screen.x  / this.screen.y > this.size.x / this.size.y) {
                 this.scale = v(this.screen.y / this.size.y,this.screen.y / this.size.y);
             } else {
-                this.scale = v(this.screen.x / this.size.x  , this.screen.x / this.size.x);
+                this.scale = v(this.screen.x / this.size.x,this.screen.x / this.size.x);
             }
         } 
         this.element.width = this.size.x * this.scale.x;
