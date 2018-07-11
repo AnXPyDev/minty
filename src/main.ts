@@ -104,17 +104,22 @@ const GAME:{
         fn():void,
         doneedit:boolean
     },
+    onbeforetick:{
+        set(fn:() => void):void,
+        fn():void,
+        doneedit:boolean
+    }
 } = {
     onload:{
         set(fn:() => void):void {
             if (this.doneedit || !$MAIN.edit) {
-                GAME.onload.fn = fn;
+                this.fn = fn;
             } else {
                 //$MAIN.edit = false;
                 this.doneedit = true;
-                GAME.onload.fn = () => {
+                this.fn = () => {
                     $MAIN.game_cfg = reqget(paths.mpx + paths.editor + "/game.cfg.json");
-                    GAME.onload.fn = () => {};
+                    this.fn = () => {};
                     loadgame(paths.editor);
                 }
             }
@@ -122,6 +127,18 @@ const GAME:{
         fn():void {},
         doneedit:false
     },
+    onbeforetick:{
+        set(fn:() => void):void {
+            if (this.doneedit || !$MAIN.edit) {
+                this.fn = fn;
+            } else {
+                //$MAIN.edit = false;
+                this.doneedit = true;
+            }
+        },
+        fn():void {},
+        doneedit:false
+    }
 }
 
 $MAIN.cfg = reqget(paths.mpx + "./minty.cfg.json");
@@ -152,7 +169,7 @@ let bck:any = {};
 let ins:any = {};
 let loop:any = [];
 let camera:Camera = new Camera();
-let scene:Scene = new Scene(v(),[],[],()=>{},()=>{});
+let scene:Scene = new Scene("default",v(),[],[],()=>{},()=>{});
 let tick:number = 0;
 let dt:number = 1;
 let CGH:CGHandler = new CGHandler();
@@ -208,6 +225,7 @@ $MAIN.tick = function():void {
     $MAIN.mLAY.reset();
     camera.update();
     Key.mouselog();
+    GAME.onbeforetick.fn();
     let bKeys = Object.keys(bck);
     for(let i = 0; i<bKeys.length; i++) {
         bck[bKeys[i]].update();

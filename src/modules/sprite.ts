@@ -48,7 +48,12 @@ class Sprite {
     attach(name:string, imgname:string[], len:number = 1, fps:number, depth:number, offset:Vector, angle:Angle, scale:Vector = v(1,1)):void {
         this.attachments[name] = new SpriteAttachment(imgname, len, fps, depth, offset,angle,scale);
     }
-    
+    setFps(fps:number) {
+        this.fps = fps;
+        this.loop = new Loop(() => {
+            this.index = wrap_np(this.index + 1, 0, this.len - 1);
+        }, this.fps);
+    }
 }
 
 class SpriteAttachment extends Sprite {
