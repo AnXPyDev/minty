@@ -175,6 +175,9 @@ let tick:number = 0;
 let dt:number = 1;
 let adt:number = 1;
 let CGH:CGHandler = new CGHandler();
+let cam_poly = new Polygon("rect");
+cam_poly.set([[-1,-1],[1,-1],[1,1],[-1,1]]);
+
 
 $MAIN.cAPI = new Compiler;
 $MAIN.cLAY = new Layers;
@@ -301,24 +304,9 @@ $MAIN.draw = function() {
     ctx2.rotate(camera.angle.rad);
     ctx2.drawImage(vport.secondC, -vport.secondC.width / 2 * camera.scale.x * vport.scale.x, -vport.secondC.height / 2 * camera.scale.y * vport.scale.y, vport.secondC.width * camera.scale.x * vport.scale.x, vport.secondC.height * camera.scale.y * vport.scale.y);
     ctx2.restore();
-    /*ctx.save(); 
-    ctx.scale(vport.scale.x, vport.scale.y);
-    ctx.save();
-    ctx.fillStyle = "white";
-    ctx.fillRect(0 , 0, vport.size.x, vport.size.y);
-    ctx.restore();
-    ctx.save();
-    ctx.translate(0,0);
-    ctx.scale(camera.scale.x, camera.scale.y);
-    ctx.rotate(camera.angle.get("rad"));
-    $MAIN.cAPI.compile($MAIN.cLAY);
-    ctx.restore();
-    ctx.save();
     if (!$MAIN.load.doneanim) {
         $MAIN.loadanim();
     }
-    ctx.restore();
-    ctx.restore();*/
     requestAnimationFrame($MAIN.draw);
     $MAIN.fps.now = Date.now();
     //@ts-ignore

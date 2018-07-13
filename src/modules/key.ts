@@ -11,12 +11,12 @@ const Key:{
     mouselog:() => void,
     mousedown:(evt:any) => void,
     mouseup:(evt:any) => void,
-    holder:boolean[],
+    holder:any,
     mupdated:boolean,
     lastsc:Vector
 } = {};
 
-Key.holder = [];
+Key.holder = {};
 
 Key.check = function (kc:number):boolean {
     return Key.holder[kc] ? true : false;
@@ -45,11 +45,11 @@ Key.mouseup = function (evt:any) {
 }
 
 Key.add = function (evt:any):void {
-    Key.holder[evt.key] = true;
+    Key.holder[evt.key.toLowerCase()] = true;
 }
 
 Key.remove = function (evt:any):void {
-    Key.holder[evt.key] = false;
+    Key.holder[evt.key.toLowerCase()] = false;
 }
 
 

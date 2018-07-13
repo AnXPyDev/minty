@@ -24,7 +24,8 @@ class Actor {
         this.size = v();
         this.angle = new Angle("deg", 0);
         this.sprite = new Sprite(["noimage"],1,0);
-        this.mask = new Polygon();
+        this.mask = new Polygon("rect");
+        this.mask.set([[-1,-1],[1,-1],[1,1],[-1,1]]);
         this.id = 0;
         this.isPersistant = false;
         this.tickrate = 1;
