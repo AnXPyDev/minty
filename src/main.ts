@@ -54,7 +54,7 @@ function resume(tps:number = scene.tps, aps:number = tps):void {
     //@ts-ignore
     pause();
     $MAIN.mainloop = setInterval($MAIN.tick, 1000 / tps);
-    dt = aps / tps;
+    adt = dt = aps / tps;
 }
 
 // @ts-ignore
@@ -173,6 +173,7 @@ let camera:Camera = new Camera();
 let scene:Scene = new Scene("default",v(),[],[],()=>{},()=>{});
 let tick:number = 0;
 let dt:number = 1;
+let adt:number = 1;
 let CGH:CGHandler = new CGHandler();
 
 $MAIN.cAPI = new Compiler;
@@ -266,6 +267,7 @@ $MAIN.tick = function():void {
     $MAIN.mLAY.finalize();
     $MAIN.tps.now = Date.now();
     $MAIN.tps.total = Math.floor(1000 / ($MAIN.tps.now - $MAIN.tps.last));
+    //dt = scene.tps / $MAIN.tps.total * adt;
     $MAIN.titleupdateloop.update();
     vport.update();
 }
