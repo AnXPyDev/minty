@@ -38,17 +38,22 @@ class Background {
         ctx.globalAlpha = this.alpha;
         if(this.type == "tiled") {
             let vsize = vport.ssize *  (1 / Math.max(camera.scale.x, camera.scale.y));
+            let im = this.img.get();
             let goff:Vector = new Vector(
-                    (camera.pos.x / (this.img.get().width * this.scale.x) - Math.floor(camera.pos.x / (this.img.get().width * this.scale.x))) * (this.img.get().width * this.scale.x) + this.offset.x,
-                    (camera.pos.y / (this.img.get().height * this.scale.y) - Math.floor(camera.pos.y / (this.img.get().height * this.scale.y))) * (this.img.get().height * this.scale.y) + this.offset.y
+                    (camera.pos.x / (im.width * this.scale.x) - Math.floor(camera.pos.x / (im.width * this.scale.x))) * (im.width * this.scale.x) + this.offset.x,
+                    (camera.pos.y / (im.height * this.scale.y) - Math.floor(camera.pos.y / (im.height * this.scale.y))) * (im.height * this.scale.y) + this.offset.y
                 )
-            for(let i:number = -Math.floor((vsize / 2) / (this.img.get().width * this.scale.x)) -2; i < Math.floor(vsize / (this.img.get().width * this.scale.x)) + 2; i++) {
-                for(let e:number = -Math.floor((vsize / 2) / (this.img.get().height * this.scale.y)) -2; e < Math.floor(vsize / (this.img.get().height * this.scale.y)) + 2; e++) {
-                    ctx.drawImage(this.img.get(), 
-                        i * this.img.get().width * this.scale.x + camera.pos.x - goff.x + this.off.x - 1,  
-                        e * this.img.get().height * this.scale.y + camera.pos.y - goff.y + this.off.y - 1, 
-                        this.img.get().width * this.scale.x + 1, 
-                        this.img.get().height * this.scale.y + 1)
+            for(let i:number = -Math.floor((vsize / 2) / (im.width * this.scale.x)) -2; i < Math.floor((vsize / 2) / (im.width * this.scale.x)) + 2; i++) {
+                for(let e:number = -Math.floor((vsize / 2) / (im.height * this.scale.y)) -2; e < Math.floor((vsize / 2) / (im.height * this.scale.y)) + 2; e++) {
+                    ctx.save()
+                    ctx.translate(i * im.width * this.scale.x + camera.pos.x - goff.x + this.off.x - 1,e * im.height * this.scale.y + camera.pos.y - goff.y + this.off.y - 1);
+                    ctx.scale(this.scale.x, this.scale.y);
+                    ctx.drawImage(im, 
+                        -im.width /2,  
+                        -im.height / 2, 
+                        im.width, 
+                        im.height)
+                    ctx.restore();   
                 }
             }
         } else if (this.type == "fullscreen") {
