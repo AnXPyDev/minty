@@ -159,6 +159,7 @@ $MAIN.logo.parts[1] = new Image(); $MAIN.logo.parts[1].src = paths.mpx + "./icon
 let vport:Viewport = new Viewport("null", false);
 //@ts-ignore
 let ctx:CanvasRenderingContext2D = document.createElement("canvas").getContext("2d");
+let ctx2:CanvasRenderingContext2D;
 
 const act:any = {};
 let cfg:any = {};
@@ -192,7 +193,8 @@ $MAIN.titleupdateloop = new Loop(
 $MAIN.onload = function() {
     WINDOW.setTitle(`${paths.project_name}`);
     vport = new Viewport("c0", true);
-    ctx = vport.context;
+    ctx = vport.context2;
+    ctx2 = vport.context;
     ctx.imageSmoothingEnabled = $MAIN.game_cfg.imgSmoothing;
     //@ts-ignore
     ctx.scaleNew = ctx.scale;
@@ -200,6 +202,13 @@ $MAIN.onload = function() {
         //@ts-ignore
         ctx.scaleNew(x,y);
         ctx.imageSmoothingEnabled = $MAIN.game_cfg.imgSmoothing;
+    }
+    //@ts-ignore
+    ctx2.scaleNew = ctx.scale;
+    ctx2.scale = (x:number,y:number) => {
+        //@ts-ignore
+        ctx2.scaleNew(x,y);
+        ctx2.imageSmoothingEnabled = $MAIN.game_cfg.imgSmoothing;
     }
     vport.resize(new Vector(600,600), true);
     requestAnimationFrame($MAIN.draw);
@@ -276,14 +285,28 @@ $MAIN.tps = {
 
 $MAIN.draw = function() {
     $MAIN.fps.last = $MAIN.fps.now;
+    
     ctx.save();
+    ctx.fillStyle = "black";
+    ctx.fillRect(0 , 0, vport.ssize, vport.ssize);
+    ctx.translate(-camera.pos.x + vport.ssize / 2, -camera.pos.y + vport.ssize / 2);
+    $MAIN.cAPI.compile($MAIN.cLAY);
+    ctx.restore();
+    ctx2.save();
+    ctx2.fillStyle = "white";
+    ctx2.fillRect(0,0,vport.size.x, vport.size.y);
+    ctx2.translate((vport.size.x * vport.scale.x) / 2, (vport.size.y * vport.scale.y) / 2);
+    ctx2.rotate(camera.angle.rad);
+    ctx2.drawImage(vport.secondC, -vport.secondC.width / 2 * camera.scale.x * vport.scale.x, -vport.secondC.height / 2 * camera.scale.y * vport.scale.y, vport.secondC.width * camera.scale.x * vport.scale.x, vport.secondC.height * camera.scale.y * vport.scale.y);
+    ctx2.restore();
+    /*ctx.save(); 
     ctx.scale(vport.scale.x, vport.scale.y);
     ctx.save();
     ctx.fillStyle = "white";
     ctx.fillRect(0 , 0, vport.size.x, vport.size.y);
     ctx.restore();
     ctx.save();
-    ctx.translate(-camera.pos.x + vport.size.x / 2, -camera.pos.y + vport.size.y / 2);
+    ctx.translate(0,0);
     ctx.scale(camera.scale.x, camera.scale.y);
     ctx.rotate(camera.angle.get("rad"));
     $MAIN.cAPI.compile($MAIN.cLAY);
@@ -293,7 +316,7 @@ $MAIN.draw = function() {
         $MAIN.loadanim();
     }
     ctx.restore();
-    ctx.restore();
+    ctx.restore();*/
     requestAnimationFrame($MAIN.draw);
     $MAIN.fps.now = Date.now();
     //@ts-ignore
