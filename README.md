@@ -68,7 +68,6 @@
             super(v(-280), "paddle");
             this.speed = 8;
             this.size = v(8,64);
-            this.sm = 0;
         }
         tick() {
             this.pos.y = lerp(this.pos.y, Mouse.y, 0.1);
