@@ -44,25 +44,24 @@ class Actor {
     draw():void {}
     update():void {
         if(!this.isPaused) {
-            if(!$MAIN.edit) {
-                let lKeys = Object.keys(this.loops);
-                for(let i = 0; i<lKeys.length; i++) {
-                    this.loops[lKeys[i]].update();
-                }
-
-                if (tick * 100 % Math.floor(this.tickrate * 100) == 0) {
-                    this.tick();
-                }
-                this.morphedMask = MorphPolygon(this.mask, this);
-                this.spatialpos = CGH.calculateBlocks(this.morphedMask);
-                ins[this.name].grid.insert(this.spatialpos, this.id);
-                $MAIN.mLAY.insert(new Layer(this.mdepth, ():boolean => {return this.mousedown()}));
+            let lKeys = Object.keys(this.loops);
+            for(let i = 0; i<lKeys.length; i++) {
+                this.loops[lKeys[i]].update();
             }
+
+            if (tick * 100 % Math.floor(this.tickrate * 100) == 0) {
+                this.tick();
+            }
+            this.morphedMask = MorphPolygon(this.mask, this);
+            this.spatialpos = CGH.calculateBlocks(this.morphedMask);
+            ins[this.name].grid.insert(this.spatialpos, this.id);
+            $MAIN.mLAY.insert(new Layer(this.mdepth, ():boolean => {return this.mousedown()}));
+            
             if (!this.isHidden) {
                 $MAIN.cLAY.insert(new Layer(this.depth, ():void => {this.draw()}));
             }
         }
-        
+            
         
     }
     mousedown():boolean {

@@ -91,54 +91,17 @@ const $MAIN:{
         last:number,
         now:number,
         total:number
-    },
-    edit:boolean
+    }
 } = {};
 
-$MAIN.edit = electron.remote.getGlobal("process").argv[2] == "edit";
 $MAIN.onloaded = false;
 
 const GAME:{
-    onload:{
-        set(fn:() => void):void,
-        fn():void,
-        doneedit:boolean
-    },
-    onbeforetick:{
-        set(fn:() => void):void,
-        fn():void,
-        doneedit:boolean
-    }
+    onload:() => void,
+    onbeforetick:() => void
 } = {
-    onload:{
-        set(fn:() => void):void {
-            if (this.doneedit || !$MAIN.edit) {
-                this.fn = fn;
-            } else {
-                //$MAIN.edit = false;
-                this.doneedit = true;
-                this.fn = () => {
-                    $MAIN.game_cfg = reqget(paths.mpx + paths.editor + "/game.cfg.json");
-                    this.fn = () => {};
-                    loadgame(paths.editor);
-                }
-            }
-        },
-        fn():void {},
-        doneedit:false
-    },
-    onbeforetick:{
-        set(fn:() => void):void {
-            if (this.doneedit || !$MAIN.edit) {
-                this.fn = fn;
-            } else {
-                //$MAIN.edit = false;
-                this.doneedit = true;
-            }
-        },
-        fn():void {},
-        doneedit:false
-    }
+    onload() {},
+    onbeforetick() {}
 }
 
 $MAIN.cfg = reqget(paths.mpx + "./minty.cfg.json");
@@ -219,15 +182,12 @@ $MAIN.onload = function() {
     if ($MAIN.cfg.developer) {
       console.warn("You Are In Developer Mode");
     }
-    if ($MAIN.edit) {
-        console.warn("You are in edit mode");
-    }
     document.addEventListener("keydown", Key.add);
     document.addEventListener("keyup", Key.remove);
     vport.element.addEventListener("mousemove", Key.mouse);
     document.addEventListener("mousedown", Key.mousedown);
     document.addEventListener("mouseup", Key.mouseup);
-    GAME.onload.fn();
+    GAME.onload();
     $MAIN.onloaded = true;
 }
 
@@ -238,7 +198,7 @@ $MAIN.tick = function():void {
     $MAIN.mLAY.reset();
     camera.update();
     Key.mouselog();
-    GAME.onbeforetick.fn();
+    GAME.onbeforetick();
     let bKeys = Object.keys(bck);
     for(let i = 0; i<bKeys.length; i++) {
         bck[bKeys[i]].update();
@@ -329,7 +289,7 @@ $MAIN.load = {
             if (!$MAIN.onloaded) {   
                 $MAIN.onload();
             } else {
-                GAME.onload.fn();
+                GAME.onload();
             }
         }
     },
