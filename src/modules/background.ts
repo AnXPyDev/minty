@@ -46,7 +46,7 @@ class Background {
             for(let i:number = -Math.floor((vsize / 2) / (im.width * this.scale.x)) -2; i < Math.floor((vsize / 2) / (im.width * this.scale.x)) + 2; i++) {
                 for(let e:number = -Math.floor((vsize / 2) / (im.height * this.scale.y)) -2; e < Math.floor((vsize / 2) / (im.height * this.scale.y)) + 2; e++) {
                     ctx.save()
-                    ctx.translate(i * im.width * this.scale.x + camera.pos.x - goff.x + this.off.x - 1,e * im.height * this.scale.y + camera.pos.y - goff.y + this.off.y - 1);
+                    ctx.translate(i * im.width * this.scale.x + camera.pos.x - goff.x + this.off.x,e * im.height * this.scale.y + camera.pos.y - goff.y + this.off.y);
                     ctx.scale(this.scale.x, this.scale.y);
                     ctx.drawImage(im, 
                         -im.width /2,  
