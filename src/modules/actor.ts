@@ -90,15 +90,11 @@ const Instance:{
     get:(name:string, id:number) => any,
     filter:(traits:string[], parent:string) => string[]
 } = {
-    spawn(name:string, Args:any):number {
+    spawn(name:string, Args:any[]):number {
         let id:number = ins[name].length;
         let pho:Actor = new act[name](...Args);
         pho.id = id;
         if(pho.isCollidable) {pho.afterConstructor()}
-        if(Args[0] != undefined) {
-            pho.pos.x = Args[0].x;
-            pho.pos.y = Args[0].y;
-        }
         ins[name].push(pho);
         return id;
     },

@@ -18,6 +18,5 @@
         return v.name; });
     
     fse.copySync(`../${process.argv[2]}`, `${dir}/${files[0]}/resources/${process.argv[2]}`);
-
     console.log("Copied game");
 }

@@ -2,5 +2,6 @@
     "project_name": "project",
     "project": "../project",
     "editor": "../scene-editor",
-    "mpx": "../"
+    "mpx": "../",
+    "mmpx": "../../"
 }
