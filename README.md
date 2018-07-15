@@ -73,13 +73,9 @@
             this.pos.y = lerp(this.pos.y, Mouse.y, 0.1);
         }
         draw() {
-            ctx.save();
-            ctx.translate(this.pos.x, this.pos.y);
-            ctx.fillStyle = "white";
-            ctx.fillRect(-this.size.x / 2, -this.size.y / 2, this.size.x, this.size.y);
-            ctx.restore();
+            Draw.rect(this.size, this.pos, "white");
         }
-    }, undefined, ["paddle"]);
+    }, ["paddle"]);
 
     def("paddle_ai", class extends act.paddle {
         constructor() {
@@ -90,7 +86,7 @@
         tick() {
             this.pos.y = clamp(approach(this.pos.y, Instance.get("ball", 0).pos.y, this.speed), -320, 320);
         }
-    }, undefined, ["paddle"]);
+    }, ["paddle"]);
 
     def("ball", class extends Actor {
         constructor() {
@@ -115,10 +111,6 @@
             this.pos.y += this.dir.y;
         }
         draw() {
-            ctx.save();
-            ctx.translate(this.pos.x,this.pos.y);
-            ctx.fillStyle = "white";
-            ctx.fillRect(-this.size.x / 2, -this.size.y / 2, this.size.x, this.size.y);
-            ctx.restore();
+            Draw.ellipse(this.size, this.pos, "white");
         }
     });
