@@ -88,7 +88,7 @@ const Instance:{
     destroy:(name:string, id:number) => void,
     mod:(name:string, merge:any, id:string | number) => void,
     get:(name:string, id:number) => any,
-    filter:(traits:string[], parent:string) => string[]
+    filter:(traits:string[]) => string[]
 } = {
     spawn(name:string, Args:any[]):number {
         let id:number = ins[name].length;
@@ -115,11 +115,9 @@ const Instance:{
     get(name:string, id:number):any {
         return ins[name][id];
     },
-    filter(traits:string[] = [], parent:string = ""):string[] {
+    filter(traits:string[] = []):string[] {
         let result:string[] = [];
-        if(parent) {
-            result.concat(inheritanceTree.byParent[parent]);
-        } else if (traits.length > 0) {
+        if (traits.length > 0) {
             let count:any = {};
             for(let i = 0; i<traits.length; i++) {
                 inheritanceTree.byTrait[traits[i]] ? null : inheritanceTree.byTrait[traits[i]] = [];
@@ -143,7 +141,7 @@ const Instance:{
 }
 
 
-function def(name:string, actor:any, parent:string = "", traits:string[] = []):void {
+function def(name:string, actor:any, traits:string[] = []):void {
     act[name] = actor;
     ins[name] = [];
     ins[name].grid = new CollisionGrid();
@@ -152,13 +150,6 @@ function def(name:string, actor:any, parent:string = "", traits:string[] = []):v
             inheritanceTree.byTrait[traits[i]].push(name);
         } else {
             inheritanceTree.byTrait[traits[i]] = [name];
-        }
-    }
-    if(parent) {
-        if(inheritanceTree.byParent[parent]) {
-            inheritanceTree.byParent[parent].push(name);
-        } else {
-            inheritanceTree.byParent[parent] = [name];
         }
     }
 }

@@ -41,7 +41,7 @@ function lerp(val:number, val2:number, perc:number, floor:boolean = false, floor
 
 function approach(val:number, val2:number, amt:number):number {
     if (val2 < val) {
-        return clamp(val - amt, val - val2, val);
+        return clamp(val - amt, val2, val);
     } else {
         return clamp(val + amt, val, val2);
     }
