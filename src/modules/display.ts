@@ -52,7 +52,7 @@ class Viewport {
     update():void {
         let sc = this.scale;
         let win = WINDOW.getContentBounds();
-        let max = [Math.max(this.size.x, this.size.y), Math.max(this.scale.x, this.scale.y)];
+        let max = Math.max(this.size.x, this.size.y);
         this.screen = v(win.width, win.height);
         if (this.screen != sc) {
             Key.mupdated = false;
@@ -64,8 +64,7 @@ class Viewport {
         } 
         this.element.width = this.size.x * this.scale.x;
         this.element.height = this.size.y * this.scale.y;
-        this.secondC.width = this.secondC.height = this.ssize = max[0] * 1.5;
-        
+        this.secondC.width = this.secondC.height = this.ssize = max * 1.5;
     } 
 }
 

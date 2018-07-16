@@ -125,6 +125,21 @@ class Angle {
             this.set(lerp(this.deg, angle.deg, amt), "deg");
         }
     }
+
+    approach(angle:Angle, amt:number):void {
+        let ang = [Math.max(this.deg, angle.deg), Math.min(this.deg, angle.deg)];
+        let alpha = 360 - ang[0] + ang[1];
+        let beta = ang[0] - ang[1];
+        if (alpha < beta) {
+            if (this.deg < 180) {
+                this.set(wrap(approach(this.deg, this.deg - alpha, amt), 0, 360), "deg");
+            } else {
+                this.set(wrap(approach(this.deg, this.deg + alpha, amt), 0, 360), "deg");
+            }
+        } else {
+            this.set(approach(this.deg, angle.deg, amt), "deg");
+        }
+    }
 }
 
 class Polygon {

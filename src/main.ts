@@ -251,7 +251,6 @@ $MAIN.tps = {
 
 $MAIN.draw = function() {
     $MAIN.fps.last = $MAIN.fps.now;
-    
     ctx.save();
     ctx.fillStyle = "black";
     ctx.fillRect(0 , 0, vport.ssize, vport.ssize);
