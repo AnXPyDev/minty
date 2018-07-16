@@ -22,9 +22,9 @@
     
     $ npm install 
     
-    $ sh compile.sh (you may insert the name of a project here)
+    $ bash compile.sh (you may insert the name of a project here)
   
-    $ sh run.sh
+    $ bash run.sh
     
 # _Examples_: 
 
@@ -33,7 +33,7 @@
 # _Packaging the app_:
 
 
-    $ sh build.sh (insert name of project here)
+    $ bash build.sh (insert name of project here)
     
   You will find the packaged project in the "built" folder inside the folder that contains minty
 

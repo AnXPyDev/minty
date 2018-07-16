@@ -1,3 +1,5 @@
+#!/bin/bash
+
 echo "Launching the app ...";
 
 if [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then 
