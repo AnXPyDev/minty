@@ -333,14 +333,26 @@ function MorphPolygon(poly:Polygon, that:Actor, pos:Vector = that.pos, size:Vect
 
 const Random:{
     int:(min:number, max:number) => number,
-    float:(min:number, max:number) => number
+    float:(min:number, max:number) => number,
+    choose:(args:any[]) => any,
+    rgb:() => string,
+    rgba:() => string
 } = {
     int(min:number, max:number) {
         return Math.floor(Math.random() * (max - min + 1) + min); 
     },
     float(min:number, max:number) {
         return Math.random() * (max - min) + min;
-    }
+    },
+    choose(args:any[]):any {
+        return args[Math.floor(Math.random() * args.length)];
+    },
+    rgb():string {
+        return "rgb(" + Random.int(0,255) + "," + Random.int(0,255) + "," + Random.int(0,255) + ")";
+    },
+    rgba():string {
+        return "rgba(" + Random.int(0,255) + "," + Random.int(0,255) + "," + Random.int(0,255) + "," + Math.random() + ")";
+    },
 }
 
 function v(x:number = 0, y:number = 0):Vector {

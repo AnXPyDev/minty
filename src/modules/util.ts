@@ -73,6 +73,21 @@ function when(condition:boolean, fn:() => void) {
     }
 }
 
+function wave(min:number, max:number, speed:number) {
+    return min + ((max - min) / 2) + Math.sin(performance.now() / Math.pow(10, speed)) * ((max - min) / 2); 
+}
+
+function chance(perc:number) {
+    return Math.random() <= perc / 100;
+}
+
+function outside_scene(that:Actor) {
+    let p = MorphPolygon(that.mask, that);
+    return (
+    scene.size.x / 2 < p.corner.max.x || -scene.size.x / 2 > p.corner.min.x || scene.size.y / 2 < p.corner.max.y || -scene.size.y / 2 > p.corner.min.y
+  );
+}
+
 module.exports = {
     clamp:clamp,
     wrap:wrap,
@@ -81,5 +96,8 @@ module.exports = {
     wrap_np:wrap_np,
     approach:approach,
     whenID:whenID,
-    when:when
+    when:when,
+    wave:wave,
+    chance:chance,
+    outside_scene:outside_scene
 }
