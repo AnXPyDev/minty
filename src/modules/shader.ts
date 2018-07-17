@@ -4,11 +4,10 @@ class Shader {
     constructor(condition:(c:Color) => [boolean, number], shader:(c:Color, args:any[]) => Color) {
         this.condition = condition;
         this.shader = shader;
-
     }
-    apply(from:Vector, to:Vector, ...args:any[]) {
-        let imgdata = ctx.getImageData(from.x, from.y, to.x - from.x, to.y - from.y);
-        let newimgdata = ctx.createImageData(to.x - from.x, to.y - from.y);
+    apply(from:Vector, to:Vector, args:any[] = [], cx:CanvasRenderingContext2D = ctx) {
+        let imgdata = cx.getImageData(from.x, from.y, to.x - from.x, to.y - from.y);
+        let newimgdata = cx.createImageData(to.x - from.x, to.y - from.y);
         for(let i = 0; i < imgdata.data.length; i += 4) {
             let color = new Color(
                 imgdata.data[i],
@@ -19,14 +18,14 @@ class Shader {
             let cond = this.condition(color);
             if(cond[0]) {
                 let newcolor = this.shader(color, args);
-                newimgdata.data[i] = lerp(color.r, newcolor.r, cond[1]);
-                newimgdata.data[i+1] = lerp(color.g, newcolor.g, cond[1]);
-                newimgdata.data[i+2] = lerp(color.b, newcolor.b, cond[1]);
-                newimgdata.data[i+3] = lerp(color.a, newcolor.a, cond[1]);
+                newimgdata.data[i] = newcolor.r;
+                newimgdata.data[i+1] = newcolor.g;
+                newimgdata.data[i+2] = newcolor.b;
+                newimgdata.data[i+3] = newcolor.a;
                 //console.log("xd");
             }
         }
-        ctx.putImageData(newimgdata, from.x, from.y);
+        cx.putImageData(newimgdata, from.x, from.y);
     }
 }
 
