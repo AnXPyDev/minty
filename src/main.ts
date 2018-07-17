@@ -56,6 +56,7 @@ function resume(tps:number = scene.tps, aps:number = tps):void {
     pause();
     $MAIN.mainloop = setInterval($MAIN.tick, 1000 / tps);
     adt = dt = aps / tps;
+    //requestAnimationFrame($MAIN.draw);
 }
 
 // @ts-ignore
