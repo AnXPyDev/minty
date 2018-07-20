@@ -268,12 +268,10 @@ $MAIN.draw = function() {
     if (!$MAIN.load.doneanim) {
         $MAIN.loadanim();
     }
-    if(!$MAIN.mainloop == null) {
-        requestAnimationFrame($MAIN.draw);
-    }
-    $MAIN.fps.now = Date.now();
+    $MAIN.fps.now = performance.now();
     //@ts-ignore
     $MAIN.fps.total = Math.floor(1000 / ($MAIN.fps.now - $MAIN.fps.last));
+    requestAnimationFrame($MAIN.draw);
 }
 
 $MAIN.load = {
