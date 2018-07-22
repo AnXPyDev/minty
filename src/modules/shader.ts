@@ -29,7 +29,6 @@ class Shader {
                 newimgdata.data[i+1] = newcolor.g;
                 newimgdata.data[i+2] = newcolor.b;
                 newimgdata.data[i+3] = newcolor.a;
-                //console.log("xd");
             }
         }
         cx.putImageData(newimgdata, from.x, from.y);
