@@ -10,6 +10,7 @@ class Scene {
     public aps:number;
     public ignore_persistant:boolean;
     public name:string;
+    public vars:any;
 
     constructor(name:string, size:Vector, act:any, bck:any, onload:() => void, onbeforeload:() => void, tps:number = 60, aps:number = tps) {
         this.index = 0;
@@ -23,6 +24,7 @@ class Scene {
         this.aps = aps;
         this.ignore_persistant = false;
         this.name = name;
+        this.vars = {};
     } 
 
     load():void {
