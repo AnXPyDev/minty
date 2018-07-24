@@ -88,6 +88,10 @@ function outside_scene(that:Actor) {
   );
 }
 
+function pos_to_sz(min:Vector, max:Vector):{size:Vector, pos:Vector} {
+    return {size: v(max.x - min.x, max.y - min.y), pos:v((max.x - min.x) / 2 + min.x, (max.y - min.y) / 2 + min.y)};
+}
+
 module.exports = {
     clamp:clamp,
     wrap:wrap,
@@ -99,5 +103,6 @@ module.exports = {
     when:when,
     wave:wave,
     chance:chance,
-    outside_scene:outside_scene
+    outside_scene:outside_scene,
+    pos_to_sz:pos_to_sz
 }

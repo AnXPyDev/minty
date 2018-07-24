@@ -3,7 +3,10 @@ const Draw:{
     rectS:(size:Vector, pos:Vector, color:string, width:number) => void,
     ellipse:(size:Vector, pos:Vector, color:string) => void,
     ellipseS:(size:Vector, pos:Vector, color:string, width:number) => void,
-    scale:(scale:Vector, pos:Vector, callback:() => void) => void
+    scale:(scale:Vector, pos:Vector, callback:() => void) => void,
+    line:(pos0:Vector, pos1:Vector, color:string, width:number) => void,
+    text:(text:string, pos:Vector, color:string, size:number, font:string) => void,
+    opacity:(opacity:number, callback:() => void) => void
 } = {
     rect(size,pos,color) {
         ctx.save();
@@ -38,14 +41,37 @@ const Draw:{
         ctx.strokeStyle = color;
         ctx.lineWidth = width;
         ctx.translate(pos.x, pos.y);
-        ctx.scale(1, size.y / size.x);
-        ctx.strokeRect(-size.x / 2, -size.y / 2, size.x, size.y);
+        ctx.strokeRect(-size.x / 2 + width / 2, -size.y / 2 + width / 2, size.x - width, size.y - width);
         ctx.restore();
     },
     scale(scale, pos, callback) {
         ctx.save();
         ctx.translate(pos.x, pos.y);
         ctx.scale(scale.x, scale.y);
+        callback();
+        ctx.restore();
+    },
+    line(pos0, pos1, color, width) {
+        ctx.save();
+        ctx.strokeStyle = color;
+        ctx.lineWidth = width;
+        ctx.beginPath();
+        ctx.moveTo(pos0.x, pos0.y);
+        ctx.lineTo(pos1.x, pos1.y);
+        ctx.stroke();
+        ctx.restore();
+    },
+    text(text, pos, color, size, font = "Arial") {
+        ctx.save();
+        ctx.fillStyle = color;
+        ctx.font = `${size}px ${font}`;
+        ctx.textAlign = "center";
+        ctx.fillText(text, pos.x, pos.y);
+        ctx.restore();
+    },
+    opacity(opacity, callback) {
+        ctx.save();
+        ctx.globalAlpha = opacity;
         callback();
         ctx.restore();
     }
