@@ -2,5 +2,6 @@
     "name": "MINTY-electron",
     "version": "1.0",
     "developer": true,
-    "modules": []
+    "modules": [],
+    "packages": []
 }

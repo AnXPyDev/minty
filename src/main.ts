@@ -127,15 +127,17 @@ let ctx:CanvasRenderingContext2D = document.createElement("canvas").getContext("
 let ctx2:CanvasRenderingContext2D;
 
 const act:any = {};
+const til:any = {};
 let cfg:any = {};
 const img:any = {noimage:new Image()};
 const snd:any = {};
 
 let bck:any = {};
 let ins:any = {};
+let tileins:any = {};
 let loop:any = [];
 let camera:Camera = new Camera();
-let scene:Scene = new Scene("default",v(),[],[],()=>{},()=>{});
+let scene:Scene = new Scene("default",v(),[],[],[],()=>{},()=>{});
 let tick:number = 0;
 let dt:number = 1;
 let adt:number = 1;
@@ -204,6 +206,17 @@ $MAIN.tick = function():void {
     let bKeys = Object.keys(bck);
     for(let i = 0; i<bKeys.length; i++) {
         bck[bKeys[i]].update();
+    }
+    let tKeys = Object.keys(tileins);
+    for(let i = 0; i<tKeys.length; i++) {
+        let tKeys2 = Object.keys(tileins[tKeys[i]]);
+        for(let e = 0; e< tKeys2.length; e++) {
+            for(let t = 0; t<tileins[tKeys[i]][tKeys2[e]].length; t++) {
+                $MAIN.cLAY.insert(new Layer(til[tKeys[i]].names[tKeys2[e]][1], () => {
+                    til[tKeys[i]].drawTile(tKeys2[e],tileins[tKeys[i]][tKeys2[e]][t][0],tileins[tKeys[i]][tKeys2[e]][t][1]);
+                }));
+            }
+        }
     }
     let iKeys = Object.keys(ins);
     for(let i = 0; i<iKeys.length; i++) {
@@ -304,6 +317,9 @@ function loadgame(pp:string) {
     $MAIN.game_cfg.code.json.forEach((file:string) => {
         cfg[file.split(".")[0]] = reqget(paths.mpx + pp + "/code/" + file);
     });
+    $MAIN.cfg.packages.forEach((file:string) => {
+        loadscript(paths.mpx + "./src/packages/" + file + ".js");
+    })
     $MAIN.game_cfg.code.js.forEach((file:string) => {
         loadscript(paths.mpx + pp + "/code/" + file);
     })

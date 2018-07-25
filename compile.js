@@ -9,7 +9,8 @@ const paths = function() {
 
     fs.writeFileSync("./paths.json", JSON.stringify(json));
     return json;
-}()
+}();
+
 
 {
     const json = require("./base/refference.json");
@@ -17,13 +18,19 @@ const paths = function() {
         files.forEach(file => {
             json.modules.push(file.split(".")[0]);
         });
-        if(process.argv[3] == "nodev") {
-            json.developer = false;
-        }
-        fs.writeFile("./minty.cfg.json", JSON.stringify(json), function() {
-            console.log("Sucessfully built minty.cfg.json");
-        });
+        fs.readdir("./src/packages", function(err, files) {
+            files.forEach(file => {
+                json.packages.push(file.split(".")[0]);
+            });
+            fs.writeFile("./minty.cfg.json", JSON.stringify(json), function() {
+                console.log("Sucessfully built minty.cfg.json");
+            });
+            if(process.argv[3] == "nodev") {
+                json.developer = false;
+            }
+        });      
     });
+    
  }
 
 {

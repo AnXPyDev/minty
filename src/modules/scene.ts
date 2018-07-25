@@ -3,6 +3,7 @@ class Scene {
     public onbeforeload:() => void;
     public index:number;
     public act:any;
+    public til:any;
     public bck:any;
     public tps:number;
     public next:Scene | null;
@@ -12,12 +13,13 @@ class Scene {
     public name:string;
     public vars:any;
 
-    constructor(name:string, size:Vector, act:any, bck:any, onload:() => void, onbeforeload:() => void, tps:number = 60, aps:number = tps) {
+    constructor(name:string, size:Vector, act:any, bck:any,til:any, onload:() => void, onbeforeload:() => void, tps:number = 60, aps:number = tps) {
         this.index = 0;
         this.onload = onload;
         this.onbeforeload = onbeforeload;
         this.act = act;
         this.bck = bck;
+        this.til = til;
         this.tps = tps;
         this.next = null;
         this.size = size;
@@ -53,6 +55,20 @@ class Scene {
             let pho:any[] = this.bck[bckKeys[i]];
             //@ts-ignore
             bck[bckKeys[i]] = new Background(...pho);
+        }
+        tileins = {};
+        let tilKeys:string[] = Object.keys(this.til);
+        for(let i = 0; i < tilKeys.length; i++) {
+            let split = tilKeys[i].split(".");
+            if(!tileins[split[0]]) {
+                tileins[split[0]] = {};
+            }
+            if(!tileins[split[0]][split[1]]) {
+                tileins[split[0]][split[1]] = [];
+            }
+            for(let e = 0; e<this.til[tilKeys[i]].length; e++) {
+                tileins[split[0]][split[1]].push([v(this.til[tilKeys[i]][e][0], this.til[tilKeys[i]][e][1]), v(this.til[tilKeys[i]][e][2],this.til[tilKeys[i]][e][3])]);
+            }
         }
         $MAIN.titleupdateloop.tps = Math.floor(this.tps / 4);
         tick = 0;
