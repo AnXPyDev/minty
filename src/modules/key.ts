@@ -52,8 +52,6 @@ Key.remove = function (evt:any):void {
     Key.holder[evt.key.toLowerCase()] = false;
 }
 
-
-//@ts-ignore
 const Mouse:Vector = new Vector();
 const MClient:Vector = new Vector();
 

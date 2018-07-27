@@ -305,18 +305,20 @@ class Polygon {
     }
 
     draw(fill:string = "lightblue", stroke:string = "blue") {
-        ctx.save();
-        ctx.beginPath()
-        ctx.moveTo(this.val[0].x, this.val[0].y);
-        for(let i = 1; i < this.val.length; i++) {
-            ctx.lineTo(this.val[i].x, this.val[i].y);
+        if(this.val.length > 0) {
+            ctx.save();
+            ctx.beginPath()
+            ctx.moveTo(this.val[0].x, this.val[0].y);
+            for(let i = 1; i < this.val.length; i++) {
+                ctx.lineTo(this.val[i].x, this.val[i].y);
+            }
+            ctx.closePath();
+            ctx.strokeStyle = stroke;
+            ctx.fillStyle = fill;
+            ctx.fill();
+            ctx.stroke();
+            ctx.restore();
         }
-        ctx.closePath();
-        ctx.strokeStyle = stroke;
-        ctx.fillStyle = fill;
-        ctx.fill();
-        ctx.stroke();
-        ctx.restore();
     }
 
 }
