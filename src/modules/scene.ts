@@ -60,14 +60,16 @@ class Scene {
         let tilKeys:string[] = Object.keys(this.til);
         for(let i = 0; i < tilKeys.length; i++) {
             let split = tilKeys[i].split(".");
-            if(!tileins[split[0]]) {
-                tileins[split[0]] = {};
-            }
-            if(!tileins[split[0]][split[1]]) {
-                tileins[split[0]][split[1]] = [];
-            }
-            for(let e = 0; e<this.til[tilKeys[i]].length; e++) {
-                tileins[split[0]][split[1]].push([v(this.til[tilKeys[i]][e][0], this.til[tilKeys[i]][e][1]), v(this.til[tilKeys[i]][e][2],this.til[tilKeys[i]][e][3])]);
+            if(this.til[tilKeys[i]]) {
+                if(!tileins[split[0]]) {
+                    tileins[split[0]] = {};
+                }
+                if(!tileins[split[0]][split[1]]) {
+                    tileins[split[0]][split[1]] = [];
+                }
+                for(let e = 0; e<this.til[tilKeys[i]].length; e++) {
+                    tileins[split[0]][split[1]].push([v(this.til[tilKeys[i]][e][0], this.til[tilKeys[i]][e][1]), v(this.til[tilKeys[i]][e][2],this.til[tilKeys[i]][e][3])]);
+                }
             }
         }
         $MAIN.titleupdateloop.tps = Math.floor(this.tps / 4);
