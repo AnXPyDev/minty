@@ -17,6 +17,7 @@ class Actor {
     public spatialpos:{min:Vector, max:Vector};
     public morphedMask:Polygon;
     public isPaused:boolean;
+    public isRoundedPosAfterTick:boolean;
 
 
     constructor(pos:Vector = v(), name:string) {
@@ -39,6 +40,7 @@ class Actor {
         this.spatialpos = {min:v(), max:v()};
         this.morphedMask = new Polygon();
         this.isPaused = false;
+        this.isRoundedPosAfterTick = true;
     }
     tick():void {}
     draw():void {}
@@ -51,6 +53,8 @@ class Actor {
 
             if (tick * 100 % Math.floor(this.tickrate * 100) == 0) {
                 this.tick();
+                this.pos.x = Math.round(this.pos.x);
+                this.pos.y = Math.round(this.pos.y);
             }
             this.morphedMask = MorphPolygon(this.mask, this);
             this.spatialpos = CGH.calculateBlocks(this.morphedMask);
