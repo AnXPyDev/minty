@@ -8,19 +8,26 @@ class Sprite {
     public attachments:any;
     public compiler:Compiler;
     public layers:Layers;
+    public wrap:boolean;
 
-    constructor(imgname:string[], len:number = 1, fps:number) {
+    constructor(imgname:string[], len:number = 1, fps:number, wrap:boolean = true) {
         this.img = new ImageArray(...imgname);
         this.len = len;
         this.index = 0;
         this.width = this.img.get().width / len;
         this.fps = fps;
         this.loop = new Loop(() => {
-            this.index = wrap_np(this.index + 1, 0, this.len - 1);
+            if(this.wrap) {
+                this.index = wrap_np(this.index + 1, 0, this.len - 1);
+            } else {
+                this.index = clamp(this.index + 1, 0, this.len - 1);
+            }
+            
         }, this.fps);
         this.attachments = {};
         this.compiler = new Compiler();
         this.layers = new Layers();
+        this.wrap = wrap;
     }
     update():void {
         if (this.fps != 0) {
