@@ -24,12 +24,13 @@ function main() {
                 files.forEach(file => {
                     json.packages.push(file.split(".")[0]);
                 });
+                if(process.argv[3] == "nodev") {
+                    json.developer = false;
+                    console.log("Developer mode disabled!");
+                }
                 fs.writeFile("./minty.cfg.json", JSON.stringify(json), function() {
                     console.log("Sucessfully built minty.cfg.json");
                 });
-                if(process.argv[3] == "nodev") {
-                    json.developer = false;
-                }
             });      
         });
         

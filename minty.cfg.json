@@ -1,1 +1,1 @@
-{"name":"MINTY-electron","version":"1.0","developer":true,"modules":["actor","background","camera","collison","display","draw","event","export","key","load","math","particles","path","scene","shader","sprite","tile","util"],"packages":["collisionblock"]}
+{"name":"MINTY-electron","version":"1.0","developer":false,"modules":["actor","background","camera","collison","display","draw","event","export","key","load","math","particles","path","scene","shader","sprite","tile","util"],"packages":["collisionblock"]}
