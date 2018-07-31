@@ -42,10 +42,13 @@ class Actor {
         this.isPaused = false;
         this.isRoundedPosAfterTick = true;
     }
+    preTick():void {}
     tick():void {}
+    postTick():void {}
     draw():void {}
     update():void {
         if(!this.isPaused) {
+            this.preTick();
             let lKeys = Object.keys(this.loops);
             for(let i = 0; i<lKeys.length; i++) {
                 this.loops[lKeys[i]].update();
@@ -53,8 +56,10 @@ class Actor {
 
             if (tick * 100 % Math.floor(this.tickrate * 100) == 0) {
                 this.tick();
-                this.pos.x = Math.round(this.pos.x);
-                this.pos.y = Math.round(this.pos.y);
+                if(this.isRoundedPosAfterTick) {
+                    this.pos.x = Math.round(this.pos.x);
+                    this.pos.y = Math.round(this.pos.y);
+                }
             }
             this.morphedMask = MorphPolygon(this.mask, this);
             this.spatialpos = CGH.calculateBlocks(this.morphedMask);
@@ -64,6 +69,7 @@ class Actor {
             if (!this.isHidden) {
                 $MAIN.cLAY.insert(new Layer(this.depth, ():void => {this.draw()}));
             }
+            this.postTick();
         }
             
         
@@ -159,10 +165,8 @@ function def(name:string, actor:any, traits:string[] = []):void {
 }
 
 const inheritanceTree:{
-    byParent:any,
     byTrait:any
 } = {
-    byParent: {},
     byTrait: {}
 }
 
