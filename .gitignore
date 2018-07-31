@@ -3,3 +3,4 @@ compiled
 docs
 package-lock.json
 paths.json
+minty.cfg.json

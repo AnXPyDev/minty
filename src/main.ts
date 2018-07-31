@@ -1,5 +1,5 @@
 const reqget:any = require; //minty-compile-ignore
-const paths:any = reqget("../paths.json");
+const paths:any = reqget("../compiled/paths.json");
 const fs:any = reqget("fs");
 const electron:any = reqget("electron");
 
@@ -106,7 +106,7 @@ const GAME:{
     onbeforetick() {}
 }
 
-$MAIN.cfg = reqget(paths.mpx + "./minty.cfg.json");
+$MAIN.cfg = reqget(paths.mpx + "/compiled/minty.cfg.json");
 $MAIN.game_cfg = reqget(paths.mpx + paths.project + "/game.cfg.json");
 const ELECTRON:any = reqget("electron");
 WINDOW = ELECTRON.remote.getCurrentWindow();

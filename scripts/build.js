@@ -1,7 +1,7 @@
 {
     const fs = require("fs");
     const fse = require("fs-extra");
-    var dir = '../built';
+    var dir = '../../built';
 
 
     let fl = fs.readdirSync(dir), 
@@ -17,6 +17,6 @@
     .map(function (v) {
         return v.name; });
     
-    fse.copySync(`../${process.argv[2]}`, `${dir}/${files[0]}/resources/${process.argv[2]}`);
+    fse.copySync(`../../${process.argv[2]}`, `${dir}/${files[0]}/resources/${process.argv[2]}`);
     console.log("Copied game");
 }

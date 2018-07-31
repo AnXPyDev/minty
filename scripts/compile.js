@@ -3,24 +3,25 @@ const rls = require("readline-sync").question;
 
 function main() {
     const paths = function() {
-        const json = require("./base/refference_paths.json");
+        const json = require("../base/refference_paths.json");
         if (process.argv[2] != null) {
             json.project = "../" + process.argv[2];
             json.project_name = process.argv[2];
         }
 
-        fs.writeFileSync("./paths.json", JSON.stringify(json));
+        fs.writeFileSync("../compiled/paths.json", JSON.stringify(json));
         return json;
     }();
 
+    let project = "../../" + process.argv[2];
 
     {
-        const json = require("./base/refference.json");
-        fs.readdir("./compiled/modules", function(err, files) {
+        const json = require("../base/refference.json");
+        fs.readdir("../compiled/modules", function(err, files) {
             files.forEach(file => {
                 json.modules.push(file.split(".")[0]);
             });
-            fs.readdir("./src/packages", function(err, files) {
+            fs.readdir("../src/packages", function(err, files) {
                 files.forEach(file => {
                     json.packages.push(file.split(".")[0]);
                 });
@@ -28,7 +29,7 @@ function main() {
                     json.developer = false;
                     console.log("Developer mode disabled!");
                 }
-                fs.writeFile("./minty.cfg.json", JSON.stringify(json), function() {
+                fs.writeFile("../compiled/minty.cfg.json", JSON.stringify(json), function() {
                     console.log("Sucessfully built minty.cfg.json");
                 });
             });      
@@ -37,29 +38,29 @@ function main() {
     }
 
     {
-        const json = require("./base/refference_game.json"); 
+        const json = require("../base/refference_game.json"); 
         const types = { 
             image: ["jpg", "svg", "png"], 
             sound: ["mp3", "wav"] 
         } 
-        if (!fs.existsSync(paths.project)){ 
-            fs.mkdirSync(paths.project); 
+        if (!fs.existsSync(project)){ 
+            fs.mkdirSync(project); 
         } 
-        if (!fs.existsSync(paths.project + "/code")){ 
-            fs.mkdirSync(paths.project + "/code"); 
+        if (!fs.existsSync(project + "/code")){ 
+            fs.mkdirSync(project + "/code"); 
         } 
-        if (!fs.existsSync(paths.project + "/assets")){ 
-            fs.mkdirSync(paths.project + "/assets"); 
+        if (!fs.existsSync(project + "/assets")){ 
+            fs.mkdirSync(project + "/assets"); 
         } 
-        if (!fs.existsSync(paths.project + "/assets/img")){ 
-            fs.mkdirSync(paths.project + "/assets/img"); 
+        if (!fs.existsSync(project + "/assets/img")){ 
+            fs.mkdirSync(project + "/assets/img"); 
         } 
-        if (!fs.existsSync(paths.project + "/assets/snd")){ 
-            fs.mkdirSync(paths.project + "/assets/snd"); 
+        if (!fs.existsSync(project + "/assets/snd")){ 
+            fs.mkdirSync(project + "/assets/snd"); 
         } 
     
         let ec = 0; 
-        fs.readdir(paths.project + "/code", function (err, files) { 
+        fs.readdir(project + "/code", function (err, files) { 
             files.forEach(file => { 
                 let extension = file.split(".")[1]; 
                 if (extension == "js") { 
@@ -68,21 +69,21 @@ function main() {
                     json.code.json.push(file); 
                 } 
             }); 
-            fs.readdir(paths.project + "/assets/img", function (err, files) { 
+            fs.readdir(project + "/assets/img", function (err, files) { 
                 files.forEach(file => { 
                     let extension = file.split(".")[1]; 
                     if (types.image.includes(extension)) { 
                         json.assets.images.push(file); 
                     } 
                 }) 
-                fs.readdir(paths.project + "/assets/snd", function (err, files) { 
+                fs.readdir(project + "/assets/snd", function (err, files) { 
                     files.forEach(file => { 
                         let extension = file.split(".")[1]; 
                         if (types.sound.includes(extension)) { 
                             json.assets.sounds.push(file); 
                         } 
                     });
-                    fs.writeFile(paths.project + "/game.cfg.json", JSON.stringify(json), () => {console.log("Sucessfully built game.cfg.json"); }); 
+                    fs.writeFile(project + "/game.cfg.json", JSON.stringify(json), () => {console.log("Sucessfully built game.cfg.json"); }); 
                 }) 
                 
             }) 
@@ -90,23 +91,23 @@ function main() {
     } 
 
     {
-        const endFile = "./docs/user.js";
+        const endFile = "../docs/user.js";
         var doc = "";
         
-        if (!fs.existsSync("./docs")){
-            fs.mkdirSync("./docs");
+        if (!fs.existsSync("../docs")){
+            fs.mkdirSync("../docs");
         }
 
-        fs.readFile("./compiled/main.js", (err, data) => {
+        fs.readFile("../compiled/main.js", (err, data) => {
             doc += function() {
                 return data.toString().replace('"use strict";', "").split("module.exports")[0].split("//minty-compile-ignore")[1];
             }();
         })
 
-        fs.readdir("./compiled/modules", (err, files) => {
+        fs.readdir("../compiled/modules", (err, files) => {
             let a = 0;
             files.forEach(file => {
-                fs.readFile("./compiled/modules/" + file, (err, data) => {
+                fs.readFile("../compiled/modules/" + file, (err, data) => {
                     a++;
                     doc += function() {
                         return data.toString().replace('"use strict";', "").split("module.exports")[0];
@@ -126,7 +127,7 @@ function main() {
     }
 }
 
-if(fs.existsSync("../" + process.argv[2])) {
+if(fs.existsSync("../../" + process.argv[2])) {
     console.log("Project already exists");
     main();
 } else {

@@ -1,8 +1,8 @@
 const {app, BrowserWindow, globalShortcut} = require("electron");
 const path = require("path");
 const url = require("url");
-const config = require("../minty.cfg.json");
-const paths = require("../paths.json");
+const config = require("../compiled/minty.cfg.json");
+const paths = require("../compiled/paths.json");
 const exec = require("child_process").exec;
 
 var win, splash;
