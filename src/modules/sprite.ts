@@ -52,6 +52,12 @@ class Sprite {
         this.compiler.compile(this.layers)
         ctx.restore();
     }
+    drawStandalone(pos:Vector,size:Vector, angle:Angle = new Angle("rad", 0),depth:number = 0, ...args:any[]) {
+        this.update();
+        $MAIN.cLAY.insert(new Layer(depth, () => {
+            this.draw(pos,size,angle, ...args);
+        }));
+    }
     attach(name:string, imgname:string[], len:number = 1, fps:number, depth:number, offset:Vector, angle:Angle, scale:Vector = v(1,1)):void {
         this.attachments[name] = new SpriteAttachment(imgname, len, fps, depth, offset,angle,scale);
     }
