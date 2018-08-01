@@ -121,10 +121,8 @@ $MAIN.logo.parts = [];
 $MAIN.logo.parts[0] = new Image(); $MAIN.logo.parts[0].src = paths.mpx + "./icon/parts/1.svg";
 $MAIN.logo.parts[1] = new Image(); $MAIN.logo.parts[1].src = paths.mpx + "./icon/parts/2.svg";
 
-let vport:Viewport = new Viewport("null", false);
-//@ts-ignore
-let ctx:CanvasRenderingContext2D = document.createElement("canvas").getContext("2d");
-let ctx2:CanvasRenderingContext2D;
+let vport:Viewport = new Viewport("null", true);
+let ctx:CContext;
 
 const act:any = {};
 const til:any = {};
@@ -164,23 +162,7 @@ $MAIN.titleupdateloop = new Loop(
 $MAIN.onload = function() {
     WINDOW.setTitle(`${paths.project_name}`);
     vport = new Viewport("c0", true);
-    ctx = vport.context2;
-    ctx2 = vport.context;
-    ctx.imageSmoothingEnabled = $MAIN.game_cfg.imgSmoothing;
-    //@ts-ignore
-    ctx.scaleNew = ctx.scale;
-    ctx.scale = (x:number,y:number) => {
-        //@ts-ignore
-        ctx.scaleNew(x,y);
-        ctx.imageSmoothingEnabled = $MAIN.game_cfg.imgSmoothing;
-    }
-    //@ts-ignore
-    ctx2.scaleNew = ctx.scale;
-    ctx2.scale = (x:number,y:number) => {
-        //@ts-ignore
-        ctx2.scaleNew(x,y);
-        ctx2.imageSmoothingEnabled = $MAIN.game_cfg.imgSmoothing;
-    }
+    ctx = vport.context;
     vport.resize(new Vector(600,600), true);
     requestAnimationFrame($MAIN.draw);
     if ($MAIN.cfg.developer) {
@@ -265,19 +247,15 @@ $MAIN.tps = {
 
 $MAIN.draw = function() {
     $MAIN.fps.last = $MAIN.fps.now;
+    ctx.t = v(camera.pos.x / 4, camera.pos.y / 4);
     ctx.save();
-    ctx.fillStyle = "black";
-    ctx.fillRect(0 , 0, vport.ssize, vport.ssize);
-    ctx.translate(-camera.pos.x + vport.ssize / 2, -camera.pos.y + vport.ssize / 2);
+    ctx.setFillStyle("black");
+    ctx.fillRect(v(), vport.size);
+    ctx.translate(v(vport.size.x / 2, vport.size.y / 2));
+    //ctx.scale(camera.scale);
+    //ctx.rotate(camera.angle);
     $MAIN.cAPI.compile($MAIN.cLAY);
     ctx.restore();
-    ctx2.save();
-    ctx2.fillStyle = "white";
-    ctx2.fillRect(0,0,vport.size.x, vport.size.y);
-    ctx2.translate((vport.size.x * vport.scale.x) / 2, (vport.size.y * vport.scale.y) / 2);
-    ctx2.rotate(camera.angle.rad);
-    ctx2.drawImage(vport.secondC, -vport.secondC.width / 2 * camera.scale.x * vport.scale.x, -vport.secondC.height / 2 * camera.scale.y * vport.scale.y, vport.secondC.width * camera.scale.x * vport.scale.x, vport.secondC.height * camera.scale.y * vport.scale.y);
-    ctx2.restore();
     if (!$MAIN.load.doneanim) {
         $MAIN.loadanim();
     }

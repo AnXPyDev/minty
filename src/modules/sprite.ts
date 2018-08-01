@@ -39,16 +39,16 @@ class Sprite {
             this.layers.insert(new Layer(this.attachments[keys[i]].depth, () => {this.attachments[keys[i]].draw()}))}
         this.layers.insert(new Layer(0, () => {
             let sz = this.img.getsize();
-            ctx.drawImage(this.img.get(), this.index * this.width, 0, this.width, this.img.get().height, -sz.x / (this.len * 2), -sz.y / 2, sz.x / this.len, sz.y);
+            ctx.drawImage(this.img.get(), v(this.index * this.width, 0), v(this.width, this.img.get().height), v(-sz.x / (this.len * 2), -sz.y / 2), v(sz.x / this.len, sz.y));
         }))
         this.layers.finalize();
     }
     draw(pos:Vector,size:Vector, angle:Angle = new Angle("rad", 0), ...args:any[]):void {
         let sz:Vector = this.img.getsize();
         ctx.save();
-        ctx.translate(pos.x,pos.y);
-        ctx.rotate(angle.rad);
-        ctx.scale(size.x / (sz.x / this.len), size.y / sz.y);
+        ctx.translate(pos);
+        ctx.rotate(angle);
+        ctx.scale(v(size.x / (sz.x / this.len), size.y / sz.y));
         this.compiler.compile(this.layers)
         ctx.restore();
     }
@@ -91,10 +91,10 @@ class SpriteAttachment extends Sprite {
     draw(...args:any[]) {
         let sz = this.img.getsize();
         ctx.save();
-        ctx.translate(this.offset.x,this.offset.y);
-        ctx.rotate(this.angle.rad);
-        ctx.scale(this.scale.x,this.scale.y);
-        ctx.drawImage(this.img.get(), this.index * this.width, 0, this.width, this.img.get().height, -sz.x / (this.len * 2) + this.offset.x, -sz.y / 2 + this.offset.y, sz.x / this.len, sz.y);
+        ctx.translate(this.offset);
+        ctx.rotate(this.angle);
+        ctx.scale(this.scale);
+        ctx.drawImage(this.img.get(), v(this.index * this.width, 0), v(this.width, this.img.get().height), v(-sz.x / (this.len * 2) + this.offset.x, -sz.y / 2 + this.offset.y), v(sz.x / this.len, sz.y));
         ctx.restore();
     }
 } 

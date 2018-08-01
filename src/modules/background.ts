@@ -35,9 +35,9 @@ class Background {
     }
     draw():void {
         ctx.save();
-        ctx.globalAlpha = this.alpha;
+        ctx.setAlpha(this.alpha);
         if(this.type == "tiled") {
-            let vsize = vport.ssize *  (1 / Math.max(camera.scale.x, camera.scale.y));
+            let vsize = Math.max(vport.size.x, vport.size.y) *  (1 / Math.max(camera.scale.x, camera.scale.y));
             let im = this.img.get();
             let goff:Vector = new Vector(
                     (camera.pos.x / (im.width * this.scale.x) - Math.floor(camera.pos.x / (im.width * this.scale.x))) * (im.width * this.scale.x) + this.offset.x,
@@ -46,22 +46,22 @@ class Background {
             for(let i:number = -Math.floor((vsize / 2) / (im.width * this.scale.x)) -2; i < Math.floor((vsize / 2) / (im.width * this.scale.x)) + 2; i++) {
                 for(let e:number = -Math.floor((vsize / 2) / (im.height * this.scale.y)) -2; e < Math.floor((vsize / 2) / (im.height * this.scale.y)) + 2; e++) {
                     ctx.save()
-                    ctx.translate(i * im.width * this.scale.x + camera.pos.x - goff.x + this.off.x,e * im.height * this.scale.y + camera.pos.y - goff.y + this.off.y);
-                    ctx.scale(this.scale.x, this.scale.y);
-                    ctx.drawImage(im, 
+                    ctx.translate(v(i * im.width * this.scale.x - goff.x + this.off.x,e * im.height * this.scale.y - goff.y + this.off.y));
+                    ctx.scale(this.scale);
+                    ctx.drawImage(im,v( 
                         -im.width /2,  
-                        -im.height / 2, 
+                        -im.height / 2), v(
                         im.width, 
-                        im.height)
+                        im.height))
                     ctx.restore();   
                 }
             }
         } else if (this.type == "fullscreen") {
-            ctx.drawImage(this.img.get(), -vport.size.x / 2, -vport.size.y / 2, vport.size.x, vport.size.y);
+            ctx.drawImage(this.img.get(), v(-vport.size.x / 2, -vport.size.y / 2), v(vport.size.x, vport.size.y));
         } else if (this.type == "solid") {
             ctx.save();
-            ctx.fillStyle = this.color;
-            ctx.fillRect(-vport.ssize, -vport.ssize, vport.ssize * 2, vport.ssize * 2);
+            ctx.setFillStyle(this.color);
+            ctx.fillRect(v(-vport.size.x / 2, -vport.size.y / 2), v(vport.size.x, vport.size.y));
             ctx.restore();
         }
         ctx.restore();

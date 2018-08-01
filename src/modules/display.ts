@@ -4,36 +4,28 @@
 
 class Viewport {
     public element:any;
-    public secondC:HTMLCanvasElement;
-    public context:CanvasRenderingContext2D;
-    public context2:CanvasRenderingContext2D;
+    public context:CContext;
     public scale:Vector;
     public size:Vector;
     public screen:Vector;
     private isMain:boolean;
-    public ssize:number;
 
     constructor(id:string, main:boolean) {
-        this.element = document.getElementById(id);
-        if(this.element) {
-            this.context = this.element.getContext("2d");
+        if(id != "null") {
+            this.element = document.getElementById(id);
+            this.context = new CContext(this.element.getContext("2d"));
             this.isMain = main;
             this.scale = new Vector(1,1);
             this.size = new Vector(this.element.width, this.element.height);
-            this.screen = this.size;
+            this.screen = this.size
         } else {
-            //@ts-ignore
-            this.context = document.createElement("canvas").getContext("2d");
-            this.isMain = false;
-            this.scale = v();
-            this.size = v();
-            this.screen = v();
+            this.element = document.createElement("canvas");
+            this.context = new CContext(this.element.getContext("2d"));
+            this.isMain = main;
+            this.scale = new Vector(1,1);
+            this.size = new Vector(this.element.width, this.element.height);
+            this.screen = this.size
         }
-        this.secondC = document.createElement("canvas");
-        //@ts-ignore
-        this.context2 = this.secondC.getContext("2d");
-        this.context.scale(1/1.5, 1/1.5);
-        this.ssize = 0;
     } 
 
     resize(size:Vector, window:boolean = true):void {
@@ -64,7 +56,6 @@ class Viewport {
         } 
         this.element.width = this.size.x * this.scale.x;
         this.element.height = this.size.y * this.scale.y;
-        this.secondC.width = this.secondC.height = this.ssize = max * 1.5;
     } 
 }
 

@@ -130,7 +130,7 @@ function main() {
 if(fs.existsSync("../../" + process.argv[2])) {
     console.log("Project already exists");
     main();
-} else {
+} else if(process.argv[2]) {
     let r = rls("Target project does not exist, do you want to create it ? (yes/no) ");
     if(["y", "yes", "ok", "yeekes", "yuh"].includes(r.toLowerCase())) {
         main();
