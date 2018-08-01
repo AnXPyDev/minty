@@ -11,8 +11,8 @@ class Shader {
     }
 
     apply(from:Vector, to:Vector, args:any[] = [], cx:CanvasRenderingContext2D = ctx) {
-        from = v(from.x - camera.pos.x + vport.ssize / 2, from.y - camera.pos.y + vport.ssize / 2);
-        to = v(to.x - camera.pos.x + vport.ssize / 2, to.y - camera.pos.y + vport.ssize / 2);
+        from = v(from.x - camera.pos.x + vport.size.x / 2, from.y - camera.pos.y + vport.size.y / 2);
+        to = v(to.x - camera.pos.x + vport.size.x / 2, to.y - camera.pos.y + vport.size.y / 2);
         let imgdata = cx.getImageData(from.x, from.y, to.x - from.x, to.y - from.y);
         let newimgdata = cx.createImageData(to.x - from.x, to.y - from.y);
         for(let i = 0; i < imgdata.data.length; i += 4) {

@@ -37,7 +37,7 @@ class Background {
         ctx.save();
         ctx.globalAlpha = this.alpha;
         if(this.type == "tiled") {
-            let vsize = vport.ssize *  (1 / Math.max(camera.scale.x, camera.scale.y));
+            let vsize = Math.max(vport.size.x, vport.size.y) *  (1 / Math.max(camera.scale.x, camera.scale.y));
             let im = this.img.get();
             let goff:Vector = new Vector(
                     (camera.pos.x / (im.width * this.scale.x) - Math.floor(camera.pos.x / (im.width * this.scale.x))) * (im.width * this.scale.x) + this.offset.x,
@@ -59,9 +59,10 @@ class Background {
         } else if (this.type == "fullscreen") {
             ctx.drawImage(this.img.get(), -vport.size.x / 2, -vport.size.y / 2, vport.size.x, vport.size.y);
         } else if (this.type == "solid") {
+            let max = Math.max(vport.size.x, vport.size.y);
             ctx.save();
             ctx.fillStyle = this.color;
-            ctx.fillRect(-vport.ssize, -vport.ssize, vport.ssize * 2, vport.ssize * 2);
+            ctx.fillRect(-max, -max, max * 2, max * 2);
             ctx.restore();
         }
         ctx.restore();

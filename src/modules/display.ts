@@ -4,14 +4,11 @@
 
 class Viewport {
     public element:any;
-    public secondC:HTMLCanvasElement;
     public context:CanvasRenderingContext2D;
-    public context2:CanvasRenderingContext2D;
     public scale:Vector;
     public size:Vector;
     public screen:Vector;
     private isMain:boolean;
-    public ssize:number;
 
     constructor(id:string, main:boolean) {
         this.element = document.getElementById(id);
@@ -29,11 +26,6 @@ class Viewport {
             this.size = v();
             this.screen = v();
         }
-        this.secondC = document.createElement("canvas");
-        //@ts-ignore
-        this.context2 = this.secondC.getContext("2d");
-        this.context.scale(1/1.5, 1/1.5);
-        this.ssize = 0;
     } 
 
     resize(size:Vector, window:boolean = true):void {
@@ -64,7 +56,6 @@ class Viewport {
         } 
         this.element.width = this.size.x * this.scale.x;
         this.element.height = this.size.y * this.scale.y;
-        this.secondC.width = this.secondC.height = this.ssize = max * 1.5;
     } 
 }
 
