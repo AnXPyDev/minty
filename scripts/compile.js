@@ -58,8 +58,8 @@ function main() {
         if (!fs.existsSync(project + "/assets/snd")){ 
             fs.mkdirSync(project + "/assets/snd"); 
         } 
-        if (!fs.existsSync(project + "/assets/config")){ 
-            fs.mkdirSync(project + "/assets/config"); 
+        if (!fs.existsSync(project + "/config")){ 
+            fs.mkdirSync(project + "/config"); 
         }
     
         let ec = 0; 

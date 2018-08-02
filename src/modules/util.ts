@@ -51,7 +51,7 @@ function approach(val:number, val2:number, amt:number):number {
 
 const whenID:any = {};
 
-function when(condition:boolean, fn:() => void):boolean {
+function when(condition:boolean, fn:() => void = () => {}):boolean {
     let bool = false;
     let boolID:any = "" + new Error().stack;
     boolID = boolID.split("at")[2];
