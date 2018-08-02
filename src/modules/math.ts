@@ -357,7 +357,7 @@ const Random:{
     },
 }
 
-function v(x:number = 0, y:number = 0):Vector {
+function v(x:number = 0, y:number = x):Vector {
     return new Vector(x,y);
 }
 

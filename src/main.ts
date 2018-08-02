@@ -217,7 +217,7 @@ $MAIN.tick = function():void {
         ins[iKeys[i]].grid.reset();
         ins[iKeys[i]].grid.nextIndex();
     }
-    /*for(let i = 0; i<iKeys.length; i++) {
+    for(let i = 0; i<iKeys.length; i++) {
         for(let e = 0; e < ins[iKeys[i]].length; e++) {
             if(!ins[iKeys[i]][e]) {
                 ins[iKeys[i]].splice(e,1);
@@ -226,7 +226,7 @@ $MAIN.tick = function():void {
                 ins[iKeys[i]][e].id = e;
             }
         }
-    }*/
+    }
 
 
     for(let i = 0; i<loop.length; i++) {

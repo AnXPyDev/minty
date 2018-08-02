@@ -54,11 +54,11 @@ function gridPos(pos) {
     return v(Math.floor((pos.x - gridsize.x / 2) / gridsize.x + 1), Math.floor((pos.y - gridsize.y / 2 + 1) / gridsize.y + 1));
 }
 
-function exportScene(name) {
+function exportScene(pname, name) {
     ins.block.forEach(x => {
         x.export();
     })
-    exportObjectAsJson(exports, name);
+    exportObjectAsJson(exports, `../../../../${pname}/code/${name}`);
 }
 
 def("main_logic", class extends Actor {

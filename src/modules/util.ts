@@ -51,7 +51,7 @@ function approach(val:number, val2:number, amt:number):number {
 
 const whenID:any = {};
 
-function when(condition:boolean, fn:() => void) {
+function when(condition:boolean, fn:() => void):boolean {
     let bool = false;
     let boolID:any = "" + new Error().stack;
     boolID = boolID.split("at")[2];
@@ -66,11 +66,13 @@ function when(condition:boolean, fn:() => void) {
     } else if (!bool && condition) {
         fn();
         whenID[boolID] = true;
+        return true;
     } else if (bool && !condition) {
         whenID[boolID] = false;
     } else if (bool && condition) {
         whenID[boolID] = true;
     }
+    return false;
 }
 
 function wave(min:number, max:number, speed:number) {

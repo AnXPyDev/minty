@@ -8,6 +8,7 @@ class Viewport {
     public scale:Vector;
     public size:Vector;
     public screen:Vector;
+    public XtoY:number;
     private isMain:boolean;
 
     constructor(id:string, main:boolean) {
@@ -26,11 +27,13 @@ class Viewport {
             this.size = v();
             this.screen = v();
         }
+        this.XtoY = 0;
     } 
 
     resize(size:Vector, window:boolean = true):void {
         this.element.width = size.x;
         this.element.height = size.y;
+        this.XtoY = size.y / size.x;
         this.size = size;
         if (window) {
             this.screen = size;
@@ -53,7 +56,8 @@ class Viewport {
             } else {
                 this.scale = v(this.screen.x / this.size.x,this.screen.x / this.size.x);
             }
-        } 
+        }
+
         this.element.width = this.size.x * this.scale.x;
         this.element.height = this.size.y * this.scale.y;
     } 
