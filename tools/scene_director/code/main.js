@@ -58,7 +58,7 @@ function exportScene(pname, name) {
     ins.block.forEach(x => {
         x.export();
     })
-    exportObjectAsJson(exports, `../../../../${pname}/code/${name}`);
+    exportObjectAsJson(exports, `../../../../${pname}/config/${name}`);
 }
 
 def("main_logic", class extends Actor {

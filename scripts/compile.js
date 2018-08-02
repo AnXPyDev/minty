@@ -58,6 +58,9 @@ function main() {
         if (!fs.existsSync(project + "/assets/snd")){ 
             fs.mkdirSync(project + "/assets/snd"); 
         } 
+        if (!fs.existsSync(project + "/assets/config")){ 
+            fs.mkdirSync(project + "/assets/config"); 
+        }
     
         let ec = 0; 
         fs.readdir(project + "/code", function (err, files) { 
@@ -65,9 +68,7 @@ function main() {
                 let extension = file.split(".")[1]; 
                 if (extension == "js") { 
                     json.code.js.push(file); 
-                } else if (extension == "json") { 
-                    json.code.json.push(file); 
-                } 
+                }
             }); 
             fs.readdir(project + "/assets/img", function (err, files) { 
                 files.forEach(file => { 
@@ -83,7 +84,15 @@ function main() {
                             json.assets.sounds.push(file); 
                         } 
                     });
-                    fs.writeFile(project + "/game.cfg.json", JSON.stringify(json), () => {console.log("Sucessfully built game.cfg.json"); }); 
+                    fs.readdir(project + "/config", function (err, files){ 
+                        files.forEach(file => { 
+                            let extension = file.split(".")[1]; 
+                            if (extension == "json") { 
+                                json.code.json.push(file); 
+                            }
+                        });
+                        fs.writeFile(project + "/game.cfg.json", JSON.stringify(json), () => {console.log("Sucessfully built game.cfg.json"); }); 
+                    }) 
                 }) 
                 
             }) 

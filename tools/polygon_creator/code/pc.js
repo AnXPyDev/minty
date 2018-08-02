@@ -14,13 +14,34 @@ GAME.onload = function() {
 }
 
 const polygon = new Polygon();
+let sprite = new Sprite(["noimage"],1,0);
+let sprScale = v(1,1);;
+let is = v(1);
+function setImage(pname, name, len) {
+    preload("img", `../../${pname}/assets/img/${name}`);
+    GAME.onload = () => {
+        sprite = new Sprite([name.split(".")[0]], len, 0);
+        is = v(img[name.split(".")[0]].width / len, img[name.split(".")[0]].height);
+        if (vport.size.x  / vport.size.y > is.x / is.y) {
+            sprScale = v(vport.size.y / is.y,vport.size.y / is.y);
+        } else {
+            sprScale = v(vport.size.x / is.x,vport.size.x / is.x);
+        }
+        
 
-function exportPolygon(name) {
+
+        s_main.load();
+    }
+} 
+
+
+
+function exportPolygon(pname, name) {
     let exports = {root:[]};
     polygon.val.forEach(element => {
         exports.root.push([element.x, element.y]);
     });
-    exportObjectAsJson(exports, name);
+    exportObjectAsJson(exports, `../../../../${pname}/config/${name}`);
 }
 
 function update() {
@@ -43,13 +64,17 @@ def("main", class extends Actor {
             polygon.val.splice(-1,1);
             update();
         });
+        sprite.update();
     }
     mousedown() {
         polygon.val.push(v(Mouse.x, Mouse.y));
         update();
     }
     draw() {
-        polygon.draw();
+        sprite.draw(v(), v(is.x * sprScale.x * 0.75, is.y * sprScale.y * 0.75));
+        Draw.opacity(0.8, () => {
+            polygon.draw("red", "white");
+        })
     }
 
 })

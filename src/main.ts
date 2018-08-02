@@ -302,7 +302,7 @@ $MAIN.load = {
 function loadgame(pp:string) {
     let pco:number = 0;
     $MAIN.game_cfg.code.json.forEach((file:string) => {
-        cfg[file.split(".")[0]] = reqget(paths.mpx + pp + "/code/" + file);
+        cfg[file.split(".")[0]] = reqget(paths.mpx + pp + "/config/" + file);
     });
     $MAIN.cfg.packages.forEach((file:string) => {
         loadscript(paths.mpx + "./src/packages/" + file + ".js");
