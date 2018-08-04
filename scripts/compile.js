@@ -2,6 +2,7 @@ const fs = require("fs");
 const rls = require("readline-sync").question;
 
 function main() {
+    console.log(`Compiling for ${process.argv[2]} ...`);
     const paths = function() {
         const json = require("../base/refference_paths.json");
         if (process.argv[2] != null) {
@@ -135,13 +136,14 @@ function main() {
         }
     }
 }
-
-if(fs.existsSync("../../" + process.argv[2])) {
-    console.log("Project already exists");
-    main();
-} else {
-    let r = rls("Target project does not exist, do you want to create it ? (yes/no) ");
-    if(["y", "yes", "ok", "yeekes", "yuh"].includes(r.toLowerCase())) {
+if(process.argv[2] != null) {
+    if(fs.existsSync("../../" + process.argv[2])) {
+        console.log("Project already exists");
         main();
+    } else {
+        let r = rls("Target project does not exist, do you want to create it ? (yes/no) ");
+        if(["y", "yes", "ok", "yeekes", "yuh"].includes(r.toLowerCase())) {
+            main();
+        }
     }
 }

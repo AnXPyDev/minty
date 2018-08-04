@@ -259,9 +259,9 @@ $MAIN.draw = function() {
     ctx.save();
     ctx.fillStyle = "black";
     ctx.fillRect(0 , 0, vport.size.x, vport.size.y);
-    ctx.translate((vport.size.x * vport.scale.x) / 2, (vport.size.y * vport.scale.y) / 2);
+    ctx.translate((vport.size.x * vport.scale.x * vport.zoomFactor) / 2, (vport.size.y * vport.scale.y * vport.zoomFactor) / 2);
     ctx.rotate(camera.angle.rad);
-    ctx.scale(camera.scale.x * vport.scale.x, camera.scale.y * vport.scale.y);
+    ctx.scale(camera.scale.x * vport.scale.x * vport.zoomFactor, camera.scale.y * vport.scale.y * vport.zoomFactor);
     ctx.translate(-camera.pos.x, -camera.pos.y);
     $MAIN.cAPI.compile($MAIN.cLAY);
     ctx.restore();

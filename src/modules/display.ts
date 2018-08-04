@@ -9,6 +9,7 @@ class Viewport {
     public size:Vector;
     public screen:Vector;
     public XtoY:number;
+    public zoomFactor:number;
     private isMain:boolean;
 
     constructor(id:string, main:boolean) {
@@ -28,11 +29,15 @@ class Viewport {
             this.screen = v();
         }
         this.XtoY = 0;
+        this.zoomFactor = 1;
     } 
-
+    setRenderSize(size:Vector) {
+        this.zoomFactor = size.x / this.size.x;
+    }
     resize(size:Vector, window:boolean = true):void {
-        this.element.width = size.x;
-        this.element.height = size.y;
+        this.element.width = size.x * this.zoomFactor;
+        this.element.height = size.y * this.zoomFactor;
+        electron.webFrame.setZoomFactor(1 / this.zoomFactor);
         this.XtoY = size.y / size.x;
         this.size = size;
         if (window) {
@@ -57,9 +62,9 @@ class Viewport {
                 this.scale = v(this.screen.x / this.size.x,this.screen.x / this.size.x);
             }
         }
-
-        this.element.width = this.size.x * this.scale.x;
-        this.element.height = this.size.y * this.scale.y;
+        electron.webFrame.setZoomFactor(1 /this.zoomFactor);
+        this.element.width = this.size.x * this.scale.x * this.zoomFactor;
+        this.element.height = this.size.y * this.scale.y * this.zoomFactor;
     } 
 }
 
