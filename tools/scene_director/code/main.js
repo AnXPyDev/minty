@@ -18,7 +18,8 @@ GAME.onload = function() {
     s0.load();
 }
 
-const exports = {};
+let exports = {collisionblock:[]};
+let save = {};
 const info = {
     name: "none",
     size: v(32,32)
@@ -34,7 +35,7 @@ let isSelected = false;
 let selectSmaller = v(0,0);
 let sceneSize = v(600,600);
 
-function setInfo(name, size, gs = size) {
+function setInfo(name, size = v(save[name].size.x, save[name].size.y), gs = size) {
     info.name = name;
     info.size = size;
     
@@ -44,10 +45,13 @@ function setInfo(name, size, gs = size) {
 
     bck.grid.setScale(v(gs.x / 32, gs.y / 32)); 
     gridsize = gs;
+
+    save[name] = {size:[size.x, size.y], color:colors[name]};
 }
 
 function setSceneSize(size) {
     sceneSize = size;
+    save.sceneSize = [sceneSize.x, sceneSize.y];
 }
 
 function gridPos(pos) {
@@ -59,6 +63,31 @@ function exportScene(pname, name) {
         x.export();
     })
     exportObjectAsJson(exports, `../../../../${pname}/config/${name}`);
+    exportObjectAsJson(save, `${pname}/${name}`);
+}
+
+function importScene(pname, name) {
+    if(fs.existsSync(`tools/scene_director/exports/${pname}/${name}.json`)) {
+        exports = require(`../../${pname}/config/${name}.json`);
+        save = require(`../../minty/tools/scene_director/exports/${pname}/${name}.json`);
+        console.log(exports, save);
+        setSceneSize(v(save.sceneSize[0], save.sceneSize[1]));
+
+        Object.keys(save).forEach(x => {
+            console.log(x);
+            if(x != "sceneSize") {
+                colors[x] = save[x].color; 
+                setInfo(x, v(save[x].size[0], save[x].size[1]));
+                exports[x].forEach(y => {
+                    ins.main_logic[0].place(gridPos(v(y[0],y[1])));
+                })
+                exports.collisionblock.forEach(y => {
+                    ins.main_logic[0].placeCollision(v(y[0],y[1]),v(y[2], y[3]));
+                })
+
+            }
+        })
+    }
 }
 
 def("main_logic", class extends Actor {
@@ -105,6 +134,16 @@ def("main_logic", class extends Actor {
                 selectSmaller.y = 1;
             } else {
                 selectSmaller.y = 0;
+            }
+            if(Mouse.x > vport.size.x / 2 + camera.pos.x - 50) {
+                camera.pos.x += 4;
+            } else if(Mouse.x < -vport.size.x / 2 + camera.pos.x + 50) {
+                camera.pos.x -= 4;
+            }
+            if(Mouse.y > vport.size.y / 2 + camera.pos.y - 50) {
+                camera.pos.y += 4;
+            } else if(Mouse.y < -vport.size.y / 2 + camera.pos.y + 50) {
+                camera.pos.y -= 4;
             }
         }
         when(!Key.check("mouse") && isSelected, () => {
