@@ -10,9 +10,10 @@ class Viewport {
     public screen:Vector;
     public XtoY:number;
     public zoomFactor:number;
+    public staticResolution:boolean;
     private isMain:boolean;
 
-    constructor(id:string, main:boolean) {
+    constructor(id:string, main:boolean, staticResolution:boolean = true) {
         this.element = document.getElementById(id);
         if(this.element) {
             this.context = this.element.getContext("2d");
@@ -30,6 +31,7 @@ class Viewport {
         }
         this.XtoY = 0;
         this.zoomFactor = 1;
+        this.staticResolution = staticResolution;
     } 
     setRenderSize(size:Vector) {
         this.zoomFactor = size.x / this.size.x;
@@ -50,21 +52,23 @@ class Viewport {
     }
     
     update():void {
-        let sc = this.scale;
         let win = WINDOW.getContentBounds();
-        let max = Math.max(this.size.x, this.size.y);
-        this.screen = v(win.width, win.height);
-        if (this.screen != sc) {
+        if (this.screen.x != win.width || this.screen.y != win.height) {
             Key.mupdated = false;
+            this.screen = v(win.width, win.height);
             if (this.screen.x  / this.screen.y > this.size.x / this.size.y) {
                 this.scale = v(this.screen.y / this.size.y,this.screen.y / this.size.y);
             } else {
                 this.scale = v(this.screen.x / this.size.x,this.screen.x / this.size.x);
             }
+            if(this.staticResolution) {
+                this.zoomFactor = 1 / this.scale.x;
+            }
+            electron.webFrame.setZoomFactor(1 /this.zoomFactor);
+            this.element.width = this.size.x * this.scale.x * this.zoomFactor;
+            this.element.height = this.size.y * this.scale.y * this.zoomFactor;
         }
-        electron.webFrame.setZoomFactor(1 /this.zoomFactor);
-        this.element.width = this.size.x * this.scale.x * this.zoomFactor;
-        this.element.height = this.size.y * this.scale.y * this.zoomFactor;
+        
     } 
 }
 
