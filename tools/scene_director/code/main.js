@@ -16,6 +16,13 @@ const s0 = new Scene("s0", v(1024,1024),
 
 GAME.onload = function() {
     s0.load();
+    vport.update = function() {
+        let win = WINDOW.getContentBounds();
+        if(win.width != vport.size.x && win.height != vport.size.y) {
+            vport.resize(v(win.width, win.height));
+        }
+        
+    }
 }
 
 let exports = {collisionblock:[]};
@@ -34,6 +41,7 @@ let selection = [];
 let isSelected = false;
 let selectSmaller = v(0,0);
 let sceneSize = v(600,600);
+
 
 function setInfo(name, size = v(save[name].size.x, save[name].size.y), gs = size) {
     info.name = name;
@@ -62,6 +70,15 @@ function exportScene(pname, name) {
     ins.block.forEach(x => {
         x.export();
     })
+
+    save.steps = [];
+    steps.forEach(x => {
+        save.steps.push([]);
+        x.forEach(y => {
+            save.steps[save.steps.length - 1].push({name:ins.block[y].NAME, pos:[ins.block[y].pos.x, ins.block[y].pos.y], size:[ins.block[y].size.x, ins.block[y].size.y]});
+        })
+    })
+
     exportObjectAsJson(exports, `../../../../${pname}/config/${name}`);
     exportObjectAsJson(save, `${pname}/${name}`);
 }
@@ -73,19 +90,22 @@ function importScene(pname, name) {
         console.log(exports, save);
         setSceneSize(v(save.sceneSize[0], save.sceneSize[1]));
 
-        Object.keys(save).forEach(x => {
-            console.log(x);
-            if(x != "sceneSize") {
-                colors[x] = save[x].color; 
-                setInfo(x, v(save[x].size[0], save[x].size[1]));
-                exports[x].forEach(y => {
-                    ins.main_logic[0].place(gridPos(v(y[0],y[1])));
-                })
-                exports.collisionblock.forEach(y => {
-                    ins.main_logic[0].placeCollision(v(y[0],y[1]),v(y[2], y[3]));
-                })
+        ins.block = [];
+        ins.block.grid = new CollisionGrid();
+        steps = [];
 
-            }
+        save.steps.forEach(x => {
+            steps.push([]);
+            x.forEach(y => {
+                console.log(y);
+                if(y.name != "collisionblock") {
+                    setInfo(y.name, v(y.size[0], y.size[1]));
+                    colors[y.name] = save[y.name].color;
+                    steps[steps.length -1].push(ins.main_logic[0].place(gridPos(v(y.pos[0], y.pos[1]))));
+                } else {
+                    steps[steps.length -1].push(ins.main_logic[0].placeCollision(v(y.pos[0], y.pos[1]), v(y.size[0], y.size[1])));
+                }
+            })
         })
     }
 }
@@ -190,7 +210,7 @@ def("block", class extends Actor {
     constructor(pos, size, collision = false) {
         super(pos, "block");
         this.size = size;
-        this.NAME = info.name;
+        this.NAME = collision ? "collisionblock":info.name;
         this.collision = collision;
         this.isCollidable = false;
         this.alpha = 0;

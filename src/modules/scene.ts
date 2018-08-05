@@ -72,7 +72,6 @@ class Scene {
                 }
             }
         }
-        $MAIN.titleupdateloop.tps = Math.floor(this.tps / 4);
         tick = 0;
         resume(this.tps, this.aps);
         this.onload();

@@ -74,7 +74,6 @@ const $MAIN:{
     onloaded:boolean,
     tick:() => void,
     draw:() => void,
-    titleupdateloop:Loop,
     load:{
         all:number,
         done:number,
@@ -84,16 +83,8 @@ const $MAIN:{
         start:() => void,
         loading:() => boolean
     },
-    fps:{
-        last:number,
-        now:number,
-        total:number
-    },
-    tps:{
-        last:number,
-        now:number,
-        total:number
-    }
+    fps:FpsCounter
+    tps:FpsCounter
 } = {};
 
 $MAIN.onloaded = false;
@@ -152,14 +143,6 @@ $MAIN.mLAY = new Layers;
 
 $MAIN.loadanim = getLoadAnim();
 
-$MAIN.titleupdateloop = new Loop(
-    function() {
-        if ($MAIN.cfg.developer) {
-            WINDOW.setTitle(`${paths.project_name} ` + $MAIN.cfg.version + "   fps: " + $MAIN.fps.total + "   tps: " + $MAIN.tps.total);
-        }
-    },15
-)
-
 $MAIN.onload = function() {
     WINDOW.setTitle(`${paths.project_name}`);
     vport = new Viewport("c0", true);
@@ -187,7 +170,7 @@ $MAIN.onload = function() {
 }
 
 $MAIN.tick = function():void {
-    $MAIN.tps.last = $MAIN.tps.now;
+    $MAIN.tps.before();
     tick ++;
     $MAIN.cLAY.reset();
     $MAIN.mLAY.reset();
@@ -234,28 +217,17 @@ $MAIN.tick = function():void {
     }
     $MAIN.cLAY.finalize();
     $MAIN.mLAY.finalize();
-    $MAIN.tps.now = Date.now();
-    $MAIN.tps.total = Math.floor(1000 / ($MAIN.tps.now - $MAIN.tps.last));
-    //dt = scene.tps / $MAIN.tps.total * adt;
-    $MAIN.titleupdateloop.update();
+    $MAIN.tps.after();
     vport.update();
 }
 
-$MAIN.fps = {
-    last: 0,
-    now: 0,
-    total: 0
-}
+$MAIN.fps = new FpsCounter("FPS", "cyan");
 
-$MAIN.tps = {
-    last: 0,
-    now: 0,
-    total: 0
-}
+$MAIN.tps = new FpsCounter("TPS", "magenta");
 
 
 $MAIN.draw = function() {
-    $MAIN.fps.last = $MAIN.fps.now;
+    $MAIN.fps.before();
     ctx.save();
     ctx.fillStyle = "black";
     ctx.fillRect(0 , 0, vport.size.x, vport.size.y);
@@ -265,12 +237,14 @@ $MAIN.draw = function() {
     ctx.translate(-camera.pos.x, -camera.pos.y);
     $MAIN.cAPI.compile($MAIN.cLAY);
     ctx.restore();
+    $MAIN.tps.draw(0);
+    $MAIN.fps.draw(1);
+
     if (!$MAIN.load.doneanim) {
         $MAIN.loadanim();
     }
-    $MAIN.fps.now = performance.now();
+    $MAIN.fps.after();
     //@ts-ignore
-    $MAIN.fps.total = Math.floor(1000 / ($MAIN.fps.now - $MAIN.fps.last));
     requestAnimationFrame($MAIN.draw);
 }
 
