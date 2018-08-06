@@ -1,5 +1,5 @@
 class Scene {
-    public onload:() => void;
+    public onload:(...args:any[]) => void;
     public onbeforeload:() => void;
     public index:number;
     public act:any;
@@ -13,7 +13,7 @@ class Scene {
     public name:string;
     public vars:any;
 
-    constructor(name:string, size:Vector, act:any, bck:any,til:any, onload:() => void, onbeforeload:() => void, tps:number = 60, aps:number = tps) {
+    constructor(name:string, size:Vector, act:any, bck:any,til:any, onload:(...args:any[]) => void, onbeforeload:() => void, tps:number = 60, aps:number = tps) {
         this.index = 0;
         this.onload = onload;
         this.onbeforeload = onbeforeload;
@@ -29,7 +29,7 @@ class Scene {
         this.vars = {};
     } 
 
-    load():void {
+    load(...args:any[]):void {
         this.onbeforeload();
         pause();
         scene = this;
@@ -72,9 +72,10 @@ class Scene {
                 }
             }
         }
+        this.onload(...args);
         tick = 0;
         resume(this.tps, this.aps);
-        this.onload();
+        
     }
 
     setNext(scene:Scene):void {
