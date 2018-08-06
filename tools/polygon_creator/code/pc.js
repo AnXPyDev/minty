@@ -2,7 +2,7 @@ const s_main = new Scene("s_main", v(800,600), {
     main:[[]],
     cursor:[[]]
 },{
-    main:[["noimage"], "solid", "black"]
+    main:[["noimage"], "solid", "grey"]
 },{
     
 },() => {
