@@ -35,7 +35,7 @@ class Background {
     }
     draw():void {
         ctx.save();
-        ctx.globalAlpha = this.alpha;
+        ctx.setAlpha(this.alpha);
         if(this.type == "tiled") {
             let vsize = Math.max(vport.size.x, vport.size.y) *  (1 / Math.max(camera.scale.x, camera.scale.y));
             let im = this.img.get();
@@ -46,23 +46,23 @@ class Background {
             for(let i:number = -Math.floor((vsize / 2) / (im.width * this.scale.x)) -2; i < Math.floor((vsize / 2) / (im.width * this.scale.x)) + 2; i++) {
                 for(let e:number = -Math.floor((vsize / 2) / (im.height * this.scale.y)) -2; e < Math.floor((vsize / 2) / (im.height * this.scale.y)) + 2; e++) {
                     ctx.save()
-                    ctx.translate(i * im.width * this.scale.x + camera.pos.x - goff.x + this.off.x,e * im.height * this.scale.y + camera.pos.y - goff.y + this.off.y);
-                    ctx.scale(this.scale.x, this.scale.y);
+                    ctx.translate(v(i * im.width * this.scale.x + camera.pos.x - goff.x + this.off.x,e * im.height * this.scale.y + camera.pos.y - goff.y + this.off.y));
+                    ctx.scale(this.scale);
                     ctx.drawImage(im, 
-                        -im.width /2,  
-                        -im.height / 2, 
-                        im.width, 
-                        im.height)
+                        v(-im.width /2,  
+                        -im.height / 2), 
+                        v(im.width, 
+                        im.height))
                     ctx.restore();   
                 }
             }
         } else if (this.type == "fullscreen") {
-            ctx.drawImage(this.img.get(), -vport.size.x / 2, -vport.size.y / 2, vport.size.x, vport.size.y);
+            ctx.drawImage(this.img.get(), v(-vport.size.x / 2, -vport.size.y / 2), vport.size);
         } else if (this.type == "solid") {
             let max = Math.max(vport.size.x, vport.size.y);
             ctx.save();
-            ctx.fillStyle = this.color;
-            ctx.fillRect(-max, -max, max * 2, max * 2);
+            ctx.setFillStyle(this.color);
+            ctx.fillRect(v(-max, -max), v(max * 2, max * 2));
             ctx.restore();
         }
         ctx.restore();

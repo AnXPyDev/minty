@@ -114,7 +114,7 @@ $MAIN.logo.parts[1] = new Image(); $MAIN.logo.parts[1].src = paths.mpx + "./icon
 
 let vport:Viewport = new Viewport("null", false);
 //@ts-ignore
-let ctx:CanvasRenderingContext2D;
+let ctx:CContext;
 
 const act:any = {};
 const til:any = {};
@@ -147,14 +147,6 @@ $MAIN.onload = function() {
     WINDOW.setTitle(`${paths.project_name}`);
     vport = new Viewport("c0", true);
     ctx = vport.context;
-    ctx.imageSmoothingEnabled = $MAIN.game_cfg.imgSmoothing;
-    //@ts-ignore
-    ctx.scaleNew = ctx.scale;
-    ctx.scale = (x:number,y:number) => {
-        //@ts-ignore
-        ctx.scaleNew(x,y);
-        ctx.imageSmoothingEnabled = $MAIN.game_cfg.imgSmoothing;
-    }
     vport.resize(new Vector(600,600), true);
     requestAnimationFrame($MAIN.draw);
     if ($MAIN.cfg.developer) {
@@ -229,10 +221,10 @@ $MAIN.tps = new FpsCounter("TPS", "magenta");
 $MAIN.draw = function() {
     $MAIN.fps.before();
     ctx.save();
-    ctx.translate((vport.size.x * vport.scale.x * vport.zoomFactor) / 2, (vport.size.y * vport.scale.x * vport.zoomFactor) / 2);
-    ctx.rotate(camera.angle.rad);
-    ctx.scale(camera.scale.x * vport.scale.x * vport.zoomFactor, camera.scale.y * vport.scale.y * vport.zoomFactor);
-    ctx.translate(-camera.pos.x, -camera.pos.y);
+    ctx.translate(v((vport.size.x * vport.scale.x * vport.zoomFactor) / 2, (vport.size.y * vport.scale.x * vport.zoomFactor) / 2));
+    ctx.rotate(camera.angle);
+    ctx.scale(v(camera.scale.x * vport.scale.x * vport.zoomFactor, camera.scale.y * vport.scale.y * vport.zoomFactor));
+    ctx.translate(v(-camera.pos.x, -camera.pos.y));
     $MAIN.cAPI.compile($MAIN.cLAY);
     ctx.restore();
     if($MAIN.cfg.developer) {

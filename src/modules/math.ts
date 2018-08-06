@@ -308,13 +308,13 @@ class Polygon {
         if(this.val.length > 0) {
             ctx.save();
             ctx.beginPath()
-            ctx.moveTo(this.val[0].x, this.val[0].y);
+            ctx.moveTo(this.val[0]);
             for(let i = 1; i < this.val.length; i++) {
-                ctx.lineTo(this.val[i].x, this.val[i].y);
+                ctx.lineTo(this.val[i]);
             }
             ctx.closePath();
-            ctx.strokeStyle = stroke;
-            ctx.fillStyle = fill;
+            ctx.setStrokeStyle(stroke);
+            ctx.setFillStyle(fill);
             ctx.fill();
             ctx.stroke();
             ctx.restore();

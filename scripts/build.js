@@ -3,6 +3,9 @@
     const fse = require("fs-extra");
     var dir = '../../built';
 
+    if(!fs.existsSync(dir)) {
+        fs.mkdirSync(dir);
+    }
 
     let fl = fs.readdirSync(dir), 
 

@@ -24,13 +24,13 @@ class FpsCounter {
     }
     draw(pos:number) {
         ctx.save();
-        ctx.fillStyle = "black";
-        ctx.translate(8 + 8 * pos + 64 * pos + 64 / 2,8 + 32 /2)
-        ctx.fillRect(-32,-16, 64, 32);
-        ctx.textAlign = "center";
-        ctx.fillStyle = this.color;
-        ctx.font = `16px Arial`;
-        ctx.fillText(`${this.text}: ${this.total}`, 0, 4, 64);
+        ctx.setFillStyle("black");
+        ctx.translate(v(8 + 8 * pos + 64 * pos + 64 / 2,8 + 32 /2))
+        ctx.fillRect(v(-32,-16), v(64, 32));
+        ctx.setTextAlign("center");
+        ctx.setFillStyle(this.color);
+        ctx.setFont(`16px Arial`);
+        ctx.fillText(`${this.text}: ${this.total}`, v(0, 4), 64);
         ctx.restore();
     }
 }

@@ -4,7 +4,7 @@
 
 class Viewport {
     public element:any;
-    public context:CanvasRenderingContext2D;
+    public context:CContext;
     public scale:Vector;
     public size:Vector;
     public screen:Vector;
@@ -16,19 +16,20 @@ class Viewport {
     constructor(id:string, main:boolean, staticResolution:boolean = true) {
         this.element = document.getElementById(id);
         if(this.element) {
-            this.context = this.element.getContext("2d");
+            this.context = new CContext(this.element.getContext("2d"));
             this.isMain = main;
             this.scale = new Vector(1,1);
             this.size = new Vector(this.element.width, this.element.height);
             this.screen = this.size;
         } else {
             //@ts-ignore
-            this.context = document.createElement("canvas").getContext("2d");
-            this.isMain = false;
-            this.scale = v();
-            this.size = v();
-            this.screen = v();
+            this.context = new CContext(document.createElement("canvas").getContext("2d"));
+            this.isMain = main;
+            this.scale = new Vector(1,1);
+            this.size = new Vector(0, 0);
+            this.screen = this.size;
         }
+        
         this.XtoY = 0;
         this.zoomFactor = 1;
         this.staticResolution = staticResolution;

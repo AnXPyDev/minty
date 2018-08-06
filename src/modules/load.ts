@@ -16,20 +16,20 @@ function getLoadAnim():() => void {
         alpha = clamp(alpha, 0, 1);
         let vsz:Vector = v(vport.size.x * vport.scale.x, vport.size.y * vport.scale.y);
         let sz:number = (Math.min(vsz.x, vsz.y) / 3) * 2 / szm;
-        ctx.globalAlpha = alpha;
-        ctx.fillStyle = "black";
-        ctx.fillRect(0,0,vsz.x,vsz.y);
-        ctx.translate(vsz.x / szm * (szm - 1) , vsz.y / szm * (szm -1));
+        ctx.setAlpha(alpha);
+        ctx.setFillStyle("black");
+        ctx.fillRect(v(),vsz);
+        ctx.translate(v(vsz.x / szm * (szm - 1) , vsz.y / szm * (szm -1)));
         //@ts-ignore
         angle = 2 * Math.PI * Math.sin(new Date() / 1000);
         //if (angle < -2 * Math.PI) {angle = 0};
         ctx.save();
-        ctx.rotate(angle);
-        ctx.drawImage(i0, -sz / 2, -sz / 2, sz, sz);
+        ctx.rotate(new Angle("rad", angle));
+        ctx.drawImage(i0, v(-sz / 2), v(sz));
         ctx.restore();
         ctx.save();
-        ctx.rotate(-angle);
-        ctx.drawImage(i1, -sz / 2, -sz / 2, sz, sz);
+        ctx.rotate(new Angle("rad", -angle));
+        ctx.drawImage(i1, v(-sz / 2), v(sz));
         ctx.restore();
         ctx.restore();    
     }

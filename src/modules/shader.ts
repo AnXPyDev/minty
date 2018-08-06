@@ -6,14 +6,14 @@ class Shader {
         this.shader = shader;
     }
 
-    applySz(pos:Vector, size:Vector, args:any[] = [], cx:CanvasRenderingContext2D = ctx) {
+    applySz(pos:Vector, size:Vector, args:any[] = [], cx:CContext = ctx) {
         this.apply(v(pos.x - size.x / 2, pos.y - size.y / 2), v(pos.x + size.x / 2, pos.y + size.y / 2), args, cx);
     }
 
-    apply(from:Vector, to:Vector, args:any[] = [], cx:CanvasRenderingContext2D = ctx) {
+    apply(from:Vector, to:Vector, args:any[] = [], cx:CContext= ctx) {
         from = v(from.x - camera.pos.x + vport.size.x / 2, from.y - camera.pos.y + vport.size.y / 2);
         to = v(to.x - camera.pos.x + vport.size.x / 2, to.y - camera.pos.y + vport.size.y / 2);
-        let imgdata = cx.getImageData(from.x, from.y, to.x - from.x, to.y - from.y);
+        let imgdata = cx.getImageData(from, v(to.x - from.x, to.y - from.y));
         let newimgdata = cx.createImageData(to.x - from.x, to.y - from.y);
         for(let i = 0; i < imgdata.data.length; i += 4) {
             let color = new Color(
@@ -31,7 +31,7 @@ class Shader {
                 newimgdata.data[i+3] = newcolor.a;
             }
         }
-        cx.putImageData(newimgdata, from.x, from.y);
+        cx.putImageData(newimgdata, from);
     }
 }
 
