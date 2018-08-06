@@ -10,6 +10,7 @@ class Viewport {
     public screen:Vector;
     public XtoY:number;
     public zoomFactor:number;
+    public zoom:number;
     public staticResolution:boolean;
     private isMain:boolean;
 
@@ -32,6 +33,7 @@ class Viewport {
         
         this.XtoY = 0;
         this.zoomFactor = 1;
+        this.zoom = 1;
         this.staticResolution = staticResolution;
     } 
     setRenderSize(size:Vector) {
@@ -63,9 +65,9 @@ class Viewport {
                 this.scale = v(this.screen.x / this.size.x,this.screen.x / this.size.x);
             }
             if(this.staticResolution) {
-                this.zoomFactor = 1 / this.scale.x;
+                this.zoomFactor = (1 / this.scale.x) * this.zoom;
             }
-            electron.webFrame.setZoomFactor(1 /this.zoomFactor);
+            electron.webFrame.setZoomFactor(1 /(this.zoomFactor));
             this.element.width = this.size.x * this.scale.x * this.zoomFactor;
             this.element.height = this.size.y * this.scale.y * this.zoomFactor;
         }

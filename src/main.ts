@@ -222,8 +222,8 @@ $MAIN.draw = function() {
     $MAIN.fps.before();
     ctx.save();
     ctx.translate(v((vport.size.x * vport.scale.x * vport.zoomFactor) / 2, (vport.size.y * vport.scale.x * vport.zoomFactor) / 2));
-    ctx.rotate(camera.angle);
     ctx.scale(v(camera.scale.x * vport.scale.x * vport.zoomFactor, camera.scale.y * vport.scale.y * vport.zoomFactor));
+    ctx.rotate(camera.angle);
     ctx.translate(v(-camera.pos.x, -camera.pos.y));
     $MAIN.cAPI.compile($MAIN.cLAY);
     ctx.restore();
@@ -231,7 +231,6 @@ $MAIN.draw = function() {
         $MAIN.tps.draw(0);
         $MAIN.fps.draw(1);
     }
-
     if (!$MAIN.load.doneanim) {
         $MAIN.loadanim();
     }
