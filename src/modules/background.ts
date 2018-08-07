@@ -10,11 +10,12 @@ class Background {
     public spd:Vector;
     public offset:Vector;
     public aoff:Vector;
+    public margin:Vector;
     private types:string[];
 
     constructor(imgname:string[], type:string, color:string = "white") {
         this.img = new ImageArray(...imgname);
-        this.types = ["solid", "single", "fullscreen", "tiled"];
+        this.types = ["solid", "single", "fullscreen", "tiled", "htiled", "vtiled"];
         this.type = (():string => {
             //@ts-ignore
             if (this.types.includes(type)) {
@@ -30,6 +31,7 @@ class Background {
         this.spd = new Vector();
         this.depth = -15;
         this.alpha = 1;
+        this.margin = v();
         this.offset = v();
         this.aoff = v();
     }
@@ -40,13 +42,13 @@ class Background {
             let vsize = Math.max(vport.size.x, vport.size.y) *  (1 / Math.max(camera.scale.x, camera.scale.y));
             let im = this.img.get();
             let goff:Vector = new Vector(
-                    (camera.pos.x / (im.width * this.scale.x) - Math.floor(camera.pos.x / (im.width * this.scale.x))) * (im.width * this.scale.x) + this.offset.x,
-                    (camera.pos.y / (im.height * this.scale.y) - Math.floor(camera.pos.y / (im.height * this.scale.y))) * (im.height * this.scale.y) + this.offset.y
+                    (camera.pos.x / ((im.width + this.margin.x) * this.scale.x) - Math.floor(camera.pos.x / ((im.width + this.margin.x) * this.scale.x))) * ((im.width + this.margin.x) * this.scale.x) + this.offset.x,
+                    (camera.pos.y / ((im.height+ this.margin.y) * this.scale.y) - Math.floor(camera.pos.y / ((im.height+ this.margin.y) * this.scale.y))) * ((im.height+ this.margin.y) * this.scale.y) + this.offset.y
                 )
-            for(let i:number = -Math.floor((vsize / 2) / (im.width * this.scale.x)) -2; i < Math.floor((vsize / 2) / (im.width * this.scale.x)) + 2; i++) {
-                for(let e:number = -Math.floor((vsize / 2) / (im.height * this.scale.y)) -2; e < Math.floor((vsize / 2) / (im.height * this.scale.y)) + 2; e++) {
+            for(let i:number = -Math.floor((vsize / 2) / ((im.width + this.margin.x) * this.scale.x)) -2; i < Math.floor((vsize / 2) / ((im.width + this.margin.x) * this.scale.x)) + 2; i++) {
+                for(let e:number = -Math.floor((vsize / 2) / ((im.height+ this.margin.y) * this.scale.y)) -2; e < Math.floor((vsize / 2) / ((im.height+ this.margin.y) * this.scale.y)) + 2; e++) {
                     ctx.save()
-                    ctx.translate(v(i * im.width * this.scale.x + camera.pos.x - goff.x + this.off.x,e * im.height * this.scale.y + camera.pos.y - goff.y + this.off.y));
+                    ctx.translate(v(i * (im.width + this.margin.x) * this.scale.x + camera.pos.x - goff.x + this.off.x,e * (im.height+ this.margin.y) * this.scale.y + camera.pos.y - goff.y + this.off.y));
                     ctx.scale(this.scale);
                     ctx.drawImage(im, 
                         v(-im.width /2,  
@@ -56,19 +58,57 @@ class Background {
                     ctx.restore();   
                 }
             }
+        } else if (this.type == "htiled") {
+            let vsize = Math.max(vport.size.x, vport.size.y) *  (1 / Math.max(camera.scale.x, camera.scale.y));
+            let im = this.img.get();
+            let goff:Vector = new Vector(
+                    (camera.pos.x / ((im.width + this.margin.x) * this.scale.x) - Math.floor(camera.pos.x / ((im.width + this.margin.x) * this.scale.x))) * ((im.width + this.margin.x) * this.scale.x) + this.offset.x,
+                    (camera.pos.y / ((im.height+ this.margin.y) * this.scale.y) - Math.floor(camera.pos.y / ((im.height+ this.margin.y) * this.scale.y))) * ((im.height+ this.margin.y) * this.scale.y) + this.offset.y
+                )
+            let e = 0;
+            for(let i:number = -Math.floor((vsize / 2) / ((im.width + this.margin.x) * this.scale.x)) -2; i < Math.floor((vsize / 2) / ((im.width + this.margin.x) * this.scale.x)) + 2; i++) {
+                ctx.save()
+                ctx.translate(v(i * (im.width + this.margin.x) * this.scale.x + camera.pos.x - goff.x + this.off.x,e * (im.height+ this.margin.y) * this.scale.y + camera.pos.y - goff.y + this.off.y));
+                ctx.scale(this.scale);
+                ctx.drawImage(im, 
+                    v(-im.width /2,  
+                    -im.height / 2), 
+                    v(im.width, 
+                    im.height))
+                ctx.restore();   
+            }
+        } else if (this.type == "vtiled") {
+            let vsize = Math.max(vport.size.x, vport.size.y) *  (1 / Math.max(camera.scale.x, camera.scale.y));
+            let im = this.img.get();
+            let goff:Vector = new Vector(
+                    (camera.pos.x / ((im.width + this.margin.x) * this.scale.x) - Math.floor(camera.pos.x / ((im.width + this.margin.x) * this.scale.x))) * ((im.width + this.margin.x) * this.scale.x) + this.offset.x,
+                    (camera.pos.y / ((im.height+ this.margin.y) * this.scale.y) - Math.floor(camera.pos.y / ((im.height+ this.margin.y) * this.scale.y))) * ((im.height+ this.margin.y) * this.scale.y) + this.offset.y
+                )
+            let i = 0;
+            for(let e:number = -Math.floor((vsize / 2) / ((im.height+ this.margin.y) * this.scale.y)) -2; e < Math.floor((vsize / 2) / ((im.height+ this.margin.y) * this.scale.y)) + 2; e++) {
+                ctx.save()
+                ctx.translate(v(i * (im.width + this.margin.x) * this.scale.x + camera.pos.x - goff.x + this.off.x,e * (im.height+ this.margin.y) * this.scale.y + camera.pos.y - goff.y + this.off.y));
+                ctx.scale(this.scale);
+                ctx.drawImage(im, 
+                    v(-im.width /2,  
+                    -im.height / 2), 
+                    v(im.width, 
+                    im.height))
+                ctx.restore();   
+            }
         } else if (this.type == "fullscreen") {
             ctx.drawImage(this.img.get(), v(-vport.size.x / 2, -vport.size.y / 2), vport.size);
         } else if (this.type == "solid") {
             let max = Math.max(vport.size.x, vport.size.y);
             ctx.save();
             ctx.setFillStyle(this.color);
-            ctx.fillRect(v(-max, -max), v(max * 2, max * 2));
+            ctx.fillRect(v(-max + camera.pos.x, -max + camera.pos.y), v(max * 2, max * 2));
             ctx.restore();
         }
         ctx.restore();
     }
     update():void {
-        if(this.type == "tiled") {
+        if(this.type == "tiled" || this.type == "htiled" || this.type == "vtiled") {
             this.off.x = wrap(this.off.x + this.spd.x * dt, 0, this.img.get().width * this.scale.x);
             this.off.y = wrap(this.off.y + this.spd.y * dt, 0, this.img.get().height * this.scale.y);
             this.offset.x = (this.aoff.x - Math.floor(this.aoff.x / this.img.get().width) * this.img.get().width) * this.scale.x;
