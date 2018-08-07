@@ -42,7 +42,7 @@ function main() {
         const json = require("../base/refference_game.json"); 
         const types = { 
             image: ["jpg", "svg", "png"], 
-            sound: ["mp3", "wav"] 
+            sound: ["mp3", "wav", "flac"] 
         } 
         if (!fs.existsSync(project)){ 
             fs.mkdirSync(project); 

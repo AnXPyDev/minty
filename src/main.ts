@@ -33,12 +33,7 @@ function preload(type:string, path:string):void {
         }
     } else if (type == "snd") {
         $MAIN.load.start();
-        snd[name] = new Audio();
-        snd[name].src = path;
-        snd[name].oncanplaythrough = ():void => {
-            $MAIN.load.stop();
-            snd[name].oncanplaythrough = ():void => {};
-        }
+        snd[name] = new Sound(path);
     }
 }
 

@@ -11,6 +11,7 @@ class Background {
     public offset:Vector;
     public aoff:Vector;
     public margin:Vector;
+    public pos:Vector;
     private types:string[];
 
     constructor(imgname:string[], type:string, color:string = "white") {
@@ -34,6 +35,7 @@ class Background {
         this.margin = v();
         this.offset = v();
         this.aoff = v();
+        this.pos = v();
     }
     draw():void {
         ctx.save();
@@ -48,7 +50,7 @@ class Background {
             for(let i:number = -Math.floor((vsize / 2) / ((im.width + this.margin.x) * this.scale.x)) -2; i < Math.floor((vsize / 2) / ((im.width + this.margin.x) * this.scale.x)) + 2; i++) {
                 for(let e:number = -Math.floor((vsize / 2) / ((im.height+ this.margin.y) * this.scale.y)) -2; e < Math.floor((vsize / 2) / ((im.height+ this.margin.y) * this.scale.y)) + 2; e++) {
                     ctx.save()
-                    ctx.translate(v(i * (im.width + this.margin.x) * this.scale.x + camera.pos.x - goff.x + this.off.x,e * (im.height+ this.margin.y) * this.scale.y + camera.pos.y - goff.y + this.off.y));
+                    ctx.translate(v(i * (im.width + this.margin.x) * this.scale.x + camera.pos.x - goff.x + this.off.x + this.pos.x,e * (im.height+ this.margin.y) * this.scale.y + camera.pos.y - goff.y + this.off.y + this.pos.y));
                     ctx.scale(this.scale);
                     ctx.drawImage(im, 
                         v(-im.width /2,  
@@ -68,7 +70,7 @@ class Background {
             let e = 0;
             for(let i:number = -Math.floor((vsize / 2) / ((im.width + this.margin.x) * this.scale.x)) -2; i < Math.floor((vsize / 2) / ((im.width + this.margin.x) * this.scale.x)) + 2; i++) {
                 ctx.save()
-                ctx.translate(v(i * (im.width + this.margin.x) * this.scale.x + camera.pos.x - goff.x + this.off.x,e * (im.height+ this.margin.y) * this.scale.y + camera.pos.y - goff.y + this.off.y));
+                ctx.translate(v(i * (im.width + this.margin.x) * this.scale.x + camera.pos.x - goff.x + this.off.x + this.pos.x,e * (im.height+ this.margin.y) * this.scale.y + camera.pos.y - goff.y + this.off.y + this.pos.y));
                 ctx.scale(this.scale);
                 ctx.drawImage(im, 
                     v(-im.width /2,  
@@ -87,7 +89,7 @@ class Background {
             let i = 0;
             for(let e:number = -Math.floor((vsize / 2) / ((im.height+ this.margin.y) * this.scale.y)) -2; e < Math.floor((vsize / 2) / ((im.height+ this.margin.y) * this.scale.y)) + 2; e++) {
                 ctx.save()
-                ctx.translate(v(i * (im.width + this.margin.x) * this.scale.x + camera.pos.x - goff.x + this.off.x,e * (im.height+ this.margin.y) * this.scale.y + camera.pos.y - goff.y + this.off.y));
+                ctx.translate(v(i * (im.width + this.margin.x) * this.scale.x + camera.pos.x - goff.x + this.off.x + this.pos.x,e * (im.height+ this.margin.y) * this.scale.y + camera.pos.y - goff.y + this.off.y + this.pos.y));
                 ctx.scale(this.scale);
                 ctx.drawImage(im, 
                     v(-im.width /2,  
@@ -109,10 +111,10 @@ class Background {
     }
     update():void {
         if(this.type == "tiled" || this.type == "htiled" || this.type == "vtiled") {
-            this.off.x = wrap(this.off.x + this.spd.x * dt, 0, this.img.get().width * this.scale.x);
-            this.off.y = wrap(this.off.y + this.spd.y * dt, 0, this.img.get().height * this.scale.y);
-            this.offset.x = (this.aoff.x - Math.floor(this.aoff.x / this.img.get().width) * this.img.get().width) * this.scale.x;
-            this.offset.y = (this.aoff.y - Math.floor(this.aoff.y / this.img.get().height) * this.img.get().height) * this.scale.y;
+            this.off.x = wrap(this.off.x + this.spd.x * dt, 0, (this.img.get().width + this.margin.x) * this.scale.x);
+            this.off.y = wrap(this.off.y + this.spd.y * dt, 0, (this.img.get().height + this.margin.y) * this.scale.y);
+            this.offset.x = (this.aoff.x - Math.floor(this.aoff.x / (this.img.get().width + this.margin.x)) * (this.img.get().width + this.margin.x)) * this.scale.x;
+            this.offset.y = (this.aoff.y - Math.floor(this.aoff.y / (this.img.get().height + this.margin.y)) * (this.img.get().height + this.margin.y)) * this.scale.y;
         }
         $MAIN.cLAY.insert(new Layer(this.depth, () => {return this.draw()}));
     }
@@ -124,6 +126,9 @@ class Background {
     }
     setOffset(off:Vector):void {
         this.aoff = off;
+    }
+    setPos(pos:Vector):void {
+        this.pos = pos;
     }
 }
 
