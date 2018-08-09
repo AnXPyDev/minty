@@ -338,7 +338,8 @@ const Random:{
     float:(min:number, max:number) => number,
     choose:(args:any[]) => any,
     rgb:() => string,
-    rgba:() => string
+    rgba:() => string,
+    sign:() => number
 } = {
     int(min:number, max:number) {
         return Math.floor(Math.random() * (max - min + 1) + min); 
@@ -355,6 +356,12 @@ const Random:{
     rgba():string {
         return "rgba(" + Random.int(0,255) + "," + Random.int(0,255) + "," + Random.int(0,255) + "," + Math.random() + ")";
     },
+    sign():number {
+        if(chance(50)) {
+            return 1;
+        }
+        return -1;
+    }
 }
 
 function v(x:number = 0, y:number = x):Vector {

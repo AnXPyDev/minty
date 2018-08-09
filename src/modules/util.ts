@@ -76,7 +76,7 @@ function when(condition:boolean, fn:() => void = () => {}):boolean {
 }
 
 function wave(min:number, max:number, speed:number) {
-    return min + ((max - min) / 2) + Math.sin(performance.now() / Math.pow(10, speed)) * ((max - min) / 2); 
+    return min + ((max - min) / 2) + Math.sin(tick / Math.pow(10, 10 / speed)) * ((max - min) / 2); 
 }
 
 function chance(perc:number) {

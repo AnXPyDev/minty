@@ -10,7 +10,7 @@ class Sprite {
     public layers:Layers;
     public wrap:boolean;
 
-    constructor(imgname:string[], len:number = 1, fps:number, wrap:boolean = true) {
+    constructor(imgname:string[], len:number = 1, fps:number = 0, wrap:boolean = true) {
         this.img = new ImageArray(...imgname);
         this.len = len;
         this.index = 0;

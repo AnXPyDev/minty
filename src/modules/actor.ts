@@ -8,6 +8,7 @@ class Actor {
     public isPersistant:boolean;
     public tickrate:number;
     public depth:number;
+    public GUIdepth:number;
     public mdepth:number;
     public loops:any;
     public isCollidable:boolean;
@@ -18,6 +19,7 @@ class Actor {
     public morphedMask:Polygon;
     public isPaused:boolean;
     public isRoundedPosAfterTick:boolean;
+    public isDrawingGUI:boolean;
 
 
     constructor(pos:Vector = v(), name:string) {
@@ -29,9 +31,10 @@ class Actor {
         this.mask.set([[-1,-1],[1,-1],[1,1],[-1,1]]);
         this.id = 0;
         this.isPersistant = false;
-        this.tickrate = 1;
+        this.tickrate = scene.tps;
         this.depth = 1;
         this.mdepth = 1;
+        this.GUIdepth = 1;
         this.loops = {};
         this.isCollidable = true;
         this.name = name;
@@ -41,11 +44,13 @@ class Actor {
         this.morphedMask = new Polygon();
         this.isPaused = false;
         this.isRoundedPosAfterTick = true;
+        this.isDrawingGUI = false;
     }
     preTick():void {}
     tick():void {}
     postTick():void {}
     draw():void {}
+    drawGUI():void {}
     update():void {
         if(!this.isPaused) {
             this.preTick();
@@ -54,7 +59,7 @@ class Actor {
                 this.loops[lKeys[i]].update();
             }
 
-            if (tick * 100 % Math.floor(this.tickrate * 100) == 0) {
+            if (tick * 100 % Math.floor((scene.tps / this.tickrate) * 100) == 0) {
                 this.tick();
                 if(this.isRoundedPosAfterTick) {
                     this.pos.x = Math.round(this.pos.x);
@@ -68,6 +73,9 @@ class Actor {
             
             if (!this.isHidden) {
                 $MAIN.cLAY.insert(new Layer(this.depth, ():void => {this.draw()}));
+                if(this.isDrawingGUI) {
+                    $MAIN.cLAY_GUI.insert(new Layer(this.GUIdepth, ():void => {this.drawGUI()}));
+                }
             }
             this.postTick();
         }
@@ -180,7 +188,7 @@ class Loop {
         this.callback = callback;   
     }
     update():void {
-        if (tick * dt % this.tps == 0) {
+        if (tick * 100 % Math.floor((scene.tps / this.tps) * 100) == 0) {
             this.callback();
         }
     }

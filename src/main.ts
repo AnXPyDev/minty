@@ -62,6 +62,7 @@ const $MAIN:{
     mainloop:any,
     cAPI:Compiler,
     cLAY:Layers,
+    cLAY_GUI:Layers,
     mAPI:MCompiler,
     mLAY:Layers,
     loadanim:() => void,
@@ -86,10 +87,12 @@ $MAIN.onloaded = false;
 
 const GAME:{
     onload:() => void,
-    onbeforetick:() => void
+    onbeforetick:() => void,
+    onaftertick:() => void
 } = {
     onload() {},
-    onbeforetick() {}
+    onbeforetick() {},
+    onaftertick() {}
 }
 
 $MAIN.cfg = reqget(paths.mpx + "/compiled/minty.cfg.json");
@@ -133,6 +136,7 @@ cam_poly.set([[-1,-1],[1,-1],[1,1],[-1,1]]);
 
 $MAIN.cAPI = new Compiler;
 $MAIN.cLAY = new Layers;
+$MAIN.cLAY_GUI = new Layers;
 $MAIN.mAPI = new MCompiler;
 $MAIN.mLAY = new Layers;
 
@@ -202,7 +206,9 @@ $MAIN.tick = function():void {
     for(let i = 0; i<loop.length; i++) {
         loop[i].update();
     }
+    GAME.onaftertick();
     $MAIN.cLAY.finalize();
+    $MAIN.cLAY_GUI.finalize();
     $MAIN.mLAY.finalize();
     $MAIN.tps.after();
     vport.update();
@@ -217,10 +223,13 @@ $MAIN.draw = function() {
     $MAIN.fps.before();
     ctx.save();
     ctx.translate(v((vport.size.x * vport.scale.x * vport.zoomFactor) / 2, (vport.size.y * vport.scale.x * vport.zoomFactor) / 2));
+    ctx.save();
     ctx.scale(v(camera.scale.x * vport.scale.x * vport.zoomFactor, camera.scale.y * vport.scale.y * vport.zoomFactor));
     ctx.rotate(camera.angle);
     ctx.translate(v(-camera.pos.x, -camera.pos.y));
     $MAIN.cAPI.compile($MAIN.cLAY);
+    ctx.restore();
+    $MAIN.cAPI.compile($MAIN.cLAY_GUI);
     ctx.restore();
     if($MAIN.cfg.developer) {
         $MAIN.tps.draw(0);

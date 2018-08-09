@@ -1,5 +1,3 @@
-import { ENOMEM } from "constants";
-
 obtain("../compiled/modules/actor.js")
 
 class Particle {

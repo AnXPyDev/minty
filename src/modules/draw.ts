@@ -6,7 +6,9 @@ const Draw:{
     scale:(scale:Vector, pos:Vector, callback:() => void) => void,
     line:(pos0:Vector, pos1:Vector, color:string, width:number) => void,
     text:(text:string, pos:Vector, color:string, size:number, font:string) => void,
-    opacity:(opacity:number, callback:() => void) => void
+    opacity:(opacity:number, callback:() => void) => void,
+    insert:(depth:number, callback:() => void) => void,
+    angle:(angle:Angle, callback:() => void) => void
 } = {
     rect(size,pos,color) {
         ctx.save();
@@ -72,6 +74,15 @@ const Draw:{
     opacity(opacity, callback) {
         ctx.save();
         ctx.setAlpha(opacity);
+        callback();
+        ctx.restore();
+    },
+    insert(depth, callback) {
+        $MAIN.cLAY.insert(new Layer(depth, callback));
+    }, 
+    angle(angle, callback) {
+        ctx.save();
+        ctx.rotate(angle);
         callback();
         ctx.restore();
     }
