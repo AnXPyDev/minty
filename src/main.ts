@@ -127,8 +127,6 @@ let tick:number = 0;
 let dt:number = 1;
 let adt:number = 1;
 let CGH:CGHandler = new CGHandler();
-let cam_poly = new Polygon("rect");
-cam_poly.set([[-1,-1],[1,-1],[1,1],[-1,1]]);
 
 
 $MAIN.cAPI = new Compiler;
@@ -152,6 +150,7 @@ $MAIN.onload = function() {
     vport.element.addEventListener("mousemove", Key.mouse);
     document.addEventListener("mousedown", Key.mousedown);
     document.addEventListener("mouseup", Key.mouseup);
+    Instance.spawn("cameraBounds", []);
     GAME.onload();
     $MAIN.onloaded = true;
 }
