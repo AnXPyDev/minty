@@ -20,6 +20,31 @@ class TileSheet {
     }
 }
 
+class Tile {
+    public size:Vector;
+    public pos:Vector;
+    public name:string;
+    public subname:string;
+    public mask:Polygon;
+    constructor(name:string, subname:string, size: Vector, pos:Vector) {
+        this.size = size;
+        this.pos = pos;
+        this.name = name;
+        this.subname = subname;
+        this.mask = new Polygon("rect");
+        this.mask.set([[-1,-1],[1,-1],[1,1],[-1,1]]);
+        this.mask.size(this.size);
+        this.mask.center(this.pos);
+    }
+    update() {
+        if(this.mask.collidesRect(ins.cameraBounds[0].morphedMask)) {
+            $MAIN.cLAY.insert(new Layer(til[this.name].names[this.subname][1], () => {
+                til[this.name].drawTile(this.subname, this.pos, this.size);
+            }));
+        }
+    }   
+}
+
 function defTile(name:string, imgname:string, size:Vector, names:[string,number][][]) {
     til[name] = new TileSheet([imgname], size);
     for(let y = 0; y<names.length; y++) {
@@ -31,5 +56,6 @@ function defTile(name:string, imgname:string, size:Vector, names:[string,number]
 
 module.exports = {
     TileSheet:TileSheet,
+    Tile:Tile,
     defTile:defTile
 }

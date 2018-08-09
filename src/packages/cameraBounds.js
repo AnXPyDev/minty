@@ -8,6 +8,7 @@ def("cameraBounds", class extends Actor {
         this.isRoundedPosAfterTick = false;
     }
     tick() {
-        this.size = v(vport.size.x * camera.scale.x, vport.size.y * camera.scale.y);
+        let sz = Math.max(vport.size.x, vport.size.y) * Math.max(1 / camera.scale.x, 1 / camera.scale.y) * 1.5; 
+        this.size = v(sz);
     }
 });

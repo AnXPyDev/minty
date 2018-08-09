@@ -4,7 +4,7 @@ const s0 = new Scene("s0", v(1024,1024),
     cursor:[[]]
 },
 {
-    grid:[["grid"], "tiled"]
+    grid:[[["grid"]], "tiled"]
 },
 {
 }, () => {

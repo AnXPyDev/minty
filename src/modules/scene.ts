@@ -68,7 +68,7 @@ class Scene {
                     tileins[split[0]][split[1]] = [];
                 }
                 for(let e = 0; e<this.til[tilKeys[i]].length; e++) {
-                    tileins[split[0]][split[1]].push([v(this.til[tilKeys[i]][e][0], this.til[tilKeys[i]][e][1]), v(this.til[tilKeys[i]][e][2],this.til[tilKeys[i]][e][3])]);
+                    tileins[split[0]][split[1]].push(new Tile(split[0], split[1], v(this.til[tilKeys[i]][e][2],this.til[tilKeys[i]][e][3]),  v(this.til[tilKeys[i]][e][0],this.til[tilKeys[i]][e][1])));
                 }
             }
         }

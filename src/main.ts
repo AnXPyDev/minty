@@ -176,9 +176,7 @@ $MAIN.tick = function():void {
         let tKeys2 = Object.keys(tileins[tKeys[i]]);
         for(let e = 0; e< tKeys2.length; e++) {
             for(let t = 0; t<tileins[tKeys[i]][tKeys2[e]].length; t++) {
-                $MAIN.cLAY.insert(new Layer(til[tKeys[i]].names[tKeys2[e]][1], () => {
-                    til[tKeys[i]].drawTile(tKeys2[e],tileins[tKeys[i]][tKeys2[e]][t][0],tileins[tKeys[i]][tKeys2[e]][t][1]);
-                }));
+                tileins[tKeys[i]][tKeys2[e]][t].update();
             }
         }
     }
