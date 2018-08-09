@@ -71,7 +71,7 @@ class Actor {
             ins[this.name].grid.insert(this.spatialpos, this.id);
             $MAIN.mLAY.insert(new Layer(this.mdepth, ():boolean => {return this.mousedown()}));
             
-            if (!this.isHidden) {
+            if (!this.isHidden && (this.isDrawedOutsideCamera || this.morphedMask.collidesRect(ins.cameraBounds[0].morphedMask))) {
                 $MAIN.cLAY.insert(new Layer(this.depth, ():void => {this.draw()}));
                 if(this.isDrawingGUI) {
                     $MAIN.cLAY_GUI.insert(new Layer(this.GUIdepth, ():void => {this.drawGUI()}));
