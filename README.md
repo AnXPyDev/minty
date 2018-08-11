@@ -1,4 +1,4 @@
-<p align = "center"><img src = "icon/minty.svg" width = 400></img></p>
+<p align = "center"><img src = "icon/minty.svg.png" width = 400></img></p>
 
 
 
