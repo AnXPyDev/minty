@@ -13,6 +13,8 @@ class Background {
     public margin:Vector;
     public pos:Vector;
     public angle:Angle;
+    public imsize:Vector;
+    public singlemask:Polygon;
     private types:string[];
 
     constructor(sprite:[string[], number, number], type:string, color:string = "white") {
@@ -38,13 +40,17 @@ class Background {
         this.offset = v();
         this.aoff = v();
         this.pos = v();
+        this.imsize = v();
+        this.singlemask = new Polygon("rect");
+        this.singlemask.set([[-1,-1],[1,-1],[1,1],[-1,1]]);
+        this.singlemask.size(v(this.img.width, this.img.img.get().height));
     }
     draw(pos = camera.pos):void {
         ctx.save();
         ctx.setAlpha(this.alpha);
         ctx.translate(pos);
         ctx.rotate(this.angle);
-        
+        let dir = this.angle.dir();
 
         if(this.type == "tiled") {
             let vsize = Math.max(vport.size.x, vport.size.y) *  (1 / Math.max(camera.scale.x * vport.scale.x * vport.zoomFactor , camera.scale.y * vport.scale.y * vport.zoomFactor));
@@ -53,6 +59,7 @@ class Background {
                     (pos.x / ((im.x + this.margin.x) * this.scale.x) - Math.floor(pos.x / ((im.x + this.margin.x) * this.scale.x))) * ((im.x + this.margin.x) * this.scale.x) + this.offset.x,
                     (pos.y / ((im.y+ this.margin.y) * this.scale.y) - Math.floor(pos.y / ((im.y+ this.margin.y) * this.scale.y))) * ((im.y+ this.margin.y) * this.scale.y) + this.offset.y
                 )
+            goff.rotate(new Angle("deg", -this.angle.deg));
             for(let i:number = -Math.floor((vsize / 2) / ((im.x + this.margin.x) * this.scale.x)) -2; i < Math.floor((vsize / 2) / ((im.x + this.margin.x) * this.scale.x)) + 2; i++) {
                 for(let e:number = -Math.floor((vsize / 2) / ((im.y+ this.margin.y) * this.scale.y)) -2; e < Math.floor((vsize / 2) / ((im.y+ this.margin.y) * this.scale.y)) + 2; e++) {
                     ctx.save()
@@ -69,7 +76,8 @@ class Background {
             let goff:Vector = new Vector(
                     (pos.x / ((im.x + this.margin.x) * this.scale.x) - Math.floor(pos.x / ((im.x + this.margin.x) * this.scale.x))) * ((im.x + this.margin.x) * this.scale.x) + this.offset.x,
                     (pos.y / ((im.y+ this.margin.y) * this.scale.y) - Math.floor(pos.y / ((im.y+ this.margin.y) * this.scale.y))) * ((im.y+ this.margin.y) * this.scale.y) + this.offset.y
-                )
+                );
+            goff.rotate(new Angle("deg", -this.angle.deg));
             let e = 0;
             for(let i:number = -Math.floor((vsize / 2) / ((im.x + this.margin.x) * this.scale.x)) -2; i < Math.floor((vsize / 2) / ((im.x + this.margin.x) * this.scale.x)) + 2; i++) {
                 ctx.save()
@@ -86,6 +94,7 @@ class Background {
                     (pos.x / ((im.x + this.margin.x) * this.scale.x) - Math.floor(pos.x / ((im.x + this.margin.x) * this.scale.x))) * ((im.x + this.margin.x) * this.scale.x) + this.offset.x,
                     (pos.y / ((im.y+ this.margin.y) * this.scale.y) - Math.floor(pos.y / ((im.y+ this.margin.y) * this.scale.y))) * ((im.y+ this.margin.y) * this.scale.y) + this.offset.y
                 )
+            goff.rotate(new Angle("deg", -this.angle.deg));
             let i = 0;
             for(let e:number = -Math.floor((vsize / 2) / ((im.y+ this.margin.y) * this.scale.y)) -2; e < Math.floor((vsize / 2) / ((im.y+ this.margin.y) * this.scale.y)) + 2; e++) {
                 ctx.save()
@@ -108,12 +117,19 @@ class Background {
         ctx.restore();
     }
     update(pos = camera.pos):void {
+        this.singlemask.rotate(this.angle); 
+        this.imsize = v(
+            this.singlemask.corner.max.x - this.singlemask.corner.min.x,
+            this.singlemask.corner.max.y - this.singlemask.corner.min.y
+        );
+        let ims = v(this.img.width, this.img.img.get().height);
         if(this.type == "tiled" || this.type == "htiled" || this.type == "vtiled") {
             this.off.x = wrap(this.off.x + this.spd.x * dt, 0, (this.img.width + this.margin.x) * this.scale.x);
             this.off.y = wrap(this.off.y + this.spd.y * dt, 0, (this.img.img.get().height + this.margin.y) * this.scale.y);
             this.offset.x = (this.aoff.x - Math.floor(this.aoff.x / (this.img.width + this.margin.x)) * (this.img.width + this.margin.x)) * this.scale.x;
             this.offset.y = (this.aoff.y - Math.floor(this.aoff.y / (this.img.img.get().height + this.margin.y)) * (this.img.img.get().height + this.margin.y)) * this.scale.y;
         }
+        this.singlemask.rotate(new Angle("deg", -this.angle.deg)); 
         this.img.update();
         $MAIN.cLAY.insert(new Layer(this.depth, () => {return this.draw(pos)}));
     }
