@@ -222,6 +222,9 @@ $MAIN.draw = function() {
     ctx.translate(v((vport.size.x * vport.scale.x * vport.zoomFactor) / 2, (vport.size.y * vport.scale.x * vport.zoomFactor) / 2));
     ctx.save();
     ctx.scale(v(camera.scale.x * vport.scale.x * vport.zoomFactor, camera.scale.y * vport.scale.y * vport.zoomFactor));
+    if($MAIN.cfg.developer) {
+        ctx.scale(camera.debugScale);
+    }
     ctx.rotate(camera.angle);
     ctx.translate(v(-camera.pos.x, -camera.pos.y));
     $MAIN.cAPI.compile($MAIN.cLAY);

@@ -1,6 +1,7 @@
 class Camera {
     public pos:Vector;
     public scale:Vector;
+    public debugScale:Vector;
     public angle:Angle;
     public toFollow: {id:number, name:string};
     public isFollowing: boolean; 
@@ -13,6 +14,7 @@ class Camera {
         this.isFollowing = false;
         this.angle = new Angle("deg", 0);
         this.scale = v(1,1);
+        this.debugScale = v(1);
     }
     update():void {}
 
