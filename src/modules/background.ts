@@ -52,7 +52,7 @@ class Background {
         pos = p;
 
         if(this.type == "tiled") {
-            let vsize = Math.max(vport.size.x, vport.size.y) *  (1 / Math.max(camera.scale.x * vport.scale.x * vport.zoomFactor , camera.scale.y * vport.scale.y * vport.zoomFactor)) * 1.5;
+            let vsize = Math.max(vport.size.x, vport.size.y) *  (1 / Math.max(camera.scale.x * vport.scale.x, camera.scale.y * vport.scale.y )) * 1.5;
             let im = v(this.img.width, this.img.img.get().height);
             let goff:Vector = new Vector(
                     (pos.x / ((im.x + this.margin.x) * this.scale.x) - Math.floor(pos.x / ((im.x + this.margin.x) * this.scale.x))) * ((im.x + this.margin.x) * this.scale.x) + this.offset.x,
@@ -69,7 +69,7 @@ class Background {
                 }
             }
         } else if (this.type == "htiled") {
-            let vsize = Math.max(vport.size.x, vport.size.y) *  (1 / Math.max(camera.scale.x * vport.scale.x * vport.zoomFactor , camera.scale.y * vport.scale.y * vport.zoomFactor));
+            let vsize = Math.max(vport.size.x, vport.size.y) *  (1 / Math.max(camera.scale.x * vport.scale.x, camera.scale.y * vport.scale.y ));
             let im = v(this.img.width, this.img.img.get().height);
             let goff:Vector = new Vector(
                     (pos.x / ((im.x + this.margin.x) * this.scale.x) - Math.floor(pos.x / ((im.x + this.margin.x) * this.scale.x))) * ((im.x + this.margin.x) * this.scale.x) + this.offset.x,
@@ -85,13 +85,12 @@ class Background {
                 ctx.restore();   
             }
         } else if (this.type == "vtiled") {
-            let vsize = Math.max(vport.size.x, vport.size.y) *  (1 / Math.max(camera.scale.x * vport.scale.x * vport.zoomFactor , camera.scale.y * vport.scale.y * vport.zoomFactor));
+            let vsize = Math.max(vport.size.x, vport.size.y) *  (1 / Math.max(camera.scale.x * vport.scale.x  , camera.scale.y * vport.scale.y ));
             let im = v(this.img.width, this.img.img.get().height);
             let goff:Vector = new Vector(
                     (pos.x / ((im.x + this.margin.x) * this.scale.x) - Math.floor(pos.x / ((im.x + this.margin.x) * this.scale.x))) * ((im.x + this.margin.x) * this.scale.x) + this.offset.x,
                     (pos.y / ((im.y+ this.margin.y) * this.scale.y) - Math.floor(pos.y / ((im.y+ this.margin.y) * this.scale.y))) * ((im.y+ this.margin.y) * this.scale.y) + this.offset.y
                 )
-            goff.rotate(new Angle("deg", -this.angle.deg));
             let i = 0;
             for(let e:number = -Math.floor((vsize / 2) / ((im.y+ this.margin.y) * this.scale.y)) -2; e < Math.floor((vsize / 2) / ((im.y+ this.margin.y) * this.scale.y)) + 2; e++) {
                 ctx.save()

@@ -14,30 +14,34 @@ class Vector {
         this.origin = {x:0,y:0};
     }
 
-    rotate(angle:Angle) {
+    rotate(angle:Angle):Vector {
         let sin:number = Math.sin(angle.rad);
         let cos:number = Math.cos(angle.rad);
         let x = this.x - this.origin.x;
         let y = this.y - this.origin.y;
         this.x = (x * cos - y * sin) + this.origin.x;
         this.y = (x * sin + y * cos) + this.origin.y;
+        return this;
     }   
 
-    setorigin(v:Vector) {
+    setorigin(v:Vector):Vector {
         this.origin.x = v.x;
         this.origin.y = v.y;
+        return this;
     }
     
-    toOrigin(v:Vector) {
+    toOrigin(v:Vector):Vector {
         this.x = this.x - this.origin.x + v.x;
         this.y = this.y - this.origin.y + v.y;
         this.origin.x = v.x;
         this.origin.y = v.y;
+        return this;
     }
-    copy(v:Vector) {
+    copy(v:Vector):Vector {
         this.x = v.x;
         this.y = v.y;
         this.origin = v.origin;
+        return this;
     }
 }
 
@@ -67,7 +71,7 @@ class Angle {
         }(this.default);
     }
 
-    set(value:number, type:string = this.default) {
+    set(value:number, type:string = this.default):Angle {
         this.deg = function(type:string):number {
             if (type == "rad") {
                 return value  * 180 / Math.PI;
@@ -80,6 +84,7 @@ class Angle {
             }
             return value;
         }(type);
+        return this;
     }
 
     to(value:number, type:string):number {
@@ -107,11 +112,12 @@ class Angle {
         )
     }
 
-    between(v1:Vector, v2:Vector):void {
+    between(v1:Vector, v2:Vector):Angle {
         this.set(Math.PI + Math.atan2(v1.y - v2.y, v1.x - v2.x), "rad");
+        return this;
     }
     
-    interpolate(angle:Angle, amt:number):void {
+    interpolate(angle:Angle, amt:number):Angle {
         let ang = [Math.max(this.deg, angle.deg), Math.min(this.deg, angle.deg)];
         let alpha = 360 - ang[0] + ang[1];
         let beta = ang[0] - ang[1];
@@ -124,9 +130,10 @@ class Angle {
         } else {
             this.set(lerp(this.deg, angle.deg, amt), "deg");
         }
+        return this;
     }
 
-    approach(angle:Angle, amt:number):void {
+    approach(angle:Angle, amt:number):Angle {
         let ang = [Math.max(this.deg, angle.deg), Math.min(this.deg, angle.deg)];
         let alpha = 360 - ang[0] + ang[1];
         let beta = ang[0] - ang[1];
@@ -139,6 +146,7 @@ class Angle {
         } else {
             this.set(approach(this.deg, angle.deg, amt), "deg");
         }
+        return this;
     }
 }
 
@@ -157,7 +165,7 @@ class Polygon {
         this.isRect = type == "rect";
     }
 
-    set(polygon:number[][]):void {
+    set(polygon:number[][]):Polygon {
         let temp:Vector[] = [];
         for(let i = 0; i<polygon.length; i++) {
             temp.push(new Vector(...polygon[i]));
@@ -166,17 +174,19 @@ class Polygon {
         this.root = polygon;
         this.grabinfo();
         this.center();
+        return this;
     }
     
-    edit(callback:(vec:Vector) => Vector):void {
+    edit(callback:(vec:Vector) => Vector):Polygon {
         let temp = this.val;
         for(let i = 0; i<temp.length; i++) {
             temp[i] = callback(temp[i]);
         }
         this.val = temp;
+        return this;
     }
 
-    center(origin:Vector = new Vector()):void {
+    center(origin:Vector = new Vector()):Polygon {
         this.edit(vec => {
             let pho = v(
                 vec.x - this.offset.x + origin.x,
@@ -186,9 +196,10 @@ class Polygon {
             return pho;
         })
         this.grabinfo();
+        return this;
     }
 
-    rotate(angle:Angle):void {
+    rotate(angle:Angle):Polygon {
         this.edit(vec => {
             let pho = vec;
             pho.setorigin(this.offset);
@@ -197,9 +208,10 @@ class Polygon {
         })
         this.grabinfo();
         this.isRect = angle.deg == 0 ? true:false;
+        return this;
     }
 
-    size(size:Vector):void {
+    size(size:Vector):Polygon {
         let sz:Vector = v(
             this.corner.max.x - this.corner.min.x,
             this.corner.max.y - this.corner.min.y
@@ -209,15 +221,17 @@ class Polygon {
             size.y / sz.y
         ))
         this.grabinfo();
+        return this;
     }
 
-    scale(scale:Vector):void {
+    scale(scale:Vector):Polygon {
         this.center();
         this.edit(vec => {
             return v(vec.x * scale.x, vec.y * scale.y);
         })
         this.center(this.offset);
         this.grabinfo();
+        return this;
     }
 
     collides(poly:Polygon):boolean {
@@ -270,7 +284,7 @@ class Polygon {
         return true;
     }
 
-    collidesRect(poly:Polygon) {
+    collidesRect(poly:Polygon):boolean {
         // no horizontal overlap
         if (this.corner.min.x >= poly.corner.max.x || poly.corner.min.x >=this.corner.max.x) return false;
     
@@ -280,7 +294,7 @@ class Polygon {
         return true;
     }
 
-    grabinfo():void {
+    grabinfo():Polygon {
         (() => {
             let x:number[] = [];
             let y:number[] = [];
@@ -302,6 +316,7 @@ class Polygon {
                 return pho;
             })
         })();
+        return this;
     }
 
     draw(fill:string = "lightblue", stroke:string = "blue") {
@@ -364,8 +379,19 @@ const Random:{
     }
 }
 
+const rectRoot = [[-1,-1],[1,-1],[1,1],[-1,1]];
+
 function v(x:number = 0, y:number = x):Vector {
     return new Vector(x,y);
+}
+
+function a(value:number = 0, defaultType:string = "deg"):Angle {
+    return new Angle(defaultType, value);
+}
+
+function p(root:number[][] = rectRoot, type:string | undefined = root.length == 4 ? "rect":undefined):Polygon {
+    let p = new Polygon(type);
+    return p.set(root);
 }
 
 function distanceBetween(v0:Vector,v1:Vector) {
@@ -377,7 +403,10 @@ module.exports = {
     Polygon:Polygon,
     MorphPolygon:MorphPolygon,
     Random:Random,
+    rectRoot,
     v:v,
+    a:a,
+    p:p,
     distanceBetween:distanceBetween
 }
 

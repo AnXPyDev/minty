@@ -37,7 +37,11 @@ class Viewport {
         this.staticResolution = staticResolution;
     } 
     setRenderSize(size:Vector) {
-        this.zoomFactor = size.x / this.size.x;
+        this.zoom = size.x / this.size.x;
+        /*if(this.staticResolution) {
+            this.zoomFactor = (1 / this.scale.x) * this.zoom;
+        }
+        electron.webFrame.setZoomFactor(1 /(this.zoomFactor));*/
     }
     resize(size:Vector, window:boolean = true):void {
         this.element.width = size.x * this.zoomFactor;
@@ -56,7 +60,7 @@ class Viewport {
     
     update():void {
         let win = WINDOW.getContentBounds();
-        if (this.screen.x != win.width || this.screen.y != win.height) {
+        //if (this.screen.x != win.width || this.screen.y != win.height) {
             Key.mupdated = false;
             this.screen = v(win.width, win.height);
             if (this.screen.x  / this.screen.y > this.size.x / this.size.y) {
@@ -70,7 +74,7 @@ class Viewport {
             electron.webFrame.setZoomFactor(1 /(this.zoomFactor));
             this.element.width = this.size.x * this.scale.x * this.zoomFactor;
             this.element.height = this.size.y * this.scale.y * this.zoomFactor;
-        }
+        //}
         
     } 
 }

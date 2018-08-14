@@ -13,7 +13,7 @@ class Camera {
         }
         this.isFollowing = false;
         this.angle = new Angle("deg", 0);
-        this.scale = v(1,1);
+        this.scale = v(1);
         this.debugScale = v(1);
     }
     update():void {}
