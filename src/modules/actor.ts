@@ -194,7 +194,6 @@ class Loop {
     }
 }
 
-
 function filterIns(insNames:string[]):any[] {
     let result:any[] = [];
     for(let i = 0; i<insNames.length; i++) {

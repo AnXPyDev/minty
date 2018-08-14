@@ -1,4 +1,4 @@
-obtain("../compiled/modules/actor.js")
+obtain("../compiled/modules/actor.js");
 
 class Particle {
     public pos:Vector;
