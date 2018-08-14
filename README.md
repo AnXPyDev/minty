@@ -1,9 +1,4 @@
-<p align = "center"><img src = "icon/minty.svg.png" width = 400></img></p>
-
-
-
-<h1 align = "center"><em>minty</em></h1>
-
+<h1>minty</h1>
 
 
 # _Requirements_:
