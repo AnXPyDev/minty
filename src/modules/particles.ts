@@ -54,6 +54,7 @@ class Emitter extends Actor {
         for(let e = 0; e < deleteList.length; e++) {
             this.particleList.splice(deleteList[e], 1);
         }
+        this.onAfterTick();
     }
 
     spawnParticle(particle:Particle, ...args:any[]) {
@@ -62,6 +63,10 @@ class Emitter extends Actor {
     }
 
     spawn() {
+
+    }
+    
+    onAfterTick() {
 
     }
 }
