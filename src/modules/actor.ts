@@ -188,7 +188,7 @@ class Loop {
         this.callback = callback;   
     }
     update():void {
-        if (tick * 100 % Math.floor((scene.tps / this.tps) * 100) == 0) {
+        if (tick % Math.round(scene.tps / this.tps) == 0) {
             this.callback();
         }
     }
