@@ -1,5 +1,6 @@
 <h1>minty</h1>
 
+minty is a simple game engine inspired by Game Maker Studio
 
 # _Requirements_:
 
