@@ -14,7 +14,7 @@ function getLoadAnim():() => void {
             }
         }
         alpha = clamp(alpha, 0, 1);
-        let vsz:Vector = v(vport.size.x * vport.scale.x, vport.size.y * vport.scale.y);
+        let vsz:Vector = v(vport.size.x * vport.scale.x * vport.zoomFactor, vport.size.y * vport.scale.y * vport.zoomFactor);
         let sz:number = (Math.min(vsz.x, vsz.y) / 3) * 2 / szm;
         ctx.setAlpha(alpha);
         ctx.setFillStyle("black");
