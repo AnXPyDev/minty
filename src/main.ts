@@ -155,6 +155,7 @@ $MAIN.onload = function() {
     document.addEventListener("mousedown", Key.mousedown);
     document.addEventListener("mouseup", Key.mouseup);
     Instance.spawn("cameraBounds", []);
+    Instance.spawn("sceneBounds", []);
     GAME.onload();
     $MAIN.onloaded = true;
 }

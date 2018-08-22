@@ -4,7 +4,7 @@ obtain("../compiled/modules/math.js");
 
 //@ts-ignore
 const Key:{
-    check:(kc:number) => boolean,
+    check:(kc:string) => boolean,
     add:(evt:any) => void,
     remove:(evt:any) => void,
     mouse:(evt:any) => void,
@@ -18,8 +18,8 @@ const Key:{
 
 Key.holder = {};
 
-Key.check = function (kc:number):boolean {
-    return Key.holder[kc] ? true : false;
+Key.check = function (kc:string):boolean {
+    return Key.holder[kc.toLowerCase()] ? true : false;
 }
 
 Key.mouse = function (evt:any):void {

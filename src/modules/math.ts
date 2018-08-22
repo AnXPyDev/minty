@@ -339,14 +339,14 @@ class Polygon {
 }
 
 function MorphPolygon(poly:Polygon, that:Actor, pos:Vector = that.pos, size:Vector = that.size, angle:Angle = that.angle):Polygon{
-    let p = new Polygon();
+    let p = new Polygon(poly.isRect ? "rect":undefined);
     p.set(poly.root);
     p.grabinfo();
     p.size(size);
     p.center(pos);
     p.rotate(angle);
     return p;
-} 
+}
 
 const Random:{
     int:(min:number, max:number) => number,
@@ -394,6 +394,18 @@ function p(root:number[][] = rectRoot, type:string | undefined = root.length == 
     return p.set(root);
 }
 
+function circlePoly(r:number) {
+    let root:number[][] = [];
+    let n = clamp(Math.ceil(r / 8), 4, 360);
+    let curs = v(1, 0);
+    root.push([r, 0]);
+    for(let i = 0; i < n; i++) {
+        curs.rotate(a(360 / n));
+        root.push([curs.x * r, curs.y * r]);
+    }
+    return p(root);
+}
+
 function distanceBetween(v0:Vector,v1:Vector) {
     return (Math.sqrt(Math.pow(Math.abs(v0.x - v1.x),2) + Math.pow(Math.abs(v0.y - v1.y),2)));
 }
@@ -407,6 +419,7 @@ module.exports = {
     v:v,
     a:a,
     p:p,
-    distanceBetween:distanceBetween
+    distanceBetween:distanceBetween,
+    circlePoly:circlePoly
 }
 

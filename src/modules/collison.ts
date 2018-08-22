@@ -95,7 +95,6 @@ function collides(that:Actor, otherNames:string[], pos:Vector = that.pos, size:V
         let p1 = MorphPolygon(that.mask, that, pos, size, angle);
         let spos = CGH.calculateBlocks(p1);
         for(let e = 0; e<otherNames.length; e++) {
-            final.other[otherNames[e]] = [];
             let gins = ins[otherNames[e]].grid.request(spos);
             for(let i = 0; i < gins.length; i++) {
                 if(!(that.name == otherNames[e] && that.id == gins[i])) {
@@ -105,6 +104,9 @@ function collides(that:Actor, otherNames:string[], pos:Vector = that.pos, size:V
                         if (p1.collidesRect(p2)) {
                             if ((p1.isRect && p2.isRect) || p1.collides(p2)) {
                                 final.is = true;
+                                if(!final.other[otherNames[e]]) {
+                                    final.other[otherNames[e]] = [];
+                                }
                                 final.other[otherNames[e]].push(gins[i]);
                             }
                         }

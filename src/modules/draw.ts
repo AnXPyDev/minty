@@ -3,6 +3,8 @@ const Draw:{
     rectS:(size:Vector, pos:Vector, color:string, width:number) => void,
     ellipse:(size:Vector, pos:Vector, color:string) => void,
     ellipseS:(size:Vector, pos:Vector, color:string, width:number) => void,
+    nGon:(n:number, size:Vector, pos:Vector, color:string) => void, 
+    nGonS:(n:number, size:Vector, pos:Vector, color:string, width:number) => void, 
     scale:(scale:Vector, pos:Vector, callback:() => void) => void,
     line:(pos0:Vector, pos1:Vector, color:string, width:number) => void,
     text:(text:string, pos:Vector, color:string, size:number, font:string) => void,
@@ -25,6 +27,39 @@ const Draw:{
         ctx.beginPath();
         ctx.arc(v(), size.x / 2, new Angle("deg", 0), new Angle("rad", 2 * Math.PI), false);
         ctx.fill();
+        ctx.restore();
+    },
+    nGon(n, size, pos, color) {
+        let curs = v(1,0);
+        ctx.save();
+        ctx.setFillStyle(color);
+        ctx.translate(pos);
+        ctx.scale(size);
+        ctx.beginPath();
+        ctx.moveTo(curs);
+        for(let i = 1; i < n + 1; i++) {
+            curs.rotate(a(360 / n));
+            ctx.lineTo(curs);
+        }
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+    },
+    nGonS(n, size, pos, color, width) {
+        let curs = v(1,0);
+        ctx.save();
+        ctx.setStrokeStyle(color);
+        ctx.setLineWidth(width);
+        ctx.translate(pos);
+        ctx.scale(size);
+        ctx.beginPath();
+        ctx.moveTo(curs);
+        for(let i = 1; i < n + 1; i++) {
+            curs.rotate(a(360 / n));
+            ctx.lineTo(curs);
+        }
+        ctx.closePath();
+        ctx.stroke();
         ctx.restore();
     },
     ellipseS(size,pos,color,width) {

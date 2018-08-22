@@ -32,9 +32,9 @@ function flip(val:number, min:number, max:number):number {
     return min - val + max;
 }
 
-function lerp(val:number, val2:number, perc:number, floor:boolean = false, floorby:number = 0):number {
-    if (floor) {
-        return Math.floor((val + (val2 - val) * perc) * Math.pow(10, floorby)) / Math.pow(10, floorby);
+function lerp(val:number, val2:number, perc:number, round:boolean = false, roundby:number = 0):number {
+    if (round) {
+        return Math.round((val + (val2 - val) * perc) * Math.pow(10, roundby)) / Math.pow(10, roundby);
     }
     return (val + (val2 - val) * perc)
 }

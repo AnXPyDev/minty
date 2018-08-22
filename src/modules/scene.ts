@@ -12,6 +12,7 @@ class Scene {
     public ignore_persistant:boolean;
     public name:string;
     public vars:any;
+    public bounds:Polygon;
 
     constructor(name:string, size:Vector, act:any, bck:any,til:any, onload:(...args:any[]) => void, onbeforeload:() => void, tps:number = 60, aps:number = tps) {
         this.index = 0;
@@ -27,6 +28,8 @@ class Scene {
         this.ignore_persistant = false;
         this.name = name;
         this.vars = {};
+        this.bounds = p(rectRoot, "rect");
+        this.bounds.size(this.size);
     } 
 
     load(...args:any[]):void {
@@ -36,9 +39,12 @@ class Scene {
         let insKeys:string[] = Object.keys(ins);
         for(let i = 0; i < insKeys.length; i++) {
             for(let e = 0; e < ins[insKeys[i]].length; e++) {
-                if (!(ins[insKeys[i]][e] == null) && (!(ins[insKeys[i]][e].isPersistant) || ((this.ignore_persistant)))) {
-                    //@ts-ignore
-                    Instance.destroy(insKeys[i], e);
+                if (!(ins[insKeys[i]][e] == null)) {
+                    if((!(ins[insKeys[i]][e].isPersistant) || ((this.ignore_persistant)))) {
+                        Instance.destroy(insKeys[i], e);    
+                    } else {
+                        Instance.get(insKeys[i], e).sceneLoad();
+                    }
                 }
             }
         }
@@ -72,7 +78,7 @@ class Scene {
                 }
             }
         }
-        this.onload(...args);
+        this.onload(...args)
         tick = 0;
         resume(this.tps, this.aps);
         

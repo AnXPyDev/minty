@@ -85,6 +85,7 @@ class Actor {
     mousedown():boolean {
         return false;
     }
+    sceneLoad() {}
     loop(name:string, callback:() => void, tps:number):void {
         this.loops[name] = new Loop(callback, tps);
     }
