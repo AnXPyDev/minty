@@ -52,7 +52,7 @@ class Background {
         pos = p;
 
         if(this.type == "tiled") {
-            let vsize = Math.max(vport.size.x, vport.size.y) *  (1 / Math.max(camera.scale.x * vport.scale.x, camera.scale.y * vport.scale.y )) * 1.5;
+            let vsize = Math.max(vport.size.x, vport.size.y) *  (1 / Math.max(camera.scale.x, camera.scale.y)) * 1.5;
             let im = v(this.img.width, this.img.img.get().height);
             let goff:Vector = new Vector(
                     (pos.x / ((im.x + this.margin.x) * this.scale.x) - Math.floor(pos.x / ((im.x + this.margin.x) * this.scale.x))) * ((im.x + this.margin.x) * this.scale.x) + this.offset.x,
