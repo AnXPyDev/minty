@@ -25,7 +25,8 @@ class CContext {
         this.nativeCtx.closePath();
     }
     createImageData(imageDataOrSw:ImageData | number, sh:number | undefined = undefined):ImageData {
-        return this.nativeCtx.createImageData(imageDataOrSw, sh);
+	    //@ts-ignore
+	    return this.nativeCtx.createImageData(imageDataOrSw, sh);
     }
     createLinearGrandient(pos1:Vector, pos2:Vector):CanvasGradient {
         return this.nativeCtx.createLinearGradient(pos1.x, pos1.y, pos2.x, pos2.y);
@@ -107,7 +108,8 @@ class CContext {
         this.nativeCtx.strokeStyle = value;
     }
     setTextAlign(value:string) {
-        this.nativeCtx.textAlign = value;
+        //@ts-ignore
+	    this.nativeCtx.textAlign = value;
     }
     setAlpha(value:number) {
         this.nativeCtx.globalAlpha = value;    

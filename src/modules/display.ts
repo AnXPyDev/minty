@@ -80,7 +80,7 @@ class Viewport {
 }
 
 class Layers {
-    public arr:(() => void)[][];
+    public arr:(() => any)[][];
     public temp:Layer[];
     public min:number;
 

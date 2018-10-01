@@ -3,6 +3,7 @@ const paths:any = reqget("../compiled/paths.json");
 const fs:any = reqget("fs");
 const electron:any = reqget("electron");
 
+
 function obtain(path:string, scope:any = null):void {
     if(scope != null) {
         Object.assign(scope, reqget(path));
@@ -18,6 +19,7 @@ function loadscript(path:string):void {
     scr.onload = function() {
         $MAIN.load.stop();
     }
+    //@ts-ignore
     document.head.appendChild(scr);
 } 
 
