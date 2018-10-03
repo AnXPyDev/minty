@@ -1,7 +1,7 @@
 class CGHandler {
     public block:Vector;
     constructor() {
-        this.block = v(32,32)
+        this.block = v(64)
     }
     calculateBlocks(poly:Polygon):{min:Vector, max:Vector} {
         let min:Vector, max:Vector;
@@ -125,3 +125,4 @@ module.exports = {
     collidesOld:collidesOld
 
 }
+
