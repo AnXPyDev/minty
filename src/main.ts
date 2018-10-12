@@ -1,4 +1,5 @@
 const reqget:any = require; //minty-compile-ignore
+
 const paths:any = reqget("../compiled/paths.json");
 const fs:any = reqget("fs");
 const electron:any = reqget("electron");

@@ -94,8 +94,17 @@ function pos_to_sz(min:Vector, max:Vector):{size:Vector, pos:Vector} {
     return {size: v(max.x - min.x, max.y - min.y), pos:v((max.x - min.x) / 2 + min.x, (max.y - min.y) / 2 + min.y)};
 }
 
+function avg(array:number[]) {
+	let sum = 0;
+	for(let i = 0; i < array.length; i++) {
+		sum += array[i];
+	}
+	return sum / array.length
+}
+
 module.exports = {
-    clamp:clamp,
+	avg:avg,
+	clamp:clamp,
     wrap:wrap,
     flip:flip,
     lerp:lerp,
