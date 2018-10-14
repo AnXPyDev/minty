@@ -18,6 +18,15 @@ function wrap(val:number, min:number, max:number):number {
     }
 }
 
+function wrap_ol(val:number, min:number, max:number):number {
+    if (val < min) {
+        return max - (min - val) + 1;
+    } else if (val > max) {
+        return min + (val - max) - 1;
+    } else {
+        return val;
+    }
+}
 function wrap_np(val:number, min:number, max:number):number {
     if (val < min) {
         return max;
@@ -109,7 +118,8 @@ module.exports = {
     flip:flip,
     lerp:lerp,
     wrap_np:wrap_np,
-    approach:approach,
+    wrap_ol:wrap_ol,
+	approach:approach,
     whenID:whenID,
     when:when,
     wave:wave,
