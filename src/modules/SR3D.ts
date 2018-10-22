@@ -43,7 +43,7 @@ function loop3SidedPoly(polygon:Polygon, screenSize:Vector, forPoint:(pos:Vector
 			    (current[e].y == polygon.corner.min.y &&
 				current[wrap_ol(e+1, 0, 1)].y == polygon.corner.max.y)) {
 					
-				 byWhichValue = "y";
+				byWhichValue = "y";
 				is = true;
 			}
 
@@ -59,98 +59,33 @@ function loop3SidedPoly(polygon:Polygon, screenSize:Vector, forPoint:(pos:Vector
 
 	}
 	
+	let step = v();
+	let isInverted = false;
 	// Find which side of the bounding box is this side closest to
 	if(byWhichValue == "x") {
 		let average = avg([fullSide[0].y, fullSide[1].y]);
-		if(average < polygon.corner.min.y - polygon.corner.max.y + polygon.corner.max.y) {
-			ixFullSide[1] = 1;
+		if(average < polygon.corner.min.y + (polygon.corner.max.y - polygon.corner.min.y) / 2) {
+			ixFullSide[1] = 0;
+			step = v(-1,1);
+			isInverted = true;
 		} else {
-			ixFullSide[1] = 3;
+			ixFullSide[1] = 2;
+			step = v(1,-1);
+			isInverted = true;
 		}
 	} else {
 		let average = avg([fullSide[0].x, fullSide[1].x]);
-		if(average < polygon.corner.min.x - polygon.corner.max.x + polygon.corner.max.x) {
-			ixFullSide[1] = 0;
+		if(average < polygon.corner.min.x + (polygon.corner.max.x - polygon.corner.min.x) / 2) {
+			ixFullSide[1] = 1;
+			step = v(1);
 		} else {
-			ixFullSide[1] = 2;
+			ixFullSide[1] = 3;
+			step = v(-1);
 		}
 	}
-
-	// Find direction of iteration 
-	let step = v();
-	let angle = a().between(fullSide[0], fullSide[1]);
-	let isInverted = false;
-	if((angle.deg >= 315 && angle.deg <= 360) || (angle.deg >= 0 && angle.deg < 45)) {
-		step = v(1,1);
-	} else if(angle.deg >= 45 && angle.deg < 135) {
-		isInverted = true;
-		step= v(-1, -1);
-	} else if(angle.deg >= 135 && angle.deg < 225) {
-		step = v(-1, -1);
-	} else if(angle.deg >= 225 && angle.deg < 315) {
-		isInverted = true;
-		step = v(1, 1);
-	}
-		
-	// Find side of triangle closer to top of selected full side of triangle
-	let average:number[] = []; // [avg y of side 1, average y of side 2]
-	average[0] = avg([translatePos(sides[wrap_ol(ixFullSide[0] + 1, 0, 2)][0], step, isInverted).y, 
-					  translatePos(sides[wrap_ol(ixFullSide[0] + 1, 0, 2)][1], step, isInverted).y]); 
-	average[1] = avg([translatePos(sides[wrap_ol(ixFullSide[0] + 2, 0, 2)][0], step, isInverted).y, 
-					  translatePos(sides[wrap_ol(ixFullSide[0] + 2, 0, 2)][1], step, isInverted).y]); 
 	
-	let succession = [wrap_ol(ixFullSide[0] + 1, 0, 2), wrap_ol(ixFullSide[1] + 2, 0, 2)];
 
-	if(average[1] < average[0]) {
-		succession = [wrap_ol(ixFullSide[0] + 2, 0, 2), wrap_ol(ixFullSide[1] + 1, 0, 2)];
-	}
-	
-	let sidePoly:Polygon[] = [];
-	sidePoly[0] = p();
-	sidePoly[0].val = [translatePos(sides[succession[0]][0], step, isInverted), translatePos(sides[succession[0]][1], step, isInverted)];
-	sidePoly[0].grabinfo();
-
-	sidePoly[1] = p();
-	sidePoly[1].val = [translatePos(sides[succession[1]][0], step, isInverted), translatePos(sides[succession[1]][1], step, isInverted)];
-	sidePoly[1].grabinfo();
-
-	sidePoly[2] = p();
-	sidePoly[2].val = [translatePos(sides[ixFullSide[0]][0], step, isInverted), translatePos(sides[ixFullSide[0]][1], step, isInverted)];
-	sidePoly[2].grabinfo();
-	
-	// Translate original polygon into new coordinate system
-	let newPoly = p();
-	newPoly.val = [];
-	for(let i:number = 0; i < 3; i++) {
-		newPoly.val.push(translatePos(polygon.val[i], step, isInverted));
-	}
-	newPoly.grabinfo();
-	
-	console.log({sidePoly:sidePoly, sides:sides, newPoly:newPoly, step:step, isInverted:isInverted, average:average, ixFullSide:ixFullSide, fullSide:fullSide, succession:succession, angle:angle});
-
-	// Loop through every point in triangle
-	let y = 0;
-	let scix = 0; // Index of secondary polygon face
-	
-	let tt = v(); // Translation to 0,0
-		
-	let x0 = 0;
-	let x1 = 0;
-	while(true) {
-		x0 = ((y / (sidePoly[2].corner.max.y - sidePoly[2].corner.min.y)) * (sidePoly[2].corner.max.x - sidePoly[2].corner.min.x)) + sidePoly[2].corner.min.x;
-		x1 = ((y / (sidePoly[scix].corner.max.y - sidePoly[scix].corner.min.y)) * (sidePoly[scix].corner.max.x - sidePoly[scix].corner.min.x)) + sidePoly[scix].corner.min.x;
-		console.log({x0:x0, x1:x1, scix:scix});
-		for(let x:number = x0; x < x1; x++) {
-			forPoint(translatePos(v(x, y), step, isInverted));
-		}
-		y += 1;
-		if(y > newPoly.corner.max.y - newPoly.corner.min.y) {
-			break;
-		}
-		if(y > sidePoly[scix].corner.max.y) {
-			scix += 1;
-		}
-	}
+	console.log(ixFullSide, fullSide, step, isInverted);
 
 }
 
