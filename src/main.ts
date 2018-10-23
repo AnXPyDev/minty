@@ -53,7 +53,8 @@ function resume(tps:number = scene.tps, aps:number = tps):void {
     //@ts-ignore
     pause();
     $MAIN.mainloop = setInterval($MAIN.tick, 1000 / tps);
-    adt = dt = aps / tps;
+	$MAIN.aTps = [tps, aps];
+	$MAIN.performance = [performance.now(), performance.now()];
     //requestAnimationFrame($MAIN.draw);
 }
 
@@ -82,8 +83,10 @@ const $MAIN:{
         start:() => void,
         loading:() => boolean
     },
-    fps:FpsCounter
-    tps:FpsCounter
+    fps:FpsCounter,
+    tps:FpsCounter,
+	performance:number[],
+	aTps:number[]
 } = {};
 
 $MAIN.onloaded = false;
@@ -163,8 +166,13 @@ $MAIN.onload = function() {
     $MAIN.onloaded = true;
 }
 
+$MAIN.performance = [0,0];
+
 $MAIN.tick = function():void {
-    $MAIN.tps.before();
+	$MAIN.performance[0] = performance.now();
+	dt = ($MAIN.aTps[0] / $MAIN.aTps[1]) * (($MAIN.performance[0] - $MAIN.performance[1]) / (1000 / $MAIN.aTps[0]))
+	$MAIN.performance[1] = $MAIN.performance[0]
+	$MAIN.tps.before();
     tick ++;
     $MAIN.cLAY.reset();
     $MAIN.mLAY.reset();

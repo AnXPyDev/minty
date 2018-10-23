@@ -21,8 +21,6 @@ function loop3SidedPoly(polygon:Polygon, screenSize:Vector, forPoint:(pos:Vector
 		sides.push([polygon.val[i], polygon.val[wrap_ol(i+1, 0, 2)]])
 	}
 	
-	let pCenter = v(polygon.corner.min.x - polygon.corner.max.x + polygon.corner.max.x, polygon.corner.min.y - polygon.corner.max.y + polygon.corner.max.y);
-		
 	// Find first face of polygon that completely covers a face of the bounding box of the polygon
 	let ixFullSide = [0,0]; // [index of side in polygon, index of bounding box side]
 	let fullSide:Vector[] = [];
@@ -33,69 +31,44 @@ function loop3SidedPoly(polygon:Polygon, screenSize:Vector, forPoint:(pos:Vector
 		// Checks if any both x/y values are equal to corner values of the bounding box
 		// If yes then returns index of the side and the side as a Vector Array itself
 		// There should be a side like this in any three sided polygon 
-		for(let e:number = 0; e < 3; e++) {
-			if((current[e].x == polygon.corner.min.x &&
-			    current[wrap_ol(e+1, 0, 1)].x == polygon.corner.max.x)) {
-				
-				byWhichValue = "x";
-				is = true;
-			} else if (
+		for(let e:number = 0; e < 2; e++) {
+			if (
 			    (current[e].y == polygon.corner.min.y &&
 				current[wrap_ol(e+1, 0, 1)].y == polygon.corner.max.y)) {
 					
 				byWhichValue = "y";
 				is = true;
-			}
-
-			if(is) {
 				ixFullSide[0] = i;
 				fullSide = current;
 				break;
 			}
-		}
-	
+		}	
 		if(is) {break}
-	
-
 	}
 	
-	let step = v();
-	let isInverted = false;
 	// Find which side of the bounding box is this side closest to
-	if(byWhichValue == "x") {
-		let average = avg([fullSide[0].y, fullSide[1].y]);
-		if(average < polygon.corner.min.y + (polygon.corner.max.y - polygon.corner.min.y) / 2) {
-			ixFullSide[1] = 0;
-			step = v(-1,1);
-			isInverted = true;
-		} else {
-			ixFullSide[1] = 2;
-			step = v(1,-1);
-			isInverted = true;
-		}
+	let average = avg([fullSide[0].x, fullSide[1].x]);
+	let step = 1;
+	let opposites = [sides[wrap_ol(ixFullSide[0] + 1, 0, 2)],sides[wrap_ol(ixFullSide[0] + 1, 0, 2)]];
+	if(average < polygon.corner.min.x + (polygon.corner.max.x - polygon.corner.min.x) / 2) {
+		ixFullSide[1] = 3;
 	} else {
-		let average = avg([fullSide[0].x, fullSide[1].x]);
-		if(average < polygon.corner.min.x + (polygon.corner.max.x - polygon.corner.min.x) / 2) {
-			ixFullSide[1] = 1;
-			step = v(1);
-		} else {
-			ixFullSide[1] = 3;
-			step = v(-1);
-		}
+		ixFullSide[1] = 1;
+		step = -1;
+		opposites = [opposites[1], opposites[0]];
 	}
-	
 
-	console.log(ixFullSide, fullSide, step, isInverted);
+	let oppositePerc = [Math.abs(opposites[0][0].y - opposites[0][1].y) / (polygon.corner.max.y - polygon.corner.min.y),
+		Math.abs(opposites[1][0].y - opposites[1][1].y) / (polygon.corner.max.y - polygon.corner.min.y)];
+
+
+
+		
+
+	console.log(ixFullSide, fullSide);
 
 }
 
-function translatePos(pos:Vector, step:Vector, isInverted:boolean):Vector {
-	if(isInverted) {
-		return v(pos.y * step.y, pos.x * step.x);
-	} else {
-		return v(pos.x * step.x, pos.y * step.y);
-	}
-}
 
 class Vec3 {
     x:number;
@@ -110,7 +83,6 @@ class Vec3 {
 }
 
 module.exports = {
- 	loop3SidedPoly:loop3SidedPoly,
-	translatePos:translatePos
+ 	loop3SidedPoly:loop3SidedPoly
 }
 
