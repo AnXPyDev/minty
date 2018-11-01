@@ -49,7 +49,7 @@ function loop3SidedPoly(polygon:Polygon, screenSize:Vector, forPoint:(pos:Vector
 	// Find which side of the bounding box is this side closest to
 	let average = avg([fullSide[0].x, fullSide[1].x]);
 	let step = 1;
-	let opposites = [sides[wrap_ol(ixFullSide[0] + 1, 0, 2)],sides[wrap_ol(ixFullSide[0] + 1, 0, 2)]];
+	let opposites = [sides[wrap_ol(ixFullSide[0] + 1, 0, 2)],sides[wrap_ol(ixFullSide[0] + 2, 0, 2)]];
 	if(average < polygon.corner.min.x + (polygon.corner.max.x - polygon.corner.min.x) / 2) {
 		ixFullSide[1] = 3;
 	} else {
@@ -62,10 +62,10 @@ function loop3SidedPoly(polygon:Polygon, screenSize:Vector, forPoint:(pos:Vector
 		Math.abs(opposites[1][0].y - opposites[1][1].y) / (polygon.corner.max.y - polygon.corner.min.y)];
 
 
-
+	
 		
 
-	console.log(ixFullSide, fullSide);
+	console.log(ixFullSide, fullSide, step, opposites, oppositePerc);
 
 }
 
